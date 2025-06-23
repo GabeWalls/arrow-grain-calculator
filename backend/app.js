@@ -1,6 +1,8 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const cors = require('cors');
+const grainCalculatorRoute = require('./routes/grainCalculator');
+
 
 
 var express = require('express');
@@ -24,6 +26,8 @@ app.use('/users', usersRouter);
 
 app.use(cors());
 app.use(express.json());
+app.use('/api', grainCalculatorRoute);
+
 
 
 module.exports = app;
