@@ -55,7 +55,7 @@ return (
     <h1 className="text-3xl font-bold mb-6">Arrow Grain Calculator</h1>
     
     {/* Arrow silhouette placeholder */}
-    <ArrowSVG onPartClick={handleScrollToInput} />.
+    <ArrowSVG onPartClick={handleScrollToInput} />
 
     <form onSubmit={handleSubmit} className="w-full max-w-4xl grid grid-cols-5 gap-4">
       {['knock', 'fletching', 'shaft', 'insert', 'tip'].map((component, idx) => (

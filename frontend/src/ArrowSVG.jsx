@@ -8,7 +8,7 @@ function ArrowSVG({ onPartClick }) {
         data-name="Layer 1"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 1014.27 116.47"
-        className="w-full max-w-10xl h-auto"
+        className="w-[950px] h-auto"
       >
         {/* Shaft */}
         <rect
@@ -20,19 +20,21 @@ function ArrowSVG({ onPartClick }) {
           onClick={() => onPartClick('shaft')}
         />
 
-        {/* Fletching Top */}
+        {/* Fletching Group */}
+        <g
+          className="group cursor-pointer"
+          onClick={() => onPartClick('fletching')}
+          >
         <path
-          className="fill-gray-300 hover:fill-blue-400 cursor-pointer"
+          className="fill-gray-300 group-hover:fill-blue-400 transition-all"
           d="M124.22,35.69s15.86-29.46,40.79-27.65c0,0,139.92,8.39,167.19,27.65H124.22Z"
-          onClick={() => onPartClick('fletching')}
+          
         />
-
-        {/* Fletching Bottom */}
         <path
-          className="fill-gray-300 hover:fill-blue-400 cursor-pointer"
+          className="fill-gray-300 group-hover:fill-blue-400 transition-all"
           d="M124.22,79.03s15.86,30.31,40.79,28.45c0,0,139.92-8.63,167.19-28.45H124.22Z"
-          onClick={() => onPartClick('fletching')}
         />
+       </g>
 
         {/* Knock */}
         <path
@@ -42,16 +44,16 @@ function ArrowSVG({ onPartClick }) {
         />
 
         {/* Insert + Tip */}
-        <g>
+        <g
+          className="group cursor-pointer"
+          onClick={() => onPartClick('tip')}>
           <path
-            className="fill-gray-300 hover:fill-blue-400 cursor-pointer"
+            className="fill-gray-300 group-hover:fill-blue-400 transition-all"
             d="M893.88,24.3s-4.19,5.33-21.84,22.51c-.37-.25-.81-.4-1.3-.4h-18.23c-1.26,0-2.29,1.02-2.29,2.29v18.23c0,1.26,1.02,2.29,2.29,2.29h18.23c.71,0,1.34-.33,1.76-.84,17.25,16.81,21.37,22.04,21.37,22.04l80.31-26.77h20.14v-12.54h-20.14l-80.31-26.79ZM900.67,76.92l-7.87-11.15h45.79l-37.93,11.15ZM892.81,48.96l7.87-11.16,37.93,11.16h-45.79Z"
-            onClick={() => onPartClick('insert')}
           />
           <polygon
-            className="fill-gray-300 hover:fill-blue-400 cursor-pointer"
+            className="fill-gray-300 group-hover:fill-blue-400 transition-all"
             points="994.33 51.1 994.33 63.64 1007.72 57.37 994.33 51.1"
-            onClick={() => onPartClick('tip')}
           />
         </g>
 
