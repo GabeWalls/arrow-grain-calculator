@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import ArrowSVG from './ArrowSVG';
 
 function App() {
   const [components, setComponents] = useState({
+    knock: '',
     shaft: '',
     insert: '',
     fletching: '',
     tip: ''
   });
+
+  const handleScrollToInput = (partName) => {
+  const input = document.querySelector(`input[name="${partName}"]`);
+  if (input) {
+    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    input.focus();
+  }
+};
 
   const [totalGrains, setTotalGrains] = useState(null);
 
@@ -22,9 +32,10 @@ function App() {
     e.preventDefault();
 
     const formattedComponents = [
+      { name: 'knock', grains: components.knock },
+      { name: 'fletching', grains: components.fletching },
       { name: 'shaft', grains: components.shaft },
       { name: 'insert', grains: components.insert },
-      { name: 'fletching', grains: components.fletching },
       { name: 'tip', grains: components.tip }
     ];
 
@@ -39,30 +50,44 @@ function App() {
     }
   };
 
-  return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
-      <h1>Arrow Grain Calculator</h1>
-      <form onSubmit={handleSubmit}>
-        <label>Shaft (grains):</label><br />
-        <input type="number" name="shaft" value={components.shaft} onChange={handleChange} /><br /><br />
+return (
+  <div className="min-h-screen bg-gray-800 text-white flex flex-col items-center px-4 py-8">
+    <h1 className="text-3xl font-bold mb-6">Arrow Grain Calculator</h1>
+    
+    {/* Arrow silhouette placeholder */}
+    <ArrowSVG onPartClick={handleScrollToInput} />.
 
-        <label>Insert (grains):</label><br />
-        <input type="number" name="insert" value={components.insert} onChange={handleChange} /><br /><br />
+    <form onSubmit={handleSubmit} className="w-full max-w-4xl grid grid-cols-5 gap-4">
+      {['knock', 'fletching', 'shaft', 'insert', 'tip'].map((component, idx) => (
+        <div key={idx} className="flex flex-col items-center">
+          <label className="mb-1 capitalize">{component}</label>
+          <input
+            type="number"
+            name={component}
+            value={components[component]}
+            onChange={handleChange}
+            className="text-black px-2 py-1 rounded shadow"
+          />
+        </div>
+      ))}
+    </form>
 
-        <label>Fletching (grains):</label><br />
-        <input type="number" name="fletching" value={components.fletching} onChange={handleChange} /><br /><br />
+    <div className="col-span-5 flex justify-center mt-6">
+      <button
+        type="submit"
+       className="px-6 py-2 bg-gray-600 hover:bg-gray-700 rounded shadow"
+    >
+       Calculate
+     </button>
+   </div>
 
-        <label>Tip (grains):</label><br />
-        <input type="number" name="tip" value={components.tip} onChange={handleChange} /><br /><br />
-
-        <button type="submit">Calculate</button>
-      </form>
-
-      {totalGrains !== null && (
-        <h2 style={{ marginTop: '1.5rem' }}>Total Arrow Weight: {totalGrains} grains</h2>
-      )}
-    </div>
-  );
+    {totalGrains !== null && (
+      <h2 className="mt-6 text-xl font-semibold">
+        Total Arrow Weight: {totalGrains} grains
+      </h2>
+    )}
+  </div>
+);
 }
 
 export default App;
