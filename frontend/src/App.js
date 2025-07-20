@@ -32,11 +32,11 @@ function App() {
     e.preventDefault();
 
     const formattedComponents = [
-      { name: 'knock', grains: components.knock },
-      { name: 'fletching', grains: components.fletching },
-      { name: 'shaft', grains: components.shaft },
-      { name: 'insert', grains: components.insert },
-      { name: 'tip', grains: components.tip }
+      { name: 'knock', grains: Number(components.knock) },
+      { name: 'fletching', grains: Number(components.fletching) },
+      { name: 'shaft', grains: Number(components.shaft) },
+      { name: 'insert', grains: Number(components.insert) },
+      { name: 'tip', grains: Number(components.tip) }
     ];
 
     try {
@@ -45,7 +45,7 @@ function App() {
       });
       setTotalGrains(response.data.totalGrains);
     } catch (err) {
-      console.error('Error calculating grains:', err);
+      console.error('Error calculating grains:', err.response?.data || err.message);
       alert('There was an error calculating total grains.');
     }
   };
@@ -70,9 +70,8 @@ return (
           />
         </div>
       ))}
-    </form>
 
-    <div className="col-span-5 flex justify-center mt-6">
+      <div className="col-span-5 flex justify-center mt-6">
       <button
         type="submit"
        className="px-6 py-2 bg-gray-600 hover:bg-gray-700 rounded shadow"
@@ -80,6 +79,8 @@ return (
        Calculate
      </button>
    </div>
+
+    </form>
 
     {totalGrains !== null && (
       <h2 className="mt-6 text-xl font-semibold">

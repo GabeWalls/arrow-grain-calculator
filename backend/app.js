@@ -4,7 +4,6 @@ const cors = require('cors');
 const grainCalculatorRoute = require('./routes/grainCalculator');
 
 
-
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -28,10 +27,6 @@ app.use(cors());
 app.use(express.json());
 app.use('/api', grainCalculatorRoute);
 
-
-
-module.exports = app;
-
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -40,8 +35,4 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log("✅ MongoDB connected successfully"))
 .catch(err => console.error("❌ MongoDB connection error:", err));
 
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+module.exports = app;

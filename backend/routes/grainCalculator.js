@@ -32,6 +32,8 @@ router.post('/save', async (req, res) => {
 router.post('/calculate', (req, res) => {
   const { components } = req.body;
 
+  console.log('components received:', components);
+
   if (!Array.isArray(components)) {
     return res.status(400).json({ error: "components must be an array" });
   }
