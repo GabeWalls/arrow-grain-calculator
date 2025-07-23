@@ -1,25 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ArrowSVG from './ArrowSVG';
 
 function App() {
   const [components, setComponents] = useState({
     knock: '',
-    shaft: '',
     insert: '',
     fletching: '',
     tip: ''
   });
 
-  const handleScrollToInput = (partName) => {
-  const input = document.querySelector(`input[name="${partName}"]`);
+  const [gpi, setGpi] = useState('');
+  const [arrowLength, setArrowLength] = useState('10.00');
+  const [shaftGrains, setShaftGrains] = useState(0);
+  const [totalGrains, setTotalGrains] = useState(null);
+  const [fletchCount, setFletchCount] = useState('3');
+
+  useEffect(() => {
+    const gpiNum = parseFloat(gpi);
+    const lengthNum = parseFloat(arrowLength);
+    if (!isNaN(gpiNum) && !isNaN(lengthNum)) {
+      setShaftGrains((gpiNum * lengthNum).toFixed(2));
+    } else {
+      setShaftGrains(0);
+    }
+  }, [gpi, arrowLength]);
+
+const handleScrollToInput = (partName) => {
+  let selectorName = partName;
+
+  // Map "shaft" click to GPI input
+  if (partName === 'shaft') {
+    selectorName = 'gpi';
+  }
+
+  const input = document.querySelector(`input[name="${selectorName}"]`);
   if (input) {
     input.scrollIntoView({ behavior: 'smooth', block: 'center' });
     input.focus();
   }
 };
 
-  const [totalGrains, setTotalGrains] = useState(null);
 
   const handleChange = (e) => {
     setComponents({
@@ -34,7 +55,7 @@ function App() {
     const formattedComponents = [
       { name: 'knock', grains: Number(components.knock) },
       { name: 'fletching', grains: Number(components.fletching) },
-      { name: 'shaft', grains: Number(components.shaft) },
+      { name: 'shaft', grains: Number(shaftGrains) },
       { name: 'insert', grains: Number(components.insert) },
       { name: 'tip', grains: Number(components.tip) }
     ];
@@ -50,45 +71,126 @@ function App() {
     }
   };
 
-return (
-  <div className="min-h-screen bg-gray-800 text-white flex flex-col items-center px-4 py-8">
-    <h1 className="text-3xl font-bold mb-6">Arrow Grain Calculator</h1>
-    
-    {/* Arrow silhouette placeholder */}
-    <ArrowSVG onPartClick={handleScrollToInput} />
+  const generateArrowLengthOptions = () => {
+    const options = [];
+    for (let i = 10; i <= 40; i += 0.25) {
+      options.push(i.toFixed(2));
+    }
+    return options;
+  };
 
-    <form onSubmit={handleSubmit} className="w-full max-w-4xl grid grid-cols-5 gap-4">
-      {['knock', 'fletching', 'shaft', 'insert', 'tip'].map((component, idx) => (
-        <div key={idx} className="flex flex-col items-center">
-          <label className="mb-1 capitalize">{component}</label>
+  return (
+    <div className="min-h-screen bg-gray-800 text-white flex flex-col items-center px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6">Arrow Grain Calculator</h1>
+
+      <ArrowSVG onPartClick={handleScrollToInput} />
+
+      <form onSubmit={handleSubmit} className="w-full max-w-5xl grid grid-cols-5 gap-4 mt-6">
+
+        {/* Knock */}
+        <div className="flex flex-col items-center">
+          <label className="mb-1">Knock</label>
           <input
             type="number"
-            name={component}
-            value={components[component]}
+            name="knock"
+            value={components.knock}
             onChange={handleChange}
-            className="text-black px-2 py-1 rounded shadow"
+            className="text-black px-2 py-1 rounded shadow w-full"
           />
         </div>
-      ))}
 
-      <div className="col-span-5 flex justify-center mt-6">
-      <button
-        type="submit"
-       className="px-6 py-2 bg-gray-600 hover:bg-gray-700 rounded shadow"
-    >
-       Calculate
-     </button>
-   </div>
+        {/* Fletching */}
+        <div className="flex flex-col items-center">
+          <label className="mb-1">Fletching</label>
+          <input
+            type="number"
+            name="fletching"
+            value={components.fletching}
+            onChange={handleChange}
+            className="text-black px-2 py-1 rounded shadow w-full"
+          />
+          <label className="mt-2 mb-1 text-sm">Number of Fletches</label>
+          <select
+            value={fletchCount}
+            onChange={(e) => setFletchCount(e.target.value)}
+            className="text-black px-2 py-1 rounded shadow w-full"
+          >
+            {[2, 3, 4].map((count) => (
+              <option key={count} value={count}>{count}</option>
+            ))}
+          </select>
+        </div>
 
-    </form>
+        {/* Shaft GPI */}
+        <div className="flex flex-col items-center">
+          <label className="mb-1 text-center">Shaft (Grains Per Inch)</label>
+          <input
+            type="number"
+            name = "gpi"
+            value={gpi}
+            onChange={(e) => setGpi(e.target.value)}
+            className="text-black px-2 py-1 rounded shadow w-full"
+          />
+          <label className="mt-2 mb-1 text-sm text-center">Arrow Length (inches)</label>
+          <select
+            value={arrowLength}
+            onChange={(e) => setArrowLength(e.target.value)}
+            className="text-black px-2 py-1 rounded shadow w-full"
+          >
+            {generateArrowLengthOptions().map((len) => (
+              <option key={len} value={len}>{len}"</option>
+            ))}
+          </select>
+          <label className="mt-2 mb-1 text-sm text-center">Shaft (Total Grains)</label>
+          <input
+            type="number"
+            value={shaftGrains}
+            readOnly
+            className="text-black px-2 py-1 rounded shadow w-full bg-gray-200"
+          />
+        </div>
 
-    {totalGrains !== null && (
-      <h2 className="mt-6 text-xl font-semibold">
-        Total Arrow Weight: {totalGrains} grains
-      </h2>
-    )}
-  </div>
-);
+        {/* Insert */}
+        <div className="flex flex-col items-center">
+          <label className="mb-1">Insert</label>
+          <input
+            type="number"
+            name="insert"
+            value={components.insert}
+            onChange={handleChange}
+            className="text-black px-2 py-1 rounded shadow w-full"
+          />
+        </div>
+
+        {/* Tip */}
+        <div className="flex flex-col items-center">
+          <label className="mb-1">Tip</label>
+          <input
+            type="number"
+            name="tip"
+            value={components.tip}
+            onChange={handleChange}
+            className="text-black px-2 py-1 rounded shadow w-full"
+          />
+        </div>
+
+        <div className="col-span-5 flex justify-center mt-6">
+          <button
+            type="submit"
+            className="px-6 py-2 bg-gray-600 hover:bg-gray-700 rounded shadow"
+          >
+            Calculate
+          </button>
+        </div>
+      </form>
+
+      {totalGrains !== null && (
+        <h2 className="mt-6 text-xl font-semibold">
+          Total Arrow Weight: {totalGrains} grains
+        </h2>
+      )}
+    </div>
+  );
 }
 
 export default App;
