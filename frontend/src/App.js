@@ -15,6 +15,7 @@ function App() {
   const [shaftGrains, setShaftGrains] = useState(0);
   const [totalGrains, setTotalGrains] = useState(null);
   const [fletchCount, setFletchCount] = useState('3');
+  const [focPercent, setFocPercent] = useState(null);
 
   useEffect(() => {
     const gpiNum = parseFloat(gpi);
@@ -26,21 +27,37 @@ function App() {
     }
   }, [gpi, arrowLength]);
 
-const handleScrollToInput = (partName) => {
-  let selectorName = partName;
+  useEffect(() => {
+    const shaft = parseFloat(shaftGrains);
+    const knock = parseFloat(components.knock);
+    const insert = parseFloat(components.insert);
+    const fletching = parseFloat(components.fletching);
+    const tip = parseFloat(components.tip);
+    const length = parseFloat(arrowLength);
 
-  // Map "shaft" click to GPI input
-  if (partName === 'shaft') {
-    selectorName = 'gpi';
-  }
+    const total = shaft + knock + insert + fletching + tip;
+    setTotalGrains(!isNaN(total) ? total.toFixed(2) : null);
 
-  const input = document.querySelector(`input[name="${selectorName}"]`);
-  if (input) {
-    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    input.focus();
-  }
-};
+    const balancePoint =
+      ((tip * length) +
+        (insert * (length - 1)) +
+        (shaft * (length / 2)) +
+        (fletching * (length - 2)) +
+        (knock * 0)) / total;
 
+    const foc = ((balancePoint - (length / 2)) / length) * 100;
+    setFocPercent(!isNaN(foc) ? foc.toFixed(2) : null);
+  }, [components, shaftGrains, arrowLength]);
+
+  const handleScrollToInput = (partName) => {
+    let selectorName = partName;
+    if (partName === 'shaft') selectorName = 'gpi';
+    const input = document.querySelector(`input[name="${selectorName}"]`);
+    if (input) {
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      input.focus();
+    }
+  };
 
   const handleChange = (e) => {
     setComponents({
@@ -79,6 +96,11 @@ const handleScrollToInput = (partName) => {
     return options;
   };
 
+  const getFocColor = (foc) => {
+    const value = parseFloat(foc);
+    return value >= 10 && value <= 20 ? 'text-green-400' : 'text-red-400';
+  };
+
   return (
     <div className="min-h-screen bg-gray-800 text-white flex flex-col items-center px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Arrow Grain Calculator</h1>
@@ -115,18 +137,18 @@ const handleScrollToInput = (partName) => {
             onChange={(e) => setFletchCount(e.target.value)}
             className="text-black px-2 py-1 rounded shadow w-full"
           >
-            {[2, 3, 4].map((count) => (
+            {[3, 4].map((count) => (
               <option key={count} value={count}>{count}</option>
             ))}
           </select>
         </div>
 
-        {/* Shaft GPI */}
+        {/* Shaft GPI + Length */}
         <div className="flex flex-col items-center">
           <label className="mb-1 text-center">Shaft (Grains Per Inch)</label>
           <input
             type="number"
-            name = "gpi"
+            name="gpi"
             value={gpi}
             onChange={(e) => setGpi(e.target.value)}
             className="text-black px-2 py-1 rounded shadow w-full"
@@ -187,6 +209,12 @@ const handleScrollToInput = (partName) => {
       {totalGrains !== null && (
         <h2 className="mt-6 text-xl font-semibold">
           Total Arrow Weight: {totalGrains} grains
+        </h2>
+      )}
+
+      {focPercent !== null && (
+        <h2 className={`mt-2 text-xl font-semibold ${getFocColor(focPercent)}`}>
+          FOC: {focPercent}%
         </h2>
       )}
     </div>
