@@ -1,32 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import ArrowSVG from './ArrowSVG';
+import React, { useState, useEffect } from 'react'; 
+import axios from 'axios'; 
+import ArrowSVG from './ArrowSVG'; 
 
 function App() {
-  const [components, setComponents] = useState({
-    knock: '',
+  // State for each arrow component's grain weight
+  const [components, setComponents] = useState({ 
+    knock: '', 
     insert: '',
     fletching: '',
     tip: ''
   });
 
-  const [gpi, setGpi] = useState('');
+  // Additional arrow configuration state
+  const [gpi, setGpi] = useState(''); 
   const [arrowLength, setArrowLength] = useState('10.00');
   const [shaftGrains, setShaftGrains] = useState(0);
   const [totalGrains, setTotalGrains] = useState(null);
   const [fletchCount, setFletchCount] = useState('3');
-  const [focPercent, setFocPercent] = useState(null);
+  const [focPercent, setFocPercent] = useState(null); 
 
-  useEffect(() => {
+  // Recalculate shaft grain weight when GPI or arrow length changes
+  useEffect(() => { 
     const gpiNum = parseFloat(gpi);
     const lengthNum = parseFloat(arrowLength);
     if (!isNaN(gpiNum) && !isNaN(lengthNum)) {
-      setShaftGrains((gpiNum * lengthNum).toFixed(2));
+      setShaftGrains((gpiNum * lengthNum).toFixed(2)); 
     } else {
       setShaftGrains(0);
     }
   }, [gpi, arrowLength]);
 
+  //Recalculate total grain weight and DOC whenever inputs change
   useEffect(() => {
     const shaft = parseFloat(shaftGrains);
     const knock = parseFloat(components.knock);
@@ -38,6 +42,7 @@ function App() {
     const total = shaft + knock + insert + fletching + tip;
     setTotalGrains(!isNaN(total) ? total.toFixed(2) : null);
 
+    // FOC formula to determine fron-of-center balance point
     const balancePoint =
       ((tip * length) +
         (insert * (length - 1)) +
@@ -49,6 +54,7 @@ function App() {
     setFocPercent(!isNaN(foc) ? foc.toFixed(2) : null);
   }, [components, shaftGrains, arrowLength]);
 
+  // Move/scroll to corresponding field when arrow part is clicked in SVG
   const handleScrollToInput = (partName) => {
     let selectorName = partName;
     if (partName === 'shaft') selectorName = 'gpi';
@@ -59,6 +65,7 @@ function App() {
     }
   };
 
+  // Handle changes in individual component inputs
   const handleChange = (e) => {
     setComponents({
       ...components,
@@ -66,6 +73,7 @@ function App() {
     });
   };
 
+  // Send data to backend to calculate grains (alternative to local calc)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -88,6 +96,7 @@ function App() {
     }
   };
 
+  // Generate arrow length dropdown options (10" to 40" in 0.25" increments) 
   const generateArrowLengthOptions = () => {
     const options = [];
     for (let i = 10; i <= 40; i += 0.25) {
@@ -96,6 +105,7 @@ function App() {
     return options;
   };
 
+  // Color code FOC % based on optimal range (10-20%)
   const getFocColor = (foc) => {
     const value = parseFloat(foc);
     return value >= 10 && value <= 20 ? 'text-green-400' : 'text-red-400';
