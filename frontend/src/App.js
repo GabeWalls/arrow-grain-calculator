@@ -18,6 +18,7 @@ function App() {
   const [totalGrains, setTotalGrains] = useState(null);
   const [fletchCount, setFletchCount] = useState('3');
   const [focPercent, setFocPercent] = useState(null); 
+  const [buildName, setBuildName] = useState(''); // Track name of build to save
 
   // Recalculate shaft grain weight when GPI or arrow length changes
   useEffect(() => { 
@@ -30,7 +31,7 @@ function App() {
     }
   }, [gpi, arrowLength]);
 
-  //Recalculate total grain weight and DOC whenever inputs change
+  // Recalculate total grain weight and FOC whenever inputs change
   useEffect(() => {
     const shaft = parseFloat(shaftGrains);
     const knock = parseFloat(components.knock);
@@ -42,7 +43,7 @@ function App() {
     const total = shaft + knock + insert + fletching + tip;
     setTotalGrains(!isNaN(total) ? total.toFixed(2) : null);
 
-    // FOC formula to determine fron-of-center balance point
+    // FOC formula to determine front-of-center balance point
     const balancePoint =
       ((tip * length) +
         (insert * (length - 1)) +
@@ -73,7 +74,29 @@ function App() {
     });
   };
 
-  // Send data to backend to calculate grains (alternative to local calc)
+  // Handle saving build to MongoDB
+  const handleSaveBuild = async () => {
+    const formattedComponents = [
+      { name: 'knock', grains: Number(components.knock) },
+      { name: 'fletching', grains: Number(components.fletching) },
+      { name: 'shaft', grains: Number(shaftGrains) },
+      { name: 'insert', grains: Number(components.insert) },
+      { name: 'tip', grains: Number(components.tip) }
+    ];
+
+    try {
+      await axios.post('http://localhost:5000/api/save', {
+        name: buildName,
+        components: formattedComponents
+      });
+      alert('Build saved!');
+    } catch (err) {
+      console.error('Error saving build:', err.response?.data || err.message);
+      alert('There was an error saving the build.');
+    }
+  };
+
+  // Backend calculate fallback (still useful)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -206,6 +229,25 @@ function App() {
           />
         </div>
 
+        {/* Save Build Inputs */}
+        <div className="col-span-5 flex flex-col items-center mt-6">
+          <input
+            type="text"
+            placeholder="Build Name"
+            value={buildName}
+            onChange={(e) => setBuildName(e.target.value)}
+            className="text-black px-2 py-1 rounded shadow w-1/2 mb-2"
+          />
+          <button
+            type="button"
+            onClick={handleSaveBuild}
+            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded shadow"
+          >
+            Save Build
+          </button>
+        </div>
+
+        {/* Submit/Calculate button */}
         <div className="col-span-5 flex justify-center mt-6">
           <button
             type="submit"
@@ -216,12 +258,14 @@ function App() {
         </div>
       </form>
 
+      {/* Display Total Weight */}
       {totalGrains !== null && (
         <h2 className="mt-6 text-xl font-semibold">
           Total Arrow Weight: {totalGrains} grains
         </h2>
       )}
 
+      {/* Display FOC % */}
       {focPercent !== null && (
         <h2 className={`mt-2 text-xl font-semibold ${getFocColor(focPercent)}`}>
           FOC: {focPercent}%
