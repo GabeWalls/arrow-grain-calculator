@@ -1,11 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const ArrowBuild = require('../models/ArrowBuild'); //
+const ArrowBuild = require('../models/ArrowBuild');
 const calculateTotalGrains = require('../utils/calculateGrains');
 
-// save build route
+// =============================================
+// Route: POST /api/save
+// Purpose: Save a new arrow build to MongoDB
+// =============================================
 router.post('/save', async (req, res) => {
-  const { name, components } = req.body;
+  const { name, components, gpi, arrowLength } = req.body;
 
   // Basic validation
   if (!name || !Array.isArray(components)) {
@@ -13,40 +16,44 @@ router.post('/save', async (req, res) => {
   }
 
   try {
-    // Convert grain values to numbers just in case
-    const sanitizedComponents = components.map(comp => ({
-      name: comp.name,
-      grains: Number(comp.grains)
-    }));
+    // Calculate total grains based on components array
+    const totalGrains = calculateTotalGrains(components);
 
-    const totalGrains = calculateTotalGrains(sanitizedComponents);
-
+    // Create and save the build document
     const newBuild = new ArrowBuild({
       name,
-      components: sanitizedComponents,
-      totalGrains
+      components,
+      totalGrains,
+      gpi,
+      arrowLength
     });
 
     const saved = await newBuild.save();
     res.json({ message: "Build saved", build: saved });
   } catch (err) {
-    console.error("❌ Error saving build:", err); 
-    console.error("🧪 Data received:", { name, components }); 
+    console.error("Error saving build:", err);
+    console.error("Data received:", { name, components, gpi, arrowLength });
     res.status(500).json({ error: err.message });
   }
 });
 
-// Fetch all saved builds
+// =============================================
+// Route: GET /api/builds
+// Purpose: Fetch all saved builds from MongoDB
+// =============================================
 router.get('/builds', async (req, res) => {
   try {
-    const builds = await ArrowBuild.find().sort({ createdAt: -1 }); // most recent first
+    const builds = await ArrowBuild.find().sort({ createdAt: -1 }); // newest first
     res.json(builds);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// Delete a specific build
+// =============================================
+// Route: DELETE /api/builds/:id
+// Purpose: Delete a specific saved build
+// =============================================
 router.delete('/builds/:id', async (req, res) => {
   try {
     const result = await ArrowBuild.findByIdAndDelete(req.params.id);
@@ -59,9 +66,12 @@ router.delete('/builds/:id', async (req, res) => {
   }
 });
 
-// Update a specific build
+// =============================================
+// Route: PUT /api/builds/:id
+// Purpose: Update a specific build
+// =============================================
 router.put('/builds/:id', async (req, res) => {
-  const { name, components } = req.body;
+  const { name, components, gpi, arrowLength } = req.body;
 
   if (!name || !Array.isArray(components)) {
     return res.status(400).json({ error: "Invalid input" });
@@ -69,9 +79,10 @@ router.put('/builds/:id', async (req, res) => {
 
   try {
     const totalGrains = calculateTotalGrains(components);
+
     const updated = await ArrowBuild.findByIdAndUpdate(
       req.params.id,
-      { name, components, totalGrains },
+      { name, components, totalGrains, gpi, arrowLength },
       { new: true }
     );
 
@@ -85,7 +96,10 @@ router.put('/builds/:id', async (req, res) => {
   }
 });
 
-// calculate route
+// =============================================
+// Route: POST /api/calculate
+// Purpose: Calculate total grain weight from components
+// =============================================
 router.post('/calculate', (req, res) => {
   const { components } = req.body;
 
