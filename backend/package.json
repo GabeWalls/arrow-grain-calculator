@@ -13,5 +13,9 @@
     "express": "~4.16.1",
     "mongoose": "^8.15.0",
     "morgan": "~1.9.1"
-  }
+  },
+  "scripts": {
+  "seed": "node seeds/seedBuilds.js",
+  "bench": "node scripts/bench.js"
+}
 }
