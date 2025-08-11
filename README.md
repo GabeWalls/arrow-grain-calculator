@@ -1,6 +1,7 @@
 # Arrow Grain Calculator – CS499 Capstone
 
 Live demo: 
+
 Portfolio: https://gabewalls.github.io/#projects
 
 ## What it does
