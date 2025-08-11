@@ -21,8 +21,11 @@ function App() {
   const [buildName, setBuildName] = useState('');
   const [savedBuilds, setSavedBuilds] = useState([]);
   const [editingBuildId, setEditingBuildId] = useState(null);
+  const [activePart, setActivePart] = useState(null); // Track the active highlighted SVG part
 
-  // Fetch saved builds on initial load
+  
+
+  // Fetch saved builds on component mount
   useEffect(() => {
     fetchBuilds();
   }, []);
@@ -38,7 +41,7 @@ function App() {
     }
   }, [gpi, arrowLength]);
 
-  // Recalculate total grain weight and FOC whenever inputs change
+  // Recalculate total grain weight and FOC percentage when components or shaft changes
   useEffect(() => {
     const shaft = parseFloat(shaftGrains);
     const knock = parseFloat(components.knock);
@@ -61,8 +64,9 @@ function App() {
     setFocPercent(!isNaN(foc) ? foc.toFixed(2) : null);
   }, [components, shaftGrains, arrowLength]);
 
-  // Scroll to input field on arrow part click
+  // Handle SVG click to scroll to related input and set highlight
   const handleScrollToInput = (partName) => {
+    setActivePart(partName);
     let selectorName = partName;
     if (partName === 'shaft') selectorName = 'gpi';
     const input = document.querySelector(`input[name="${selectorName}"]`);
@@ -72,7 +76,17 @@ function App() {
     }
   };
 
-  // Update component inputs
+  // Handle input focus to sync with highlighted part
+  const handleInputFocus = (e) => {
+    const name = e.target.name;
+    if (name === 'gpi') {
+      setActivePart('shaft');
+    } else {
+      setActivePart(name);
+    }
+  };
+
+  // Update arrow component grain weights
   const handleChange = (e) => {
     setComponents({
       ...components,
@@ -80,7 +94,7 @@ function App() {
     });
   };
 
-  // Save or update build
+  // Save or update current build
   const handleSaveBuild = async () => {
     const formattedComponents = [
       { name: 'knock', grains: Number(components.knock) },
@@ -113,16 +127,17 @@ function App() {
     }
   };
 
-  // Start a new blank build
+  // Clear current build and start fresh
   const handleNewBuild = () => {
     setComponents({ knock: '', insert: '', fletching: '', tip: '' });
     setGpi('');
     setArrowLength('10.00');
     setBuildName('');
     setEditingBuildId(null);
+    setActivePart(null);
   };
 
-  // Fetch all builds
+  // Retrieve builds from database
   const fetchBuilds = async () => {
     try {
       const res = await axios.get('http://localhost:5000/api/builds');
@@ -132,7 +147,7 @@ function App() {
     }
   };
 
-  // Delete build
+  // Delete a specific saved build
   const handleDeleteBuild = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/builds/${id}`);
@@ -142,7 +157,7 @@ function App() {
     }
   };
 
-  // Load build into UI for viewing or editing
+  // Load saved build into form
   const handleLoadBuild = (build) => {
     const compObj = {};
     build.components.forEach(c => {
@@ -156,9 +171,10 @@ function App() {
     setGpi(build.gpi?.toString() || '');
     setBuildName(build.name);
     setEditingBuildId(build._id);
+    setActivePart(null);
   };
 
-  // Optional backend grain calculation support
+  // Submit form to backend for grain calculation (optional)
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formattedComponents = [
@@ -180,7 +196,7 @@ function App() {
     }
   };
 
-  // Generate dropdown from 10 to 40 in 0.25" steps
+  // Build arrow length dropdown options
   const generateArrowLengthOptions = () => {
     const options = [];
     for (let i = 10; i <= 40; i += 0.25) {
@@ -189,22 +205,22 @@ function App() {
     return options;
   };
 
-  // Style FOC color feedback
+  // Color-code FOC display based on ideal range
   const getFocColor = (foc) => {
     const value = parseFloat(foc);
     return value >= 10 && value <= 20 ? 'text-green-400' : 'text-red-400';
   };
 
   return (
-    <div className="min-h-screen bg-gray-800 text-white flex flex-col items-center px-4 py-8">
+    <div className="min-h-screen bg-gray-950 text-white flex flex-col items-center px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Arrow Grain Calculator</h1>
 
-      {/* Interactive SVG */}
-      <ArrowSVG onPartClick={handleScrollToInput} />
+      {/* Interactive SVG visualization */}
+      <ArrowSVG onPartClick={handleScrollToInput} activePart={activePart} />
 
-      {/* Input Form */}
+      {/* Input form for arrow component weights */}
       <form onSubmit={handleSubmit} className="w-full max-w-5xl grid grid-cols-5 gap-4 mt-6">
-        {/* Knock */}
+        {/* Knock input */}
         <div className="flex flex-col items-center">
           <label className="mb-1">Knock</label>
           <input
@@ -212,11 +228,12 @@ function App() {
             name="knock"
             value={components.knock}
             onChange={handleChange}
-            className="text-black px-2 py-1 rounded shadow w-full"
+            onFocus={handleInputFocus}
+            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
           />
         </div>
 
-        {/* Fletching */}
+        {/* Fletching input */}
         <div className="flex flex-col items-center">
           <label className="mb-1">Fletching</label>
           <input
@@ -224,13 +241,14 @@ function App() {
             name="fletching"
             value={components.fletching}
             onChange={handleChange}
-            className="text-black px-2 py-1 rounded shadow w-full"
+            onFocus={handleInputFocus}
+            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
           />
           <label className="mt-2 mb-1 text-sm">Number of Fletches</label>
           <select
             value={fletchCount}
             onChange={(e) => setFletchCount(e.target.value)}
-            className="text-black px-2 py-1 rounded shadow w-full"
+            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
           >
             {[3, 4].map((count) => (
               <option key={count} value={count}>{count}</option>
@@ -238,7 +256,7 @@ function App() {
           </select>
         </div>
 
-        {/* Shaft Section */}
+        {/* Shaft input (GPI and arrow length) */}
         <div className="flex flex-col items-center">
           <label className="mb-1 text-center">Shaft (Grains Per Inch)</label>
           <input
@@ -246,13 +264,14 @@ function App() {
             name="gpi"
             value={gpi}
             onChange={(e) => setGpi(e.target.value)}
-            className="text-black px-2 py-1 rounded shadow w-full"
+            onFocus={handleInputFocus}
+            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
           />
           <label className="mt-2 mb-1 text-sm text-center">Arrow Length (inches)</label>
           <select
             value={arrowLength}
             onChange={(e) => setArrowLength(e.target.value)}
-            className="text-black px-2 py-1 rounded shadow w-full"
+            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
           >
             {generateArrowLengthOptions().map((len) => (
               <option key={len} value={len}>{len}"</option>
@@ -263,11 +282,11 @@ function App() {
             type="number"
             value={shaftGrains}
             readOnly
-            className="text-black px-2 py-1 rounded shadow w-full bg-gray-200"
+            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full bg-gray-800 border border-gray-700"
           />
         </div>
 
-        {/* Insert */}
+        {/* Insert input */}
         <div className="flex flex-col items-center">
           <label className="mb-1">Insert</label>
           <input
@@ -275,11 +294,12 @@ function App() {
             name="insert"
             value={components.insert}
             onChange={handleChange}
-            className="text-black px-2 py-1 rounded shadow w-full"
+            onFocus={handleInputFocus}
+            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
           />
         </div>
 
-        {/* Tip */}
+        {/* Tip input */}
         <div className="flex flex-col items-center">
           <label className="mb-1">Tip</label>
           <input
@@ -287,11 +307,12 @@ function App() {
             name="tip"
             value={components.tip}
             onChange={handleChange}
-            className="text-black px-2 py-1 rounded shadow w-full"
+            onFocus={handleInputFocus}
+            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
           />
         </div>
 
-        {/* Calculate Button */}
+        {/* Submit calculation button */}
         <div className="col-span-5 flex justify-center mt-6">
           <button
             type="submit"
@@ -302,22 +323,24 @@ function App() {
         </div>
       </form>
 
-      {/* Arrow Output Info */}
+      {/* Display total grains */}
       {totalGrains !== null && (
         <h2 className="mt-6 text-xl font-semibold">Total Arrow Weight: {totalGrains} grains</h2>
       )}
+
+      {/* Display FOC % with color feedback */}
       {focPercent !== null && (
         <h2 className={`mt-2 text-xl font-semibold ${getFocColor(focPercent)}`}>FOC: {focPercent}%</h2>
       )}
 
-      {/* Save + New Build */}
+      {/* Build save and new build controls */}
       <div className="col-span-5 flex flex-col items-center mt-6">
         <input
           type="text"
           placeholder="Build Name"
           value={buildName}
           onChange={(e) => setBuildName(e.target.value)}
-          className="text-black px-2 py-1 rounded shadow w-full max-w-md mb-2"
+          className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full max-w-md mb-2"
         />
         <div className="flex gap-4">
           <button
@@ -337,7 +360,7 @@ function App() {
         </div>
       </div>
 
-      {/* Saved Builds */}
+      {/* Saved builds list */}
       <div className="mt-10 w-full max-w-4xl">
         <h3 className="text-2xl font-bold mb-4">Saved Builds</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
