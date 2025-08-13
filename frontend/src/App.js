@@ -23,12 +23,22 @@ function App() {
   const [editingBuildId, setEditingBuildId] = useState(null);
   const [activePart, setActivePart] = useState(null); // Track the active highlighted SVG part
 
-  
+  // NEW: Saved builds UI (collapsible + pagination)
+  const [showSaved, setShowSaved] = useState(true);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
 
   // Fetch saved builds on component mount
   useEffect(() => {
     fetchBuilds();
   }, []);
+
+  // Keep page valid when list or page size changes
+  useEffect(() => {
+    const totalPages = Math.max(1, Math.ceil(savedBuilds.length / pageSize));
+    if (page > totalPages) setPage(totalPages);
+    if (page < 1) setPage(1);
+  }, [savedBuilds, pageSize, page]);
 
   // Recalculate shaft grain weight when GPI or arrow length changes
   useEffect(() => {
@@ -211,6 +221,14 @@ function App() {
     return value >= 10 && value <= 20 ? 'text-green-400' : 'text-red-400';
   };
 
+  // ---- Pagination helpers ----
+  const totalPages = Math.max(1, Math.ceil(savedBuilds.length / pageSize));
+  const startIdx = (page - 1) * pageSize;
+  const pageItems = savedBuilds.slice(startIdx, startIdx + pageSize);
+  const goToPage = (p) => setPage(Math.min(totalPages, Math.max(1, p)));
+  const prevPage = () => goToPage(page - 1);
+  const nextPage = () => goToPage(page + 1);
+
   return (
     <div className="min-h-screen bg-gray-950 text-white flex flex-col items-center px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Arrow Grain Calculator</h1>
@@ -360,38 +378,101 @@ function App() {
         </div>
       </div>
 
-      {/* Saved builds list */}
+      {/* Saved builds (collapsible + pagination) */}
       <div className="mt-10 w-full max-w-4xl">
-        <h3 className="text-2xl font-bold mb-4">Saved Builds</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {savedBuilds.map((build) => (
-            <div key={build._id} className="bg-gray-700 p-4 rounded shadow">
-              <div className="flex justify-between items-center">
-                <div className="font-semibold">{build.name}</div>
-                <div className="text-sm text-gray-400">{new Date(build.createdAt).toLocaleString()}</div>
-              </div>
-              <div className="mt-2 text-sm">
-                {build.components.map((c, idx) => (
-                  <div key={idx}>{c.name}: {c.grains} grains</div>
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-2xl font-bold">Saved Builds</h3>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-400">{savedBuilds.length} total</span>
+            <button
+              type="button"
+              onClick={() => setShowSaved(!showSaved)}
+              className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 text-sm"
+              aria-expanded={showSaved}
+            >
+              {showSaved ? 'Hide' : 'Show'}
+            </button>
+          </div>
+        </div>
+
+        {showSaved && (
+          <>
+            {/* Grid (paginated) */}
+            {savedBuilds.length === 0 ? (
+              <div className="text-gray-400 text-sm py-6">No saved builds yet.</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {pageItems.map((build) => (
+                  <div key={build._id} className="bg-gray-700 p-4 rounded shadow">
+                    <div className="flex justify-between items-center">
+                      <div className="font-semibold truncate">{build.name}</div>
+                      <div className="text-sm text-gray-400">{new Date(build.createdAt).toLocaleString()}</div>
+                    </div>
+                    <div className="mt-2 text-sm">
+                      {build.components.map((c, idx) => (
+                        <div key={idx}>{c.name}: {c.grains} grains</div>
+                      ))}
+                    </div>
+                    <div className="mt-2 flex gap-2">
+                      <button
+                        onClick={() => handleLoadBuild(build)}
+                        className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm"
+                      >
+                        Load
+                      </button>
+                      <button
+                        onClick={() => handleDeleteBuild(build._id)}
+                        className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
                 ))}
               </div>
-              <div className="mt-2 flex gap-2">
-                <button
-                  onClick={() => handleLoadBuild(build)}
-                  className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm"
-                >
-                  Load
-                </button>
-                <button
-                  onClick={() => handleDeleteBuild(build._id)}
-                  className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm"
-                >
-                  Delete
-                </button>
+            )}
+
+            {/* Pagination controls */}
+            {savedBuilds.length > 0 && (
+              <div className="flex items-center justify-between mt-4">
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={prevPage}
+                    disabled={page <= 1}
+                    className={`px-3 py-1 rounded text-sm ${page <= 1 ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-gray-700 hover:bg-gray-600'}`}
+                  >
+                    Prev
+                  </button>
+                  <span className="text-sm">
+                    Page <strong>{page}</strong> / {totalPages}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={nextPage}
+                    disabled={page >= totalPages}
+                    className={`px-3 py-1 rounded text-sm ${page >= totalPages ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-gray-700 hover:bg-gray-600'}`}
+                  >
+                    Next
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-300">Per page:</span>
+                  <select
+                    value={pageSize}
+                    onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
+                    className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded text-sm"
+                  >
+                    {[4, 6, 8, 10].map(n => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
