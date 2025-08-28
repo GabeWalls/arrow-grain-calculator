@@ -4,7 +4,11 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}", // ensures Tailwind scans React components
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        pureblack: '#000000'
+      }
+    },
   },
   plugins: [],
 }

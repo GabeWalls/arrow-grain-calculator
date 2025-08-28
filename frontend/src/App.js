@@ -23,19 +23,19 @@ function App() {
   const [editingBuildId, setEditingBuildId] = useState(null);
   const [activePart, setActivePart] = useState(null); // Track the active highlighted SVG part
 
-  // NEW: Saved builds UI (collapsible + pagination)
+  // NEW: Saved builds panel UI state
   const [showSaved, setShowSaved] = useState(true);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(6);
+  const [pageSize, setPageSize] = useState(6); // default cards per page
 
   // Fetch saved builds on component mount
   useEffect(() => {
     fetchBuilds();
   }, []);
 
-  // Keep page valid when list or page size changes
+  // Keep page valid when list or pageSize changes
   useEffect(() => {
-    const totalPages = Math.max(1, Math.ceil(savedBuilds.length / pageSize));
+    const totalPages = Math.max(1, Math.ceil((Array.isArray(savedBuilds) ? savedBuilds.length : 0) / pageSize));
     if (page > totalPages) setPage(totalPages);
     if (page < 1) setPage(1);
   }, [savedBuilds, pageSize, page]);
@@ -89,7 +89,7 @@ function App() {
   // Handle input focus to sync with highlighted part
   const handleInputFocus = (e) => {
     const name = e.target.name;
-    if (name === 'gpi') {
+    if (name === 'gpi' || name === 'arrowLength') {
       setActivePart('shaft');
     } else {
       setActivePart(name);
@@ -151,7 +151,9 @@ function App() {
   const fetchBuilds = async () => {
     try {
       const res = await axios.get('http://localhost:5000/api/builds');
-      setSavedBuilds(res.data);
+      // NEW: backend returns { items, page, total, ... } — store just the array
+      const items = Array.isArray(res.data) ? res.data : (res.data.items || []);
+      setSavedBuilds(items);
     } catch (err) {
       console.error('Error fetching builds:', err);
     }
@@ -177,7 +179,12 @@ function App() {
     });
     setComponents(compObj);
     setShaftGrains(build.components.find(c => c.name === 'shaft')?.grains || 0);
-    setArrowLength(build.arrowLength?.toFixed(2) || '10.00');
+    // NEW: format defensively
+    setArrowLength(
+      Number.isFinite(Number(build.arrowLength))
+        ? Number(build.arrowLength).toFixed(2)
+        : '10.00'
+    );
     setGpi(build.gpi?.toString() || '');
     setBuildName(build.name);
     setEditingBuildId(build._id);
@@ -221,16 +228,18 @@ function App() {
     return value >= 10 && value <= 20 ? 'text-green-400' : 'text-red-400';
   };
 
-  // ---- Pagination helpers ----
-  const totalPages = Math.max(1, Math.ceil(savedBuilds.length / pageSize));
+  // NEW: defensive pagination using a normalized array
+  const builds = Array.isArray(savedBuilds) ? savedBuilds : [];
+  const totalPages = Math.max(1, Math.ceil(builds.length / pageSize));
   const startIdx = (page - 1) * pageSize;
-  const pageItems = savedBuilds.slice(startIdx, startIdx + pageSize);
+  const pageItems = builds.slice(startIdx, startIdx + pageSize);
+
   const goToPage = (p) => setPage(Math.min(totalPages, Math.max(1, p)));
   const prevPage = () => goToPage(page - 1);
   const nextPage = () => goToPage(page + 1);
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col items-center px-4 py-8">
+    <div className="min-h-screen bg-pureblack text-white flex flex-col items-center px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Arrow Grain Calculator</h1>
 
       {/* Interactive SVG visualization */}
@@ -247,7 +256,7 @@ function App() {
             value={components.knock}
             onChange={handleChange}
             onFocus={handleInputFocus}
-            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
+            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
           />
         </div>
 
@@ -260,13 +269,13 @@ function App() {
             value={components.fletching}
             onChange={handleChange}
             onFocus={handleInputFocus}
-            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
+            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
           />
           <label className="mt-2 mb-1 text-sm">Number of Fletches</label>
           <select
             value={fletchCount}
             onChange={(e) => setFletchCount(e.target.value)}
-            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
+            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
           >
             {[3, 4].map((count) => (
               <option key={count} value={count}>{count}</option>
@@ -283,13 +292,13 @@ function App() {
             value={gpi}
             onChange={(e) => setGpi(e.target.value)}
             onFocus={handleInputFocus}
-            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
+            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
           />
           <label className="mt-2 mb-1 text-sm text-center">Arrow Length (inches)</label>
           <select
             value={arrowLength}
             onChange={(e) => setArrowLength(e.target.value)}
-            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
+            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
           >
             {generateArrowLengthOptions().map((len) => (
               <option key={len} value={len}>{len}"</option>
@@ -300,7 +309,7 @@ function App() {
             type="number"
             value={shaftGrains}
             readOnly
-            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full bg-gray-800 border border-gray-700"
+            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full bg-gray-800 border border-gray-700"
           />
         </div>
 
@@ -313,7 +322,7 @@ function App() {
             value={components.insert}
             onChange={handleChange}
             onFocus={handleInputFocus}
-            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
+            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
           />
         </div>
 
@@ -326,7 +335,7 @@ function App() {
             value={components.tip}
             onChange={handleChange}
             onFocus={handleInputFocus}
-            className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
+            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
           />
         </div>
 
@@ -334,7 +343,7 @@ function App() {
         <div className="col-span-5 flex justify-center mt-6">
           <button
             type="submit"
-            className="px-6 py-2 bg-gray-600 hover:bg-gray-700 rounded shadow"
+            className="px-6 py-2 hover:bg-gray-700 rounded shadow"
           >
             Calculate
           </button>
@@ -358,7 +367,7 @@ function App() {
           placeholder="Build Name"
           value={buildName}
           onChange={(e) => setBuildName(e.target.value)}
-          className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded shadow w-full max-w-md mb-2"
+          className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full max-w-md mb-2"
         />
         <div className="flex gap-4">
           <button
@@ -383,7 +392,7 @@ function App() {
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-2xl font-bold">Saved Builds</h3>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-400">{savedBuilds.length} total</span>
+            <span className="text-sm text-gray-400">{builds.length} total</span>
             <button
               type="button"
               onClick={() => setShowSaved(!showSaved)}
@@ -397,8 +406,8 @@ function App() {
 
         {showSaved && (
           <>
-            {/* Grid (paginated) */}
-            {savedBuilds.length === 0 ? (
+            {/* Grid of builds (paginated) */}
+            {builds.length === 0 ? (
               <div className="text-gray-400 text-sm py-6">No saved builds yet.</div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -406,14 +415,16 @@ function App() {
                   <div key={build._id} className="bg-gray-700 p-4 rounded shadow">
                     <div className="flex justify-between items-center">
                       <div className="font-semibold truncate">{build.name}</div>
-                      <div className="text-sm text-gray-400">{new Date(build.createdAt).toLocaleString()}</div>
+                      <div className="text-sm text-gray-400">
+                        {new Date(build.createdAt).toLocaleString()}
+                      </div>
                     </div>
                     <div className="mt-2 text-sm">
                       {build.components.map((c, idx) => (
                         <div key={idx}>{c.name}: {c.grains} grains</div>
                       ))}
                     </div>
-                    <div className="mt-2 flex gap-2">
+                    <div className="mt-3 flex gap-2">
                       <button
                         onClick={() => handleLoadBuild(build)}
                         className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm"
@@ -433,7 +444,7 @@ function App() {
             )}
 
             {/* Pagination controls */}
-            {savedBuilds.length > 0 && (
+            {builds.length > 0 && (
               <div className="flex items-center justify-between mt-4">
                 <div className="flex items-center gap-2">
                   <button
