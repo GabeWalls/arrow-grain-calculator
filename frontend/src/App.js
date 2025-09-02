@@ -3,7 +3,7 @@ import axios from 'axios';
 import ArrowSVG from './ArrowSVG';
 
 function App() {
-  // State for each arrow component's grain weight
+  // Component grain weights
   const [components, setComponents] = useState({
     knock: '',
     insert: '',
@@ -11,7 +11,10 @@ function App() {
     tip: ''
   });
 
-  // Additional arrow configuration state
+  // Build type toggle: 'arrow' | 'bolt'
+  const [buildType, setBuildType] = useState('arrow');
+
+  // Other config
   const [gpi, setGpi] = useState('');
   const [arrowLength, setArrowLength] = useState('10.00');
   const [shaftGrains, setShaftGrains] = useState(0);
@@ -21,37 +24,32 @@ function App() {
   const [buildName, setBuildName] = useState('');
   const [savedBuilds, setSavedBuilds] = useState([]);
   const [editingBuildId, setEditingBuildId] = useState(null);
-  const [activePart, setActivePart] = useState(null); // Track the active highlighted SVG part
+  const [activePart, setActivePart] = useState(null);
 
-  // NEW: Saved builds panel UI state
+  // Saved builds panel
   const [showSaved, setShowSaved] = useState(true);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(6); // default cards per page
+  const [pageSize, setPageSize] = useState(6);
 
-  // Fetch saved builds on component mount
-  useEffect(() => {
-    fetchBuilds();
-  }, []);
+  // Initial fetch
+  useEffect(() => { fetchBuilds(); }, []);
 
-  // Keep page valid when list or pageSize changes
+  // Keep pagination sane
   useEffect(() => {
     const totalPages = Math.max(1, Math.ceil((Array.isArray(savedBuilds) ? savedBuilds.length : 0) / pageSize));
     if (page > totalPages) setPage(totalPages);
     if (page < 1) setPage(1);
   }, [savedBuilds, pageSize, page]);
 
-  // Recalculate shaft grain weight when GPI or arrow length changes
+  // Compute shaft grains from GPI * length
   useEffect(() => {
     const gpiNum = parseFloat(gpi);
     const lengthNum = parseFloat(arrowLength);
-    if (!isNaN(gpiNum) && !isNaN(lengthNum)) {
-      setShaftGrains((gpiNum * lengthNum).toFixed(2));
-    } else {
-      setShaftGrains(0);
-    }
+    if (!isNaN(gpiNum) && !isNaN(lengthNum)) setShaftGrains((gpiNum * lengthNum).toFixed(2));
+    else setShaftGrains(0);
   }, [gpi, arrowLength]);
 
-  // Recalculate total grain weight and FOC percentage when components or shaft changes
+  // Compute total grains + FOC
   useEffect(() => {
     const shaft = parseFloat(shaftGrains);
     const knock = parseFloat(components.knock);
@@ -74,7 +72,7 @@ function App() {
     setFocPercent(!isNaN(foc) ? foc.toFixed(2) : null);
   }, [components, shaftGrains, arrowLength]);
 
-  // Handle SVG click to scroll to related input and set highlight
+  // Click SVG → focus related input
   const handleScrollToInput = (partName) => {
     setActivePart(partName);
     let selectorName = partName;
@@ -86,25 +84,16 @@ function App() {
     }
   };
 
-  // Handle input focus to sync with highlighted part
   const handleInputFocus = (e) => {
     const name = e.target.name;
-    if (name === 'gpi' || name === 'arrowLength') {
-      setActivePart('shaft');
-    } else {
-      setActivePart(name);
-    }
+    if (name === 'gpi' || name === 'arrowLength') setActivePart('shaft');
+    else setActivePart(name);
   };
 
-  // Update arrow component grain weights
   const handleChange = (e) => {
-    setComponents({
-      ...components,
-      [e.target.name]: e.target.value
-    });
+    setComponents({ ...components, [e.target.name]: e.target.value });
   };
 
-  // Save or update current build
   const handleSaveBuild = async () => {
     const formattedComponents = [
       { name: 'knock', grains: Number(components.knock) },
@@ -118,7 +107,8 @@ function App() {
       name: buildName,
       components: formattedComponents,
       gpi: Number(gpi),
-      arrowLength: Number(arrowLength)
+      arrowLength: Number(arrowLength),
+      buildType
     };
 
     try {
@@ -137,7 +127,6 @@ function App() {
     }
   };
 
-  // Clear current build and start fresh
   const handleNewBuild = () => {
     setComponents({ knock: '', insert: '', fletching: '', tip: '' });
     setGpi('');
@@ -147,11 +136,9 @@ function App() {
     setActivePart(null);
   };
 
-  // Retrieve builds from database
   const fetchBuilds = async () => {
     try {
       const res = await axios.get('http://localhost:5000/api/builds');
-      // NEW: backend returns { items, page, total, ... } — store just the array
       const items = Array.isArray(res.data) ? res.data : (res.data.items || []);
       setSavedBuilds(items);
     } catch (err) {
@@ -159,7 +146,6 @@ function App() {
     }
   };
 
-  // Delete a specific saved build
   const handleDeleteBuild = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/builds/${id}`);
@@ -169,29 +155,20 @@ function App() {
     }
   };
 
-  // Load saved build into form
   const handleLoadBuild = (build) => {
     const compObj = {};
-    build.components.forEach(c => {
-      if (c.name !== 'shaft') {
-        compObj[c.name] = c.grains;
-      }
-    });
+    build.components.forEach(c => { if (c.name !== 'shaft') compObj[c.name] = c.grains; });
     setComponents(compObj);
     setShaftGrains(build.components.find(c => c.name === 'shaft')?.grains || 0);
-    // NEW: format defensively
-    setArrowLength(
-      Number.isFinite(Number(build.arrowLength))
-        ? Number(build.arrowLength).toFixed(2)
-        : '10.00'
-    );
+    setArrowLength(Number.isFinite(Number(build.arrowLength)) ? Number(build.arrowLength).toFixed(2) : '10.00');
     setGpi(build.gpi?.toString() || '');
     setBuildName(build.name);
     setEditingBuildId(build._id);
     setActivePart(null);
+    // NEW: reflect saved type in the toggle (fallback to arrow)
+    setBuildType(build.buildType === 'bolt' ? 'bolt' : 'arrow');
   };
 
-  // Submit form to backend for grain calculation (optional)
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formattedComponents = [
@@ -213,192 +190,155 @@ function App() {
     }
   };
 
-  // Build arrow length dropdown options
+  // Arrow length dropdown adapts by build type
   const generateArrowLengthOptions = () => {
+    const min = buildType === 'bolt' ? 14 : 20;
+    const max = buildType === 'bolt' ? 24 : 34;
     const options = [];
-    for (let i = 10; i <= 40; i += 0.25) {
-      options.push(i.toFixed(2));
-    }
+    for (let i = min; i <= max; i += 0.25) options.push(i.toFixed(2));
     return options;
   };
 
-  // Color-code FOC display based on ideal range
+  // Ensure reasonable value on type switch
+  useEffect(() => {
+    if (buildType === 'bolt') {
+      const len = parseFloat(arrowLength);
+      if (isFinite(len) && len > 24) setArrowLength('20.00');
+    }
+  }, [buildType]); // eslint-disable-line
+
+  // FOC color feedback
   const getFocColor = (foc) => {
     const value = parseFloat(foc);
     return value >= 10 && value <= 20 ? 'text-green-400' : 'text-red-400';
   };
 
-  // NEW: defensive pagination using a normalized array
+  // Pagination helpers
   const builds = Array.isArray(savedBuilds) ? savedBuilds : [];
   const totalPages = Math.max(1, Math.ceil(builds.length / pageSize));
   const startIdx = (page - 1) * pageSize;
   const pageItems = builds.slice(startIdx, startIdx + pageSize);
-
   const goToPage = (p) => setPage(Math.min(totalPages, Math.max(1, p)));
   const prevPage = () => goToPage(page - 1);
   const nextPage = () => goToPage(page + 1);
 
+  // Segmented-control styles
+  const segClass = (isActive) =>
+    `px-4 py-1 rounded-full border transition ${
+      isActive ? 'bg-white text-black border-white' : 'border-gray-500 text-gray-300 hover:bg-gray-800'
+    }`;
+
   return (
     <div className="min-h-screen bg-pureblack text-white flex flex-col items-center px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Arrow Grain Calculator</h1>
+      <h1 className="text-3xl font-bold mb-3">Arrow & Bolt Weight Calculator</h1>
 
-      {/* Interactive SVG visualization */}
-      <ArrowSVG onPartClick={handleScrollToInput} activePart={activePart} />
+      {/* Build-type segmented control (no "|"—just space) */}
+      <div className="mb-6 flex items-center gap-4">
+        <button
+          type="button"
+          className={segClass(buildType === 'arrow')}
+          onClick={() => setBuildType('arrow')}
+          aria-pressed={buildType === 'arrow'}
+        >
+          Arrow
+        </button>
+        <button
+          type="button"
+          className={segClass(buildType === 'bolt')}
+          onClick={() => setBuildType('bolt')}
+          aria-pressed={buildType === 'bolt'}
+        >
+          Bolt
+        </button>
+      </div>
 
-      {/* Input form for arrow component weights */}
+      {/* SVG visualization */}
+      <ArrowSVG onPartClick={handleScrollToInput} activePart={activePart} mode={buildType} />
+
+      {/* Inputs */}
       <form onSubmit={handleSubmit} className="w-full max-w-5xl grid grid-cols-5 gap-4 mt-6">
-        {/* Knock input */}
+        {/* Knock */}
         <div className="flex flex-col items-center">
           <label className="mb-1">Knock</label>
-          <input
-            type="number"
-            name="knock"
-            value={components.knock}
-            onChange={handleChange}
-            onFocus={handleInputFocus}
-            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
-          />
+          <input type="number" name="knock" value={components.knock} onChange={handleChange} onFocus={handleInputFocus}
+                 className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full" />
         </div>
 
-        {/* Fletching input */}
+        {/* Fletching */}
         <div className="flex flex-col items-center">
           <label className="mb-1">Fletching</label>
-          <input
-            type="number"
-            name="fletching"
-            value={components.fletching}
-            onChange={handleChange}
-            onFocus={handleInputFocus}
-            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
-          />
+          <input type="number" name="fletching" value={components.fletching} onChange={handleChange} onFocus={handleInputFocus}
+                 className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full" />
           <label className="mt-2 mb-1 text-sm">Number of Fletches</label>
-          <select
-            value={fletchCount}
-            onChange={(e) => setFletchCount(e.target.value)}
-            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
-          >
-            {[3, 4].map((count) => (
-              <option key={count} value={count}>{count}</option>
-            ))}
+          <select value={fletchCount} onChange={(e) => setFletchCount(e.target.value)}
+                  className="text-black border border-gray-600 px-2 py-1 rounded shadow w-full">
+            {[3, 4].map((count) => <option key={count} value={count}>{count}</option>)}
           </select>
         </div>
 
-        {/* Shaft input (GPI and arrow length) */}
+        {/* Shaft */}
         <div className="flex flex-col items-center">
           <label className="mb-1 text-center">Shaft (Grains Per Inch)</label>
-          <input
-            type="number"
-            name="gpi"
-            value={gpi}
-            onChange={(e) => setGpi(e.target.value)}
-            onFocus={handleInputFocus}
-            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
-          />
-          <label className="mt-2 mb-1 text-sm text-center">Arrow Length (inches)</label>
-          <select
-            value={arrowLength}
-            onChange={(e) => setArrowLength(e.target.value)}
-            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
-          >
-            {generateArrowLengthOptions().map((len) => (
-              <option key={len} value={len}>{len}"</option>
-            ))}
+          <input type="number" name="gpi" value={gpi} onChange={(e) => setGpi(e.target.value)} onFocus={handleInputFocus}
+                 className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full" />
+          <label className="mt-2 mb-1 text-sm text-center">
+            {buildType === 'bolt' ? 'Bolt Length (inches)' : 'Arrow Length (inches)'}
+          </label>
+          <select name="arrowLength" value={arrowLength} onChange={(e) => setArrowLength(e.target.value)}
+                  className="text-black border border-gray-600 px-2 py-1 rounded shadow w-full">
+            {generateArrowLengthOptions().map((len) => <option key={len} value={len}>{len}"</option>)}
           </select>
           <label className="mt-2 mb-1 text-sm text-center">Shaft (Total Grains)</label>
-          <input
-            type="number"
-            value={shaftGrains}
-            readOnly
-            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full bg-gray-800 border border-gray-700"
-          />
+          <input type="number" value={shaftGrains} readOnly
+                 className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full bg-gray-800 border border-gray-700" />
         </div>
 
-        {/* Insert input */}
+        {/* Insert */}
         <div className="flex flex-col items-center">
           <label className="mb-1">Insert</label>
-          <input
-            type="number"
-            name="insert"
-            value={components.insert}
-            onChange={handleChange}
-            onFocus={handleInputFocus}
-            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
-          />
+          <input type="number" name="insert" value={components.insert} onChange={handleChange} onFocus={handleInputFocus}
+                 className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full" />
         </div>
 
-        {/* Tip input */}
+        {/* Tip */}
         <div className="flex flex-col items-center">
           <label className="mb-1">Tip</label>
-          <input
-            type="number"
-            name="tip"
-            value={components.tip}
-            onChange={handleChange}
-            onFocus={handleInputFocus}
-            className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full"
-          />
+          <input type="number" name="tip" value={components.tip} onChange={handleChange} onFocus={handleInputFocus}
+                 className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full" />
         </div>
 
-        {/* Submit calculation button */}
+        {/* Calculate */}
         <div className="col-span-5 flex justify-center mt-6">
-          <button
-            type="submit"
-            className="px-6 py-2 hover:bg-gray-700 rounded shadow"
-          >
-            Calculate
-          </button>
+          <button type="submit" className="px-6 py-2 bg-green-600 hover:bg-gray-700 rounded shadow">Calculate</button>
         </div>
       </form>
 
-      {/* Display total grains */}
-      {totalGrains !== null && (
-        <h2 className="mt-6 text-xl font-semibold">Total Arrow Weight: {totalGrains} grains</h2>
-      )}
+      {/* Totals */}
+      {totalGrains !== null && <h2 className="mt-6 text-xl font-semibold">Total Arrow Weight: {totalGrains} grains</h2>}
+      {focPercent !== null && <h2 className={`mt-2 text-xl font-semibold ${getFocColor(focPercent)}`}>FOC: {focPercent}%</h2>}
 
-      {/* Display FOC % with color feedback */}
-      {focPercent !== null && (
-        <h2 className={`mt-2 text-xl font-semibold ${getFocColor(focPercent)}`}>FOC: {focPercent}%</h2>
-      )}
-
-      {/* Build save and new build controls */}
+      {/* Save / New */}
       <div className="col-span-5 flex flex-col items-center mt-6">
-        <input
-          type="text"
-          placeholder="Build Name"
-          value={buildName}
-          onChange={(e) => setBuildName(e.target.value)}
-          className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full max-w-md mb-2"
-        />
+        <input type="text" placeholder="Build Name" value={buildName} onChange={(e) => setBuildName(e.target.value)}
+               className="text-white border border-gray-600 px-2 py-1 rounded shadow w-full max-w-md mb-2" />
         <div className="flex gap-4">
-          <button
-            type="button"
-            onClick={handleSaveBuild}
-            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded shadow"
-          >
+          <button type="button" onClick={handleSaveBuild} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded shadow">
             {editingBuildId ? 'Update Build' : 'Save Build'}
           </button>
-          <button
-            type="button"
-            onClick={handleNewBuild}
-            className="px-6 py-2 bg-gray-500 hover:bg-gray-600 rounded shadow"
-          >
+          <button type="button" onClick={handleNewBuild} className="px-6 py-2 bg-gray-500 hover:bg-gray-600 rounded shadow">
             New Build
           </button>
         </div>
       </div>
 
-      {/* Saved builds (collapsible + pagination) */}
+      {/* Saved builds */}
       <div className="mt-10 w-full max-w-4xl">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-2xl font-bold">Saved Builds</h3>
           <div className="flex items-center gap-3">
             <span className="text-sm text-gray-400">{builds.length} total</span>
-            <button
-              type="button"
-              onClick={() => setShowSaved(!showSaved)}
-              className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 text-sm"
-              aria-expanded={showSaved}
-            >
+            <button type="button" onClick={() => setShowSaved(!showSaved)}
+                    className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 text-sm" aria-expanded={showSaved}>
               {showSaved ? 'Hide' : 'Show'}
             </button>
           </div>
@@ -406,78 +346,65 @@ function App() {
 
         {showSaved && (
           <>
-            {/* Grid of builds (paginated) */}
             {builds.length === 0 ? (
               <div className="text-gray-400 text-sm py-6">No saved builds yet.</div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {pageItems.map((build) => (
-                  <div key={build._id} className="bg-gray-700 p-4 rounded shadow">
-                    <div className="flex justify-between items-center">
-                      <div className="font-semibold truncate">{build.name}</div>
-                      <div className="text-sm text-gray-400">
-                        {new Date(build.createdAt).toLocaleString()}
+                {pageItems.map((build) => {
+                  const typeLabel = (build.buildType ?? (build.arrowLength <= 24 ? 'bolt' : 'arrow')) === 'bolt' ? 'Bolt' : 'Arrow';
+                  const isBolt = typeLabel === 'Bolt';
+                  return (
+                    <div key={build._id} className="bg-gray-700 p-4 rounded shadow">
+                      <div className="flex justify-between items-center">
+                        <div className="font-semibold truncate">{build.name}</div>
+                        <div className="flex items-center gap-3">
+                          <span
+                            className={`text-xs px-2 py-0.5 rounded-full ${
+                              isBolt ? 'bg-purple-600/30 border border-purple-500 text-purple-200'
+                                     : 'bg-green-600/30 border border-green-500 text-green-200'
+                            }`}
+                            title="Build Type"
+                          >
+                            {typeLabel}
+                          </span>
+                          <div className="text-sm text-gray-400">{new Date(build.createdAt).toLocaleString()}</div>
+                        </div>
+                      </div>
+                      <div className="mt-2 text-sm">
+                        {build.components.map((c, idx) => (
+                          <div key={idx}>{c.name}: {c.grains} grains</div>
+                        ))}
+                      </div>
+                      <div className="mt-3 flex gap-2">
+                        <button onClick={() => handleLoadBuild(build)} className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm">Load</button>
+                        <button onClick={() => handleDeleteBuild(build._id)} className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm">Delete</button>
                       </div>
                     </div>
-                    <div className="mt-2 text-sm">
-                      {build.components.map((c, idx) => (
-                        <div key={idx}>{c.name}: {c.grains} grains</div>
-                      ))}
-                    </div>
-                    <div className="mt-3 flex gap-2">
-                      <button
-                        onClick={() => handleLoadBuild(build)}
-                        className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm"
-                      >
-                        Load
-                      </button>
-                      <button
-                        onClick={() => handleDeleteBuild(build._id)}
-                        className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
-            {/* Pagination controls */}
+            {/* Pagination */}
             {builds.length > 0 && (
               <div className="flex items-center justify-between mt-4">
                 <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={prevPage}
-                    disabled={page <= 1}
-                    className={`px-3 py-1 rounded text-sm ${page <= 1 ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-gray-700 hover:bg-gray-600'}`}
-                  >
+                  <button type="button" onClick={prevPage} disabled={page <= 1}
+                          className={`px-3 py-1 rounded text-sm ${page <= 1 ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-gray-700 hover:bg-gray-600'}`}>
                     Prev
                   </button>
-                  <span className="text-sm">
-                    Page <strong>{page}</strong> / {totalPages}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={nextPage}
-                    disabled={page >= totalPages}
-                    className={`px-3 py-1 rounded text-sm ${page >= totalPages ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-gray-700 hover:bg-gray-600'}`}
-                  >
+                  <span className="text-sm">Page <strong>{page}</strong> / {totalPages}</span>
+                  <button type="button" onClick={nextPage} disabled={page >= totalPages}
+                          className={`px-3 py-1 rounded text-sm ${page >= totalPages ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-gray-700 hover:bg-gray-600'}`}>
                     Next
                   </button>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-300">Per page:</span>
-                  <select
-                    value={pageSize}
-                    onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
-                    className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded text-sm"
-                  >
-                    {[4, 6, 8, 10].map(n => (
-                      <option key={n} value={n}>{n}</option>
-                    ))}
+                  <select value={pageSize} onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
+                          className="bg-gray-800 text-white border border-gray-600 px-2 py-1 rounded text-sm">
+                    {[4, 6, 8, 10].map(n => <option key={n} value={n}>{n}</option>)}
                   </select>
                 </div>
               </div>
