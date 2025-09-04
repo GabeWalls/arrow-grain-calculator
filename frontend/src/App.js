@@ -358,10 +358,12 @@ function App() {
                       <div className="flex justify-between items-center">
                         <div className="font-semibold truncate">{build.name}</div>
                         <div className="flex items-center gap-3">
+                          {/* === UPDATED: Bolt -> orange badge; Arrow -> green badge === */}
                           <span
                             className={`text-xs px-2 py-0.5 rounded-full ${
-                              isBolt ? 'bg-purple-600/30 border border-purple-500 text-purple-200'
-                                     : 'bg-green-600/30 border border-green-500 text-green-200'
+                              isBolt
+                                ? 'bg-orange-600/30 border border-orange-500 text-orange-200'
+                                : 'bg-green-600/30  border border-green-500  text-green-200'
                             }`}
                             title="Build Type"
                           >
