@@ -458,22 +458,34 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
   // Handle click outside to deselect
   useEffect(() => {
     const handleClickOutside = (e) => {
-      // Check if click is on white space (not on SVG parts, inputs, or buttons)
+      // Check if click is on white space (not on SVG parts, inputs, buttons, labels, or forms)
       const target = e.target;
       const isInput = target.tagName === 'INPUT' || target.tagName === 'SELECT';
       const isButton = target.tagName === 'BUTTON' || target.closest('button');
-      const isSVGPart = target.closest('svg') && !target.closest('svg rect[fill="transparent"]');
-      const isForm = target.closest('form');
+      const isLabel = target.tagName === 'LABEL';
+      const isSVGInteractive = target.closest('svg') && (
+        target.closest('rect') || 
+        target.closest('path') || 
+        target.closest('polygon') ||
+        target.closest('g[pointerEvents="bounding-box"]')
+      );
       
-      // If clicking on white space (not inputs, buttons, or SVG parts), deselect
-      if (!isInput && !isButton && !isSVGPart && !isForm) {
-        setActivePart(null);
+      // Only deselect if clicking on actual white space (not on any interactive element)
+      if (!isInput && !isButton && !isLabel && !isSVGInteractive && activePart !== null) {
+        // Additional check: make sure we're clicking on the background, not inside a container
+        const isInContainer = target.closest('.flex.flex-col.items-center') || 
+                             target.closest('form') || 
+                             target.closest('[class*="mb-10"]');
+        
+        if (!isInContainer || target === isInContainer) {
+          setActivePart(null);
+        }
       }
     };
     
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
+  }, [activePart]);
 
   return (
     <div className="flex flex-col items-center">
