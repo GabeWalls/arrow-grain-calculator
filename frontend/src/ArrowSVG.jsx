@@ -82,7 +82,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
             />
             <path
               id="bottom-vane-bolt"
-              className={`transition-all duration-200 transform-gpu group-hover:translate-y-1 ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
+              className={`transition-all duration-200 transform-gpu group-hover:translate-y-1 ${hoverPart === 'shaft' ? 'translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
               d="M778.41,158.04s-59,58.45-302.57,49.65c-1.48-.05-2.85-.77-3.73-1.96-4.57-6.2-19.74-25.74-30.35-26.91-1.48-.16-2.81-.97-3.75-2.13-2.11-2.6-4.63-8.05-3.06-18.65h343.46Z"
             />
           </g>
@@ -93,7 +93,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
             className="shaft-group relative"
           >
             <rect
-              className={`${hot('shaft') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-y-1`}
+              className={`${hot('shaft') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-colors duration-200 hover:fill-blaze`}
               x={BOLT_SHAFT_X} y={BOLT_SHAFT_Y} width={BOLT_SHAFT_W} height={BOLT_SHAFT_H}
               filter={boltGlow('shaft')}
               onMouseOver={() => setHoverPart('shaft')}
@@ -193,7 +193,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
 
         {/* Shaft */}
         <rect
-          className={`${hot('shaft') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-y-1`}
+          className={`${hot('shaft') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-colors duration-200 hover:fill-blaze`}
           x={SHAFT_X} y={SHAFT_Y} width={SHAFT_W} height={SHAFT_H}
           filter={greenGlow('shaft')}
           onMouseOver={() => setHoverPart('shaft')}
@@ -215,7 +215,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
             d="M124.22,35.69s15.86-29.46,40.79-27.65c0,0,139.92,8.39,167.19,27.65H124.22Z"
           />
           <path
-            className={`transition-all duration-200 transform-gpu group-hover:translate-y-1 ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
+            className={`transition-all duration-200 transform-gpu group-hover:translate-y-1 ${hoverPart === 'shaft' ? 'translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
             d="M124.22,79.03s15.86,30.31,40.79,28.45c0,0,139.92-8.63,167.19-28.45H124.22Z"
           />
         </g>

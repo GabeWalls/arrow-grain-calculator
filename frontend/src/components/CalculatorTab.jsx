@@ -512,7 +512,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
 
       <form onSubmit={handleSubmit} className="w-full max-w-5xl grid grid-cols-5 gap-4 mt-6">
         <div className="flex flex-col items-center">
-          <label className={`mb-1 transition-colors duration-200 ${activePart === 'knock' ? 'text-blaze' : ''}`}>Knock</label>
+          <label className={`mb-1 transition-colors duration-200 ${activePart === 'knock' ? 'text-blaze font-bold' : ''}`}>Knock</label>
           <input type="number" name="knock" value={components.knock} onChange={handleChange} onFocus={handleInputFocus}
                  className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
                    activePart === 'knock'
@@ -522,7 +522,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
         </div>
 
         <div className="flex flex-col items-center">
-          <label className={`mb-1 transition-colors duration-200 ${activePart === 'fletching' ? 'text-blaze' : ''}`}>Fletching</label>
+          <label className={`mb-1 transition-colors duration-200 ${activePart === 'fletching' ? 'text-blaze font-bold' : ''}`}>Fletching</label>
           <input type="number" name="fletching" value={components.fletching} onChange={handleChange} onFocus={handleInputFocus}
                  className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
                    activePart === 'fletching'
@@ -537,14 +537,14 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
         </div>
 
         <div className="flex flex-col items-center">
-          <label className={`mb-1 text-center transition-colors duration-200 ${activePart === 'shaft' ? 'text-blaze' : ''}`}>Shaft (Grains Per Inch)</label>
+          <label className={`mb-1 text-center transition-colors duration-200 ${activePart === 'shaft' ? 'text-blaze font-bold' : ''}`}>Shaft (Grains Per Inch)</label>
           <input type="number" name="gpi" value={gpi} onChange={(e) => setGpi(e.target.value)} onFocus={handleInputFocus}
                  className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
                    activePart === 'shaft'
                      ? 'border-blaze border-2 text-gray-900 dark:text-white'
                      : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
                  }`} />
-          <label className={`mt-2 mb-1 text-sm text-center transition-colors duration-200 ${activePart === 'shaft' ? 'text-blaze' : ''}`}>
+          <label className={`mt-2 mb-1 text-sm text-center transition-colors duration-200 ${activePart === 'shaft' ? 'text-blaze font-bold' : ''}`}>
             {buildType === 'bolt' ? 'Bolt Length (inches)' : 'Arrow Length (inches)'}
           </label>
           <select name="arrowLength" value={arrowLength} onChange={(e) => setArrowLength(e.target.value)} onFocus={handleInputFocus}
@@ -561,7 +561,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
         </div>
 
         <div className="flex flex-col items-center">
-          <label className={`mb-1 transition-colors duration-200 ${activePart === 'insert' ? 'text-blaze' : ''}`}>Insert</label>
+          <label className={`mb-1 transition-colors duration-200 ${activePart === 'insert' ? 'text-blaze font-bold' : ''}`}>Insert</label>
           <input type="number" name="insert" value={components.insert} onChange={handleChange} onFocus={handleInputFocus}
                  className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
                    activePart === 'insert'
@@ -571,7 +571,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
         </div>
 
         <div className="flex flex-col items-center">
-          <label className={`mb-1 transition-colors duration-200 ${activePart === 'tip' ? 'text-blaze' : ''}`}>Tip</label>
+          <label className={`mb-1 transition-colors duration-200 ${activePart === 'tip' ? 'text-blaze font-bold' : ''}`}>Tip</label>
           <input type="number" name="tip" value={components.tip} onChange={handleChange} onFocus={handleInputFocus}
                  className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
                    activePart === 'tip'
