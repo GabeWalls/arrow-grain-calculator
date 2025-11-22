@@ -54,7 +54,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
 
           {/* Shaft */}
           <rect
-            className={`${hot('shaft') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:scale-110`}
+            className={`${hot('shaft') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-y-1`}
             x={BOLT_SHAFT_X} y={BOLT_SHAFT_Y} width={BOLT_SHAFT_W} height={BOLT_SHAFT_H}
             filter={boltGlow('shaft')}
             onMouseOver={() => setHoverPart('shaft')}
@@ -65,7 +65,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
           {/* Fletching */}
           <g
             pointerEvents="bounding-box"
-            className="group cursor-pointer transition-transform duration-200 transform-gpu hover:scale-110"
+            className="group cursor-pointer transition-transform duration-200 transform-gpu hover:-translate-y-1"
             filter={boltGlow('fletching')}
             onMouseOver={() => setHoverPart('fletching')}
             onMouseOut={() => setHoverPart(null)}
@@ -94,7 +94,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
           {/* Tip */}
           <g
             pointerEvents="bounding-box"
-            className="group cursor-pointer transition-transform duration-200 transform-gpu hover:scale-110"
+            className="group cursor-pointer transition-transform duration-200 transform-gpu hover:-translate-y-1"
             filter={boltGlow('tip')}
             onMouseOver={() => setHoverPart('tip')}
             onMouseOut={() => setHoverPart(null)}
@@ -154,7 +154,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
 
         {/* Shaft */}
         <rect
-          className={`${hot('shaft') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:scale-110`}
+          className={`${hot('shaft') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-y-1`}
           x={SHAFT_X} y={SHAFT_Y} width={SHAFT_W} height={SHAFT_H}
           filter={greenGlow('shaft')}
           onMouseOver={() => setHoverPart('shaft')}
@@ -165,7 +165,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
         {/* Fletching */}
         <g
           pointerEvents="bounding-box"
-            className="group cursor-pointer transition-transform duration-200 transform-gpu hover:scale-110"
+            className="group cursor-pointer transition-transform duration-200 transform-gpu hover:-translate-y-1"
           filter={greenGlow('fletching')}
           onMouseOver={() => setHoverPart('fletching')}
           onMouseOut={() => setHoverPart(null)}
@@ -194,7 +194,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
         {/* Tip */}
         <g
           pointerEvents="bounding-box"
-            className="group cursor-pointer transition-transform duration-200 transform-gpu hover:scale-110"
+            className="group cursor-pointer transition-transform duration-200 transform-gpu hover:-translate-y-1"
           filter={greenGlow('tip')}
           onMouseOver={() => setHoverPart('tip')}
           onMouseOut={() => setHoverPart(null)}

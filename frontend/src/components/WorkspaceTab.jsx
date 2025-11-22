@@ -442,14 +442,7 @@ export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset
               <img 
                 src={theme === 'dark' ? `/icons/${section.iconName}-White.svg` : `/icons/${section.iconName}-Black.svg`}
                 alt={section.label}
-                className={`w-5 h-5 object-contain transition-all duration-300 ${
-                  activeSection === section.id ? 'brightness-0 saturate-100' : ''
-                }`}
-                style={activeSection === section.id ? {
-                  filter: theme === 'dark' 
-                    ? 'brightness(0) saturate(100%) invert(71%) sepia(86%) saturate(4363%) hue-rotate(359deg) brightness(102%) contrast(101%)'
-                    : 'brightness(0) saturate(100%) invert(55%) sepia(93%) saturate(3281%) hue-rotate(359deg) brightness(101%) contrast(101%)'
-                } : {}}
+                className="w-5 h-5 object-contain"
               />
               {section.label}
             </button>
