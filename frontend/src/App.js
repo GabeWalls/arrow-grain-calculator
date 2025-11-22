@@ -94,7 +94,7 @@ function App() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`px-4 py-2.5 rounded-lg font-medium whitespace-nowrap flex items-center gap-2 relative overflow-hidden transition-all duration-300 ease-out flex-shrink-0 ${
                     activeTab === tab.id
-                      ? 'bg-gradient-to-r from-blaze to-blaze-700 text-white shadow-lg transform scale-105 hover:scale-110 hover:shadow-xl'
+                      ? 'bg-gradient-to-r from-blaze to-blaze-700 text-black dark:text-white shadow-lg transform scale-105 hover:scale-110 hover:shadow-xl'
                       : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 shadow-sm hover:shadow-md hover:scale-102 hover:bg-gray-200 dark:hover:bg-gray-700 active:scale-95'
                   }`}
                 >
