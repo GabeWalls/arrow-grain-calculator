@@ -72,6 +72,7 @@ const BUILD_COLORS_BORDER = [
 ];
 
 export default function CompareTab({ savedBuilds }) {
+  const { theme } = useTheme();
   const [selectedBuilds, setSelectedBuilds] = useState([]);
   const [buildsToCompare, setBuildsToCompare] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
