@@ -1,9 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useTheme } from '../ThemeContext';
+
+// Helper component to display animal silhouettes
+const AnimalSilhouette = ({ animal, className = 'w-8 h-8' }) => {
+  const { theme } = useTheme();
+  if (!animal) return null;
+  
+  const isDark = theme === 'dark';
+  // Map animal names to file names
+  const animalNameMap = {
+    'deer': 'Deer',
+    'elk': 'Elk',
+    'bear': 'Bear',
+    'moose': 'Moose',
+    'turkey': 'Turkey',
+    'hogs': 'Boar', // Wild Hog maps to Boar
+    'boar': 'Boar',
+    'caribou': 'Caribou'
+  };
+  
+  const animalName = animalNameMap[animal.toLowerCase()] || (animal.charAt(0).toUpperCase() + animal.slice(1).replace(/s$/, ''));
+  const silhouettePath = `/silhouettes/${animalName}-${isDark ? 'White' : 'Black'}.svg`;
+  
+  return (
+    <img 
+      src={silhouettePath} 
+      alt={animal}
+      className={className}
+      title={animal.charAt(0).toUpperCase() + animal.slice(1).replace(/s$/, '')}
+      onError={(e) => { 
+        console.warn(`Failed to load silhouette for ${animal}: ${silhouettePath}`);
+        e.target.style.display = 'none'; 
+      }}
+    />
+  );
+};
 
 // Color palette for builds
 const BUILD_COLORS = [
-  'bg-blue-500 dark:bg-blue-400',
+  'bg-blue-500 dark:bg-gray-600',
   'bg-green-500 dark:bg-green-400',
   'bg-orange-500 dark:bg-orange-400',
   'bg-purple-500 dark:bg-purple-400',
@@ -14,7 +50,7 @@ const BUILD_COLORS = [
 ];
 
 const BUILD_COLORS_TEXT = [
-  'text-blue-600 dark:text-blue-400',
+  'text-blue-600 dark:text-gray-300',
   'text-green-600 dark:text-green-400',
   'text-orange-600 dark:text-orange-400',
   'text-purple-600 dark:text-purple-400',
@@ -25,7 +61,7 @@ const BUILD_COLORS_TEXT = [
 ];
 
 const BUILD_COLORS_BORDER = [
-  'border-blue-500 dark:border-blue-400',
+  'border-blue-500 dark:border-gray-600',
   'border-green-500 dark:border-green-400',
   'border-orange-500 dark:border-orange-400',
   'border-purple-500 dark:border-purple-400',
@@ -169,7 +205,7 @@ export default function CompareTab({ savedBuilds }) {
         {selectedBuilds.length > 0 && (
           <button
             onClick={clearSelection}
-            className="px-3 py-1.5 text-sm bg-gray-500 hover:bg-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 text-white rounded shadow transition-colors"
+            className="px-3 py-1.5 text-sm bg-gray-500 hover:bg-gray-600 active:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:active:bg-gray-800 text-white rounded shadow transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform"
           >
             Clear ({selectedBuilds.length})
           </button>
@@ -178,16 +214,17 @@ export default function CompareTab({ savedBuilds }) {
 
       {/* Selected Builds Summary Bar */}
       {selectedBuilds.length > 0 && (
-        <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+        <div className="mb-4 p-3 bg-blue-50 dark:bg-gray-800/40 border border-blue-200 dark:border-gray-700 rounded-lg">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-semibold text-blue-900 dark:text-blue-200">Selected:</span>
+            <span className="text-sm font-semibold text-blue-900 dark:text-gray-200">Selected:</span>
             {selectedBuildObjects.map((build, index) => {
               const typeLabel = (build.buildType ?? (build.arrowLength <= 24 ? 'bolt' : 'arrow')) === 'bolt' ? 'B' : 'A';
               return (
-                <div
-                  key={build._id}
-                  className={`flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium ${BUILD_COLORS[index % BUILD_COLORS.length]} text-white`}
-                >
+              <div
+                key={build._id}
+                className={`flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium ${BUILD_COLORS[index % BUILD_COLORS.length]} text-white`}
+              >
+                  {build.animal && <AnimalSilhouette animal={build.animal} className="w-4 h-4" />}
                   <span className="font-bold">{typeLabel}</span>
                   <span className="truncate max-w-[100px]">{build.name}</span>
                   <button
@@ -262,7 +299,7 @@ export default function CompareTab({ savedBuilds }) {
                   className={`p-2 rounded border-2 cursor-pointer transition transform ${
                     isSelected
                       ? `${colorClass} bg-opacity-10 dark:bg-opacity-20 scale-105`
-                      : 'border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-700'
+                      : 'border-gray-200 dark:border-gray-600 hover:border-blaze-400 dark:hover:border-gray-700'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-1 mb-1">
@@ -272,11 +309,14 @@ export default function CompareTab({ savedBuilds }) {
                     )}
                   </div>
                   <div className="flex items-center gap-1 mb-1">
+                    {build.animal && (
+                      <AnimalSilhouette animal={build.animal} className="w-5 h-5" />
+                    )}
                     <span
                       className={`text-[10px] px-1.5 py-0.5 rounded font-semibold ${
                         isBolt
                           ? 'bg-orange-500 dark:bg-orange-600/30 text-white dark:text-orange-200'
-                          : 'bg-green-600 dark:bg-green-600/30 text-white dark:text-green-200'
+                          : 'bg-blaze dark:bg-blaze/70 text-white dark:text-blaze-100'
                       }`}
                     >
                       {typeLabel.charAt(0)}
@@ -405,8 +445,8 @@ export default function CompareTab({ savedBuilds }) {
       )}
 
       {buildsToCompare.length === 0 && builds.length > 0 && (
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 text-center">
-          <p className="text-blue-800 dark:text-blue-200">
+        <div className="bg-blue-50 dark:bg-gray-800/40 border border-blue-200 dark:border-gray-700 rounded-lg p-6 text-center">
+          <p className="text-blue-800 dark:text-gray-200">
             Select builds above to see a visual comparison with bar charts and detailed metrics.
           </p>
         </div>

@@ -1,20 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useTheme } from '../ThemeContext';
 import PresetsTab from './PresetsTab';
 import ComponentLibraryTab from './ComponentLibraryTab';
 import CompareTab from './CompareTab';
 
+// Helper component to display animal silhouettes
+const AnimalSilhouette = ({ animal, className = 'w-8 h-8' }) => {
+  const { theme } = useTheme();
+  if (!animal) return null;
+  
+  const isDark = theme === 'dark';
+  // Map animal names to file names
+  const animalNameMap = {
+    'deer': 'Deer',
+    'elk': 'Elk',
+    'bear': 'Bear',
+    'moose': 'Moose',
+    'turkey': 'Turkey',
+    'hogs': 'Boar', // Wild Hog maps to Boar
+    'boar': 'Boar',
+    'caribou': 'Caribou'
+  };
+  
+  const animalName = animalNameMap[animal.toLowerCase()] || (animal.charAt(0).toUpperCase() + animal.slice(1).replace(/s$/, ''));
+  const silhouettePath = `/silhouettes/${animalName}-${isDark ? 'White' : 'Black'}.svg`;
+  
+  return (
+    <img 
+      src={silhouettePath} 
+      alt={animal}
+      className={className}
+      title={animal.charAt(0).toUpperCase() + animal.slice(1).replace(/s$/, '')}
+      onError={(e) => { 
+        console.warn(`Failed to load silhouette for ${animal}: ${silhouettePath}`);
+        e.target.style.display = 'none'; 
+      }}
+    />
+  );
+};
+
 export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset }) {
+  const { theme } = useTheme();
   const [activeSection, setActiveSection] = useState('presets');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
 
   const sections = [
-    { id: 'presets', label: 'Presets', icon: '🎯' },
-    { id: 'library', label: 'Component Library', icon: '📚' },
-    { id: 'saved', label: 'Saved Builds', icon: '💾' },
-    { id: 'compare', label: 'Compare', icon: '⚖️' },
-    { id: 'export', label: 'Export', icon: '📄' }
+    { id: 'presets', label: 'Presets', iconName: 'Presets' },
+    { id: 'library', label: 'Component Library', iconName: 'Library' },
+    { id: 'saved', label: 'Saved Builds', iconName: 'Builds' },
+    { id: 'compare', label: 'Compare', iconName: 'Compare' },
+    { id: 'export', label: 'Export', iconName: 'Export' }
   ];
 
   useEffect(() => {
@@ -93,11 +130,16 @@ export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset
                     <div className="flex justify-between items-center mb-3">
                       <div className="font-semibold truncate">{build.name}</div>
                       <div className="flex items-center gap-3">
+                        {build.animal && (
+                          <div className="flex items-center justify-center w-8 h-8 bg-gray-100 dark:bg-gray-600 rounded-full p-1">
+                            <AnimalSilhouette animal={build.animal} className="w-6 h-6" />
+                          </div>
+                        )}
                         <span
                           className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
                             isBolt
                               ? 'bg-orange-500 dark:bg-orange-600/30 border border-orange-600 dark:border-orange-500 text-white dark:text-orange-200'
-                              : 'bg-green-600 dark:bg-green-600/30 border border-green-600 dark:border-green-500 text-white dark:text-green-200'
+                              : 'bg-blaze dark:bg-blaze/70 border border-blaze dark:border-blaze-600 text-white dark:text-blaze-100'
                           }`}
                         >
                           {typeLabel}
@@ -116,13 +158,13 @@ export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleLoadBuild(build)}
-                        className="flex-1 bg-green-600 hover:bg-green-700 px-3 py-2 rounded text-sm text-white transition-colors"
+                        className="flex-1 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 px-3 py-2 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform"
                       >
                         Load
                       </button>
                       <button
                         onClick={() => handleDeleteBuild(build._id)}
-                        className="bg-red-600 hover:bg-red-700 px-3 py-2 rounded text-sm text-white transition-colors"
+                        className="bg-red-600 hover:bg-red-700 active:bg-red-800 px-3 py-2 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform"
                       >
                         Delete
                       </button>
@@ -282,11 +324,11 @@ export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset
           Export your builds as text files, JSON, or print them for physical records.
         </p>
 
-        <div className="mb-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+        <div className="mb-6 bg-blue-50 dark:bg-gray-800/40 p-4 rounded-lg border border-blue-200 dark:border-gray-700">
           <button
             onClick={exportAllToJSON}
             disabled={builds.length === 0}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded shadow transition-colors"
+            className="px-4 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded shadow transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform disabled:hover:scale-100 disabled:hover:shadow-none"
           >
             Export All Builds (JSON)
           </button>
@@ -372,13 +414,17 @@ export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset
             <button
               key={section.id}
               onClick={() => setActiveSection(section.id)}
-              className={`px-4 py-3 font-medium transition-colors whitespace-nowrap border-b-2 ${
+              className={`px-4 py-3 font-medium transition-all duration-300 ease-out whitespace-nowrap border-b-2 flex items-center gap-2 ${
                 activeSection === section.id
-                  ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                  : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                  ? 'border-blaze text-blaze dark:text-blaze-400'
+                  : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
-              <span className="mr-2">{section.icon}</span>
+              <img 
+                src={theme === 'dark' ? `/icons/${section.iconName}-White.svg` : `/icons/${section.iconName}-Black.svg`}
+                alt={section.label}
+                className="w-5 h-5 object-contain"
+              />
               {section.label}
             </button>
           ))}

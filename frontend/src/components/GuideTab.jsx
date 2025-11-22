@@ -12,7 +12,7 @@ export default function GuideTab() {
             FOC stands for Front of Center and measures how much weight is concentrated toward the front of your arrow. 
             It's calculated as the percentage of the arrow's length that the balance point is ahead of center.
           </p>
-          <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded">
+          <div className="bg-blue-50 dark:bg-gray-800/40 p-4 rounded">
             <p className="text-sm font-semibold mb-2">Optimal FOC Range: 10-20%</p>
             <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1 list-disc list-inside">
               <li><strong>10-12%:</strong> Best for target shooting and 3D archery - excellent flight characteristics</li>

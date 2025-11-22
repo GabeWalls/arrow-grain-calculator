@@ -1,6 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useTheme } from '../ThemeContext';
 import ArrowSVG from '../ArrowSVG';
+
+// Helper component to display animal silhouettes
+const AnimalSilhouette = ({ animal, className = 'w-8 h-8' }) => {
+  const { theme } = useTheme();
+  if (!animal) return null;
+  
+  const isDark = theme === 'dark';
+  // Map animal names to file names (available silhouettes: Bear, Boar, Caribou, Deer, Elk, Moose, Turkey)
+  const animalNameMap = {
+    'deer': 'Deer',
+    'elk': 'Elk',
+    'bear': 'Bear',
+    'moose': 'Moose',
+    'turkey': 'Turkey',
+    'hogs': 'Boar', // Wild Hog - using Boar silhouette
+    'boar': 'Boar',
+    'caribou': 'Caribou'
+  };
+  
+  const animalName = animalNameMap[animal.toLowerCase()] || (animal.charAt(0).toUpperCase() + animal.slice(1).replace(/s$/, ''));
+  const silhouettePath = `/silhouettes/${animalName}-${isDark ? 'White' : 'Black'}.svg`;
+  
+  return (
+    <img 
+      src={silhouettePath} 
+      alt={animal}
+      className={className}
+      title={animal.charAt(0).toUpperCase() + animal.slice(1).replace(/s$/, '')}
+      onError={(e) => { 
+        console.warn(`Failed to load silhouette for ${animal}: ${silhouettePath}`);
+        e.target.style.display = 'none'; 
+      }}
+    />
+  );
+};
 
 // Advanced Calculators Component
 function AdvancedCalculators() {
@@ -50,7 +86,7 @@ function AdvancedCalculators() {
     <div className="mt-12 w-full max-w-4xl border-t border-gray-200 dark:border-gray-700 pt-8">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+        className="w-full flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 ease-out hover:shadow-md hover:scale-[1.01] active:scale-[0.99]"
       >
         <h3 className="text-xl font-bold">Advanced Calculators</h3>
         <svg
@@ -128,9 +164,9 @@ function AdvancedCalculators() {
               </div>
             </div>
             {momentum !== null && (
-              <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded">
-                <div className="text-sm text-gray-600 dark:text-gray-400">Momentum</div>
-                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{momentum} slug-ft/s</div>
+            <div className="mt-4 p-4 bg-blue-50 dark:bg-gray-800/40 rounded">
+              <div className="text-sm text-gray-600 dark:text-gray-400">Momentum</div>
+              <div className="text-2xl font-bold text-blue-600 dark:text-gray-300">{momentum} slug-ft/s</div>
               </div>
             )}
           </div>
@@ -149,6 +185,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
   });
 
   const [buildType, setBuildType] = useState('arrow');
+  const [animal, setAnimal] = useState('');
   const [gpi, setGpi] = useState('');
   const [arrowLength, setArrowLength] = useState('10.00');
   const [shaftGrains, setShaftGrains] = useState(0);
@@ -161,6 +198,17 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
   const [showSaved, setShowSaved] = useState(true);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
+
+  const ANIMALS = [
+    { value: '', label: 'None' },
+    { value: 'deer', label: 'Deer' },
+    { value: 'elk', label: 'Elk' },
+    { value: 'bear', label: 'Bear' },
+    { value: 'moose', label: 'Moose' },
+    { value: 'turkey', label: 'Turkey' },
+    { value: 'hogs', label: 'Wild Hog' },
+    { value: 'caribou', label: 'Caribou' }
+  ];
 
   useEffect(() => {
     const totalPages = Math.max(1, Math.ceil((Array.isArray(savedBuilds) ? savedBuilds.length : 0) / pageSize));
@@ -180,6 +228,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
     setEditingBuildId(build._id);
     setActivePart(null);
     setBuildType(build.buildType === 'bolt' ? 'bolt' : 'arrow');
+    setAnimal(build.animal || '');
   };
 
   // Listen for preset load events
@@ -202,6 +251,8 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
           setShaftGrains(shaftComp.grains.toString());
         }
         setBuildName(`${preset.name} (Preset)`);
+        setAnimal(preset.animal || '');
+        setBuildType(preset.buildType || 'arrow');
       }
     };
 
@@ -284,7 +335,8 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
       components: formattedComponents,
       gpi: Number(gpi),
       arrowLength: Number(arrowLength),
-      buildType
+      buildType,
+      animal: animal || null
     };
 
     try {
@@ -310,6 +362,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
     setBuildName('');
     setEditingBuildId(null);
     setActivePart(null);
+    setAnimal('');
   };
 
   const fetchBuilds = async () => {
@@ -397,7 +450,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
   const segClass = (isActive) =>
     `px-4 py-1 rounded-full border-2 transition ${
       isActive 
-        ? 'bg-blue-600 dark:bg-blue-600 text-white dark:text-white border-blue-600 dark:border-blue-600 font-semibold' 
+        ? 'bg-blaze dark:bg-blaze text-white dark:text-white border-blaze dark:border-blaze font-semibold' 
         : 'border-gray-400 dark:border-gray-500 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 bg-white dark:bg-gray-700'
     }`;
 
@@ -471,7 +524,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
         </div>
 
         <div className="col-span-5 flex justify-center mt-6">
-          <button type="submit" className="px-6 py-2 bg-green-600 hover:bg-green-700 dark:hover:bg-green-700 rounded shadow text-white">Calculate</button>
+          <button type="submit" className="px-6 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform">Calculate</button>
         </div>
       </form>
 
@@ -481,11 +534,23 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
       <div className="col-span-5 flex flex-col items-center mt-6">
         <input type="text" placeholder="Build Name" value={buildName} onChange={(e) => setBuildName(e.target.value)}
                className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full max-w-md mb-2" />
+        <div className="w-full max-w-md mb-2">
+          <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Target Animal</label>
+          <select 
+            value={animal} 
+            onChange={(e) => setAnimal(e.target.value)}
+            className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full"
+          >
+            {ANIMALS.map(a => (
+              <option key={a.value} value={a.value}>{a.label}</option>
+            ))}
+          </select>
+        </div>
         <div className="flex gap-4">
-          <button type="button" onClick={handleSaveBuild} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded shadow text-white">
+          <button type="button" onClick={handleSaveBuild} className="px-6 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform">
             {editingBuildId ? 'Update Build' : 'Save Build'}
           </button>
-          <button type="button" onClick={handleNewBuild} className="px-6 py-2 bg-gray-500 dark:bg-gray-500 hover:bg-gray-600 dark:hover:bg-gray-600 rounded shadow text-white">
+          <button type="button" onClick={handleNewBuild} className="px-6 py-2 bg-gray-500 dark:bg-gray-500 hover:bg-gray-600 dark:hover:bg-gray-600 active:bg-gray-700 dark:active:bg-gray-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform">
             New Build
           </button>
         </div>
@@ -517,11 +582,16 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
                       <div className="flex justify-between items-center">
                         <div className="font-semibold truncate">{build.name}</div>
                         <div className="flex items-center gap-3">
+                          {build.animal && (
+                            <div className="flex items-center justify-center w-8 h-8 bg-gray-100 dark:bg-gray-600 rounded-full p-1">
+                              <AnimalSilhouette animal={build.animal} className="w-6 h-6" />
+                            </div>
+                          )}
                           <span
                             className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
                               isBolt
                                 ? 'bg-orange-500 dark:bg-orange-600/30 border border-orange-600 dark:border-orange-500 text-white dark:text-orange-200'
-                                : 'bg-green-600 dark:bg-green-600/30 border border-green-600 dark:border-green-500 text-white dark:text-green-200'
+                                : 'bg-blaze dark:bg-blaze/70 border border-blaze dark:border-blaze-600 text-white dark:text-blaze-100'
                             }`}
                             title="Build Type"
                           >
@@ -536,8 +606,8 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
                         ))}
                       </div>
                       <div className="mt-3 flex gap-2">
-                        <button onClick={() => handleLoadBuild(build)} className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm text-white">Load</button>
-                        <button onClick={() => handleDeleteBuild(build._id)} className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm text-white">Delete</button>
+                        <button onClick={() => handleLoadBuild(build)} className="bg-green-600 hover:bg-green-700 active:bg-green-800 px-3 py-1 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform">Load</button>
+                        <button onClick={() => handleDeleteBuild(build._id)} className="bg-red-600 hover:bg-red-700 active:bg-red-800 px-3 py-1 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform">Delete</button>
                       </div>
                     </div>
                   );

@@ -88,11 +88,11 @@ export default function ExportTab({ savedBuilds }) {
         Export your builds as text files, JSON, or print them for physical records.
       </p>
 
-      <div className="mb-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+      <div className="mb-6 bg-blue-50 dark:bg-gray-800/40 p-4 rounded-lg border border-blue-200 dark:border-gray-700">
         <button
           onClick={exportAllToJSON}
           disabled={builds.length === 0}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded shadow"
+          className="px-4 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded shadow transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform disabled:hover:scale-100 disabled:hover:shadow-none"
         >
           Export All Builds (JSON)
         </button>

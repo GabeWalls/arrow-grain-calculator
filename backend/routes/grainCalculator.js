@@ -16,7 +16,7 @@ function normalizeComponents(components) {
 
 // ---------------------- Save ----------------------
 router.post('/save', async (req, res) => {
-  let { name, components, gpi, arrowLength } = req.body;
+  let { name, components, gpi, arrowLength, buildType, animal } = req.body;
   if (!name || !Array.isArray(components)) {
     return res.status(400).json({ error: 'Invalid input' });
   }
@@ -29,7 +29,9 @@ router.post('/save', async (req, res) => {
       components,
       totalGrains,
       gpi,
-      arrowLength
+      arrowLength,
+      buildType: buildType || (arrowLength <= 24 ? 'bolt' : 'arrow'),
+      animal: animal || null
     });
     res.json({ message: 'Build saved', build });
   } catch (err) {
@@ -103,7 +105,7 @@ router.put('/builds/:id', async (req, res) => {
   if (!mongoose.isValidObjectId(req.params.id)) {
     return res.status(400).json({ error: 'Invalid id' });
   }
-  let { name, components, gpi, arrowLength } = req.body;
+  let { name, components, gpi, arrowLength, buildType, animal } = req.body;
   if (!name || !Array.isArray(components)) {
     return res.status(400).json({ error: 'Invalid input' });
   }
@@ -113,7 +115,7 @@ router.put('/builds/:id', async (req, res) => {
   try {
     const updated = await ArrowBuild.findByIdAndUpdate(
       req.params.id,
-      { name: name.trim(), components, totalGrains, gpi, arrowLength },
+      { name: name.trim(), components, totalGrains, gpi, arrowLength, buildType, animal },
       { new: true, runValidators: true }
     ).lean();
     if (!updated) return res.status(404).json({ error: 'Build not found' });

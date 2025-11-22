@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #fff;
+        stroke-miterlimit: 10;
+        stroke-width: 28px;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M505.43,162.44l47.46,1.23c1.51,0,2.73,1.22,2.73,2.73v317.96c0,1.51-1.22,2.73-2.73,2.73H47.11c-1.51,0-2.73-1.22-2.73-2.73V166.39c0-1.51,1.22-2.73,2.73-2.73h41.64"/>
+  <path class="cls-1" d="M297.27,488.82l-211-57.09c-1.51,0-2.73-1.22-2.73-2.73l-.91-317.58c0-1.51,1.22-2.73,2.73-2.73l211.73,49.88c1.51,0,2.73,1.22,2.73,2.73l.19,324.78c0,1.51-1.22,2.73-2.73,2.73Z"/>
+  <path class="cls-1" d="M300.19,161.31l-.19,324.78c0,1.51,1.21,2.73,2.71,2.73l209.74-57.09c1.5,0,2.71-1.22,2.71-2.73l.91-317.58c0-1.51-1.21-2.73-2.71-2.73l-210.46,49.88c-1.5,0-2.71,1.22-2.71,2.73"/>
+  <rect class="cls-2" x="122.82" y="211.23" width="136.56" height="27.55" rx="13.77" ry="13.77" transform="translate(63.88 -41.38) rotate(14.81)"/>
+  <rect class="cls-2" x="123.04" y="281.06" width="136.56" height="27.55" rx="13.77" ry="13.77" transform="translate(81.74 -39.12) rotate(14.81)"/>
+  <rect class="cls-2" x="339.76" y="281.69" width="136.56" height="27.55" rx="13.77" ry="13.77" transform="translate(-64.13 119.82) rotate(-15.5)"/>
+  <rect class="cls-2" x="339.76" y="211.23" width="136.56" height="27.55" rx="13.77" ry="13.77" transform="translate(-45.3 117.25) rotate(-15.5)"/>
+  <rect class="cls-2" x="121.95" y="350.89" width="136.56" height="27.55" rx="13.77" ry="13.77" transform="translate(99.56 -36.52) rotate(14.81)"/>
+  <ellipse class="cls-2" cx="299" cy="495.83" rx="42.99" ry="14.38"/>
+</svg>

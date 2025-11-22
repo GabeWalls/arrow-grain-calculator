@@ -78,10 +78,10 @@ export default function ComponentLibraryTab({ onSelectComponent }) {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded capitalize transition ${
+              className={`px-4 py-2 rounded capitalize transition-all duration-300 ease-out ${
                 selectedCategory === cat
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                  ? 'bg-blaze text-white shadow-md transform scale-105'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 hover:shadow-sm hover:scale-102 active:scale-95'
               }`}
             >
               {cat}
@@ -107,7 +107,7 @@ export default function ComponentLibraryTab({ onSelectComponent }) {
           >
             <div className="flex justify-between items-start mb-2">
               <h3 className="font-semibold text-lg">{component.name}</h3>
-              <span className="text-xs px-2 py-1 rounded bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+              <span className="text-xs px-2 py-1 rounded bg-blue-100 dark:bg-gray-800 text-blue-800 dark:text-gray-200">
                 {component.brand}
               </span>
             </div>

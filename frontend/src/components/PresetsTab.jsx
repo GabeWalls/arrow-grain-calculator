@@ -1,58 +1,39 @@
 import React, { useState } from 'react';
+import { useTheme } from '../ThemeContext';
 
-// Animal SVG silhouettes
-const AnimalSilhouettes = {
-  deer: (
-    <svg viewBox="0 0 100 100" className="w-16 h-16">
-      <path d="M50,20 L45,35 L40,50 L35,65 L40,75 L50,80 L60,75 L65,65 L60,50 L55,35 L50,20 Z M50,80 L50,90 M45,35 L30,30 L20,40 L25,50 M55,35 L70,30 L80,40 L75,50" 
-            fill="currentColor" stroke="none"/>
-    </svg>
-  ),
-  elk: (
-    <svg viewBox="0 0 100 100" className="w-16 h-16">
-      <path d="M50,15 L45,35 L40,55 L35,75 L40,85 L50,90 L60,85 L65,75 L60,55 L55,35 L50,15 Z M50,90 L50,100 M40,55 L25,50 L15,60 L20,70 M60,55 L75,50 L85,60 L80,70 M45,35 L35,25 L25,35 M55,35 L65,25 L75,35" 
-            fill="currentColor" stroke="none"/>
-    </svg>
-  ),
-  bear: (
-    <svg viewBox="0 0 100 100" className="w-16 h-16">
-      <circle cx="50" cy="40" r="25" fill="currentColor"/>
-      <ellipse cx="50" cy="75" rx="30" ry="25" fill="currentColor"/>
-      <circle cx="42" cy="35" r="5" fill="currentColor"/>
-      <circle cx="58" cy="35" r="5" fill="currentColor"/>
-      <ellipse cx="50" cy="45" rx="8" ry="5" fill="currentColor"/>
-    </svg>
-  ),
-  moose: (
-    <svg viewBox="0 0 100 100" className="w-16 h-16">
-      <path d="M50,10 L48,25 L45,45 L42,70 L45,85 L50,95 L55,85 L58,70 L55,45 L52,25 L50,10 Z M50,95 L50,100 M42,70 L25,65 L15,75 L18,85 M58,70 L75,65 L85,75 L82,85 M48,25 L35,15 L28,28 M52,25 L65,15 L72,28 M45,45 L38,40 L32,48 M55,45 L62,40 L68,48" 
-            fill="currentColor" stroke="none"/>
-    </svg>
-  ),
-  turkey: (
-    <svg viewBox="0 0 100 100" className="w-16 h-16">
-      <ellipse cx="50" cy="50" rx="20" ry="25" fill="currentColor"/>
-      <circle cx="45" cy="45" r="3" fill="white"/>
-      <circle cx="55" cy="45" r="3" fill="white"/>
-      <path d="M50,55 L50,65 M45,60 L55,60" stroke="currentColor" strokeWidth="2" fill="none"/>
-      <path d="M35,40 L25,35 L20,45 L22,50 M65,40 L75,35 L80,45 L78,50" fill="currentColor"/>
-    </svg>
-  ),
-  hogs: (
-    <svg viewBox="0 0 100 100" className="w-16 h-16">
-      <ellipse cx="50" cy="50" rx="25" ry="20" fill="currentColor"/>
-      <circle cx="42" cy="45" r="3" fill="currentColor"/>
-      <circle cx="58" cy="45" r="3" fill="currentColor"/>
-      <ellipse cx="50" cy="55" rx="10" ry="8" fill="currentColor"/>
-      <path d="M30,50 L20,48 L18,52 L22,55 M70,50 L80,48 L82,52 L78,55" fill="currentColor"/>
-    </svg>
-  ),
-  caribou: (
-    <svg viewBox="0 0 100 100" className="w-16 h-16">
-      <path d="M50,15 L48,30 L45,50 L42,70 L45,82 L50,88 L55,82 L58,70 L55,50 L52,30 L50,15 Z M50,88 L50,95 M42,70 L28,65 L20,72 L22,80 M58,70 L72,65 L80,72 L78,80 M48,30 L38,20 L30,28 M52,30 L62,20 L70,28" 
-            fill="currentColor" stroke="none"/>
-    </svg>
-  )
+// Helper component to display animal silhouettes
+const AnimalSilhouette = ({ animal, className = 'w-16 h-16' }) => {
+  const { theme } = useTheme();
+  if (!animal) return null;
+  
+  const isDark = theme === 'dark';
+  // Map animal names to file names
+  const animalNameMap = {
+    'deer': 'Deer',
+    'elk': 'Elk',
+    'bear': 'Bear',
+    'moose': 'Moose',
+    'turkey': 'Turkey',
+    'hogs': 'Boar', // Wild Hog maps to Boar
+    'boar': 'Boar',
+    'caribou': 'Caribou'
+  };
+  
+  const animalName = animalNameMap[animal.toLowerCase()] || (animal.charAt(0).toUpperCase() + animal.slice(1).replace(/s$/, ''));
+  const silhouettePath = `/silhouettes/${animalName}-${isDark ? 'White' : 'Black'}.svg`;
+  
+  return (
+    <img 
+      src={silhouettePath} 
+      alt={animal}
+      className={className}
+      title={animal.charAt(0).toUpperCase() + animal.slice(1).replace(/s$/, '')}
+      onError={(e) => { 
+        console.warn(`Failed to load silhouette for ${animal}: ${silhouettePath}`);
+        e.target.style.display = 'none'; 
+      }}
+    />
+  );
 };
 
 // Expanded presets with 3 variants per species (Light, Medium, Heavy)
@@ -62,6 +43,7 @@ const BIG_GAME_PRESETS = {
       name: 'Deer - Light',
       variant: 'Light',
       buildType: 'arrow',
+      animal: 'deer',
       components: [
         { name: 'knock', grains: 12 },
         { name: 'fletching', grains: 22 },
@@ -79,6 +61,7 @@ const BIG_GAME_PRESETS = {
       name: 'Deer - Medium',
       variant: 'Medium',
       buildType: 'arrow',
+      animal: 'deer',
       components: [
         { name: 'knock', grains: 15 },
         { name: 'fletching', grains: 25 },
@@ -96,6 +79,7 @@ const BIG_GAME_PRESETS = {
       name: 'Deer - Heavy',
       variant: 'Heavy',
       buildType: 'arrow',
+      animal: 'deer',
       components: [
         { name: 'knock', grains: 18 },
         { name: 'fletching', grains: 28 },
@@ -115,6 +99,7 @@ const BIG_GAME_PRESETS = {
       name: 'Elk - Light',
       variant: 'Light',
       buildType: 'arrow',
+      animal: 'elk',
       components: [
         { name: 'knock', grains: 16 },
         { name: 'fletching', grains: 28 },
@@ -132,6 +117,7 @@ const BIG_GAME_PRESETS = {
       name: 'Elk - Medium',
       variant: 'Medium',
       buildType: 'arrow',
+      animal: 'elk',
       components: [
         { name: 'knock', grains: 18 },
         { name: 'fletching', grains: 30 },
@@ -149,6 +135,7 @@ const BIG_GAME_PRESETS = {
       name: 'Elk - Heavy',
       variant: 'Heavy',
       buildType: 'arrow',
+      animal: 'elk',
       components: [
         { name: 'knock', grains: 20 },
         { name: 'fletching', grains: 35 },
@@ -168,6 +155,7 @@ const BIG_GAME_PRESETS = {
       name: 'Bear - Light',
       variant: 'Light',
       buildType: 'arrow',
+      animal: 'bear',
       components: [
         { name: 'knock', grains: 18 },
         { name: 'fletching', grains: 32 },
@@ -185,6 +173,7 @@ const BIG_GAME_PRESETS = {
       name: 'Bear - Medium',
       variant: 'Medium',
       buildType: 'arrow',
+      animal: 'bear',
       components: [
         { name: 'knock', grains: 20 },
         { name: 'fletching', grains: 35 },
@@ -202,6 +191,7 @@ const BIG_GAME_PRESETS = {
       name: 'Bear - Heavy',
       variant: 'Heavy',
       buildType: 'arrow',
+      animal: 'bear',
       components: [
         { name: 'knock', grains: 22 },
         { name: 'fletching', grains: 38 },
@@ -221,6 +211,7 @@ const BIG_GAME_PRESETS = {
       name: 'Moose - Light',
       variant: 'Light',
       buildType: 'arrow',
+      animal: 'moose',
       components: [
         { name: 'knock', grains: 18 },
         { name: 'fletching', grains: 30 },
@@ -238,6 +229,7 @@ const BIG_GAME_PRESETS = {
       name: 'Moose - Medium',
       variant: 'Medium',
       buildType: 'arrow',
+      animal: 'moose',
       components: [
         { name: 'knock', grains: 20 },
         { name: 'fletching', grains: 35 },
@@ -255,6 +247,7 @@ const BIG_GAME_PRESETS = {
       name: 'Moose - Heavy',
       variant: 'Heavy',
       buildType: 'arrow',
+      animal: 'moose',
       components: [
         { name: 'knock', grains: 22 },
         { name: 'fletching', grains: 38 },
@@ -274,6 +267,7 @@ const BIG_GAME_PRESETS = {
       name: 'Turkey - Light',
       variant: 'Light',
       buildType: 'arrow',
+      animal: 'turkey',
       components: [
         { name: 'knock', grains: 10 },
         { name: 'fletching', grains: 18 },
@@ -291,6 +285,7 @@ const BIG_GAME_PRESETS = {
       name: 'Turkey - Medium',
       variant: 'Medium',
       buildType: 'arrow',
+      animal: 'turkey',
       components: [
         { name: 'knock', grains: 12 },
         { name: 'fletching', grains: 20 },
@@ -308,6 +303,7 @@ const BIG_GAME_PRESETS = {
       name: 'Turkey - Heavy',
       variant: 'Heavy',
       buildType: 'arrow',
+      animal: 'turkey',
       components: [
         { name: 'knock', grains: 14 },
         { name: 'fletching', grains: 22 },
@@ -327,6 +323,7 @@ const BIG_GAME_PRESETS = {
       name: 'Wild Hog - Light',
       variant: 'Light',
       buildType: 'arrow',
+      animal: 'hogs',
       components: [
         { name: 'knock', grains: 14 },
         { name: 'fletching', grains: 25 },
@@ -344,6 +341,7 @@ const BIG_GAME_PRESETS = {
       name: 'Wild Hog - Medium',
       variant: 'Medium',
       buildType: 'arrow',
+      animal: 'hogs',
       components: [
         { name: 'knock', grains: 16 },
         { name: 'fletching', grains: 28 },
@@ -361,6 +359,7 @@ const BIG_GAME_PRESETS = {
       name: 'Wild Hog - Heavy',
       variant: 'Heavy',
       buildType: 'arrow',
+      animal: 'hogs',
       components: [
         { name: 'knock', grains: 18 },
         { name: 'fletching', grains: 32 },
@@ -380,6 +379,7 @@ const BIG_GAME_PRESETS = {
       name: 'Caribou - Light',
       variant: 'Light',
       buildType: 'arrow',
+      animal: 'caribou',
       components: [
         { name: 'knock', grains: 15 },
         { name: 'fletching', grains: 27 },
@@ -397,6 +397,7 @@ const BIG_GAME_PRESETS = {
       name: 'Caribou - Medium',
       variant: 'Medium',
       buildType: 'arrow',
+      animal: 'caribou',
       components: [
         { name: 'knock', grains: 17 },
         { name: 'fletching', grains: 30 },
@@ -414,6 +415,7 @@ const BIG_GAME_PRESETS = {
       name: 'Caribou - Heavy',
       variant: 'Heavy',
       buildType: 'arrow',
+      animal: 'caribou',
       components: [
         { name: 'knock', grains: 19 },
         { name: 'fletching', grains: 33 },
@@ -431,6 +433,7 @@ const BIG_GAME_PRESETS = {
 };
 
 export default function PresetsTab({ onLoadPreset }) {
+  const { theme } = useTheme();
   const [selectedSpecies, setSelectedSpecies] = useState(null);
 
   const handleLoadPreset = (preset) => {
@@ -440,7 +443,8 @@ export default function PresetsTab({ onLoadPreset }) {
         buildType: preset.buildType,
         components: preset.components,
         gpi: preset.gpi,
-        arrowLength: preset.arrowLength
+        arrowLength: preset.arrowLength,
+        animal: preset.animal || null
       });
     }
   };
@@ -492,17 +496,29 @@ export default function PresetsTab({ onLoadPreset }) {
               <button
                 key={species}
                 onClick={() => setSelectedSpecies(selectedSpecies === species ? null : species)}
-                className={`flex items-center gap-2 px-4 py-3 rounded-lg border-2 transition ${
+                className={`flex items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all duration-300 ease-out relative overflow-hidden ${
                   selectedSpecies === species
-                    ? 'bg-blue-600 border-blue-600 text-white'
-                    : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600'
+                    ? 'bg-blaze border-blaze text-white shadow-lg transform scale-105 hover:scale-110'
+                    : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:shadow-md hover:scale-102 active:scale-95'
                 }`}
-              >
-                <span className="text-gray-600 dark:text-gray-300">
-                  {AnimalSilhouettes[species]}
-                </span>
-                <span className="font-semibold">{speciesName}</span>
-              </button>
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    <AnimalSilhouette animal={species} className="w-12 h-12" />
+                    <span className="font-semibold">{speciesName}</span>
+                  </span>
+                  {selectedSpecies === species && (
+                    <>
+                      {/* Subtle dark gradient overlay in light mode */}
+                      {theme === 'light' && (
+                        <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                      )}
+                      {/* Subtle white gradient overlay in dark mode */}
+                      {theme === 'dark' && (
+                        <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                      )}
+                    </>
+                  )}
+                </button>
             );
           })}
         </div>
@@ -528,9 +544,7 @@ export default function PresetsTab({ onLoadPreset }) {
                 {/* Animal silhouette header */}
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="text-gray-600 dark:text-gray-400">
-                      {AnimalSilhouettes[selectedSpecies]}
-                    </div>
+                    <AnimalSilhouette animal={selectedSpecies} className="w-12 h-12" />
                     <div>
                       <h3 className="text-xl font-bold">{preset.name}</h3>
                       <span className={`text-xs px-2 py-0.5 rounded-full font-semibold border ${variantColors[preset.variant]}`}>
@@ -538,7 +552,7 @@ export default function PresetsTab({ onLoadPreset }) {
                       </span>
                     </div>
                   </div>
-                  <span className="text-xs px-2 py-1 rounded-full bg-green-600 text-white font-semibold">Arrow</span>
+                  <span className="text-xs px-2 py-1 rounded-full bg-blaze text-white font-semibold">Arrow</span>
                 </div>
 
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{preset.description}</p>
@@ -579,7 +593,7 @@ export default function PresetsTab({ onLoadPreset }) {
 
                 <button
                   onClick={() => handleLoadPreset(preset)}
-                  className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow transition-colors font-semibold"
+                  className="w-full px-4 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 text-white rounded shadow font-semibold transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform"
                 >
                   Load Preset
                 </button>

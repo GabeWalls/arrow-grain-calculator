@@ -116,9 +116,9 @@ export default function CalculatorsTab() {
             </div>
           </div>
           {momentum !== null && (
-            <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded">
+            <div className="mt-4 p-4 bg-blue-50 dark:bg-gray-800/40 rounded">
               <div className="text-sm text-gray-600 dark:text-gray-400">Momentum</div>
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{momentum} slug-ft/s</div>
+              <div className="text-2xl font-bold text-blue-600 dark:text-gray-300">{momentum} slug-ft/s</div>
             </div>
           )}
         </div>

@@ -48,6 +48,8 @@ const ArrowBuildSchema = new mongoose.Schema(
 
     gpi: { type: Number, required: true, min: 0 },
     arrowLength: { type: Number, required: true, min: 10, max: 40 },
+    buildType: { type: String, enum: ['arrow', 'bolt'], default: 'arrow' },
+    animal: { type: String, enum: ['deer', 'elk', 'bear', 'moose', 'turkey', 'hogs', 'caribou', null], default: null },
   },
   {
     timestamps: true, // creates createdAt/updatedAt
