@@ -40,8 +40,8 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
         >
           <defs>
             <filter id="bolt-glow" x="-40%" y="-40%" width="180%" height="180%" colorInterpolationFilters="sRGB">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur" />
-              <feFlood floodColor="#FF6700" floodOpacity="0.90" />
+              <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
+              <feFlood floodColor="#FF6700" floodOpacity="0.50" />
               <feComposite in2="blur" operator="in" result="glow" />
               <feMerge>
                 <feMergeNode in="glow" />
@@ -83,7 +83,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
 
           {/* Knock */}
           <path
-            className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:scale-110`}
+            className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-y-1`}
             filter={boltGlow('knock')}
             d="M343.46,102.88h-47.64c-1.46,0-2.47,1.46-1.95,2.83l4.74,12.45c.84,2.2.84,4.63,0,6.82l-4.67,12.27c-.55,1.45.52,3.01,2.07,3.01h47.44v-37.38Z"
             onMouseOver={() => setHoverPart('knock')}
@@ -112,7 +112,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
 
           {/* Insert */}
           <rect
-            className={`${hot('insert') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:scale-110`}
+            className={`${hot('insert') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-y-1`}
             filter={boltGlow('insert')}
             x={BOLT_INSERT_X} y={BOLT_INSERT_Y} width={BOLT_INSERT_W} height={BOLT_INSERT_H}
             onMouseOver={() => setHoverPart('insert')}
@@ -140,8 +140,8 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
       >
         <defs>
             <filter id="green-glow" x="-40%" y="-40%" width="180%" height="180%" colorInterpolationFilters="sRGB">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur" />
-              <feFlood floodColor="#FF6700" floodOpacity="0.90" />
+              <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
+              <feFlood floodColor="#FF6700" floodOpacity="0.50" />
               <feComposite in2="blur" operator="in" result="glow" />
               <feMerge>
                 <feMergeNode in="glow" />
