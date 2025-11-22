@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from './ThemeContext';
 
 /**
  * ArrowSVG
@@ -8,8 +9,10 @@ import React, { useState } from 'react';
  *               with hover lift and glow, and no always-on shadow.
  */
 export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mode = 'arrow' }) {
+  const { theme } = useTheme();
   const [hoverPart, setHoverPart] = useState(null);
   const hot = (p) => activePart === p || hoverPart === p;
+  const isActive = (p) => activePart === p;
 
   // ========================= BOLT =========================
   if (mode === 'bolt') {
@@ -48,19 +51,49 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
+            <linearGradient id="gradient-light" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgba(0,0,0,0.1)" />
+              <stop offset="50%" stopColor="rgba(0,0,0,0.05)" />
+              <stop offset="100%" stopColor="rgba(0,0,0,0)" />
+            </linearGradient>
+            <linearGradient id="gradient-dark" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgba(255,255,255,0.1)" />
+              <stop offset="50%" stopColor="rgba(255,255,255,0.05)" />
+              <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+            </linearGradient>
           </defs>
 
           <rect x="0" y="0" width={BOLT_W} height={BOLT_H} fill="transparent" />
 
           {/* Shaft */}
-          <rect
-            className={`${hot('shaft') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-y-1`}
-            x={BOLT_SHAFT_X} y={BOLT_SHAFT_Y} width={BOLT_SHAFT_W} height={BOLT_SHAFT_H}
-            filter={boltGlow('shaft')}
-            onMouseOver={() => setHoverPart('shaft')}
-            onMouseOut={() => setHoverPart(null)}
-            onClick={(e) => { e.stopPropagation(); onPartClick?.('shaft'); }}
-          />
+          <g className="relative">
+            <rect
+              className={`${hot('shaft') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-y-1`}
+              x={BOLT_SHAFT_X} y={BOLT_SHAFT_Y} width={BOLT_SHAFT_W} height={BOLT_SHAFT_H}
+              filter={boltGlow('shaft')}
+              onMouseOver={() => setHoverPart('shaft')}
+              onMouseOut={() => setHoverPart(null)}
+              onClick={(e) => { e.stopPropagation(); onPartClick?.('shaft'); }}
+            />
+            {isActive('shaft') && (
+              <>
+                {theme === 'light' && (
+                  <rect
+                    x={BOLT_SHAFT_X} y={BOLT_SHAFT_Y} width={BOLT_SHAFT_W} height={BOLT_SHAFT_H}
+                    className="pointer-events-none"
+                    fill="url(#gradient-light)"
+                  />
+                )}
+                {theme === 'dark' && (
+                  <rect
+                    x={BOLT_SHAFT_X} y={BOLT_SHAFT_Y} width={BOLT_SHAFT_W} height={BOLT_SHAFT_H}
+                    className="pointer-events-none"
+                    fill="url(#gradient-dark)"
+                  />
+                )}
+              </>
+            )}
+          </g>
 
           {/* Fletching */}
           <g
