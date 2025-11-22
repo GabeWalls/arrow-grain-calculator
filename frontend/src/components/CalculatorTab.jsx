@@ -455,6 +455,26 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
         : 'border-gray-400 dark:border-gray-500 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 bg-white dark:bg-gray-700'
     }`;
 
+  // Handle click outside to deselect
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      // Check if click is on white space (not on SVG parts, inputs, or buttons)
+      const target = e.target;
+      const isInput = target.tagName === 'INPUT' || target.tagName === 'SELECT';
+      const isButton = target.tagName === 'BUTTON' || target.closest('button');
+      const isSVGPart = target.closest('svg') && !target.closest('svg rect[fill="transparent"]');
+      const isForm = target.closest('form');
+      
+      // If clicking on white space (not inputs, buttons, or SVG parts), deselect
+      if (!isInput && !isButton && !isSVGPart && !isForm) {
+        setActivePart(null);
+      }
+    };
+    
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   return (
     <div className="flex flex-col items-center">
       <div className="mb-6 flex items-center gap-4">
@@ -476,19 +496,27 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
         </button>
       </div>
 
-      <ArrowSVG onPartClick={handleScrollToInput} activePart={activePart} mode={buildType} />
+      <ArrowSVG onPartClick={handleScrollToInput} activePart={activePart} mode={buildType} onClearSelection={() => setActivePart(null)} />
 
       <form onSubmit={handleSubmit} className="w-full max-w-5xl grid grid-cols-5 gap-4 mt-6">
         <div className="flex flex-col items-center">
           <label className="mb-1">Knock</label>
           <input type="number" name="knock" value={components.knock} onChange={handleChange} onFocus={handleInputFocus}
-                 className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full" />
+                 className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                   activePart === 'knock'
+                     ? 'text-blaze border-blaze border-2'
+                     : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
+                 }`} />
         </div>
 
         <div className="flex flex-col items-center">
           <label className="mb-1">Fletching</label>
           <input type="number" name="fletching" value={components.fletching} onChange={handleChange} onFocus={handleInputFocus}
-                 className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full" />
+                 className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                   activePart === 'fletching'
+                     ? 'text-blaze border-blaze border-2'
+                     : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
+                 }`} />
           <label className="mt-2 mb-1 text-sm">Number of Fletches</label>
           <select value={fletchCount} onChange={(e) => setFletchCount(e.target.value)}
                   className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full">
@@ -499,12 +527,20 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
         <div className="flex flex-col items-center">
           <label className="mb-1 text-center">Shaft (Grains Per Inch)</label>
           <input type="number" name="gpi" value={gpi} onChange={(e) => setGpi(e.target.value)} onFocus={handleInputFocus}
-                 className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full" />
+                 className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                   activePart === 'shaft'
+                     ? 'text-blaze border-blaze border-2'
+                     : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
+                 }`} />
           <label className="mt-2 mb-1 text-sm text-center">
             {buildType === 'bolt' ? 'Bolt Length (inches)' : 'Arrow Length (inches)'}
           </label>
-          <select name="arrowLength" value={arrowLength} onChange={(e) => setArrowLength(e.target.value)}
-                  className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full">
+          <select name="arrowLength" value={arrowLength} onChange={(e) => setArrowLength(e.target.value)} onFocus={handleInputFocus}
+                  className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                    activePart === 'shaft'
+                      ? 'text-blaze border-blaze border-2'
+                      : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
+                  }`}>
             {generateArrowLengthOptions().map((len) => <option key={len} value={len}>{len}"</option>)}
           </select>
           <label className="mt-2 mb-1 text-sm text-center">Shaft (Total Grains)</label>
@@ -515,13 +551,21 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
         <div className="flex flex-col items-center">
           <label className="mb-1">Insert</label>
           <input type="number" name="insert" value={components.insert} onChange={handleChange} onFocus={handleInputFocus}
-                 className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full" />
+                 className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                   activePart === 'insert'
+                     ? 'text-blaze border-blaze border-2'
+                     : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
+                 }`} />
         </div>
 
         <div className="flex flex-col items-center">
           <label className="mb-1">Tip</label>
           <input type="number" name="tip" value={components.tip} onChange={handleChange} onFocus={handleInputFocus}
-                 className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full" />
+                 className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                   activePart === 'tip'
+                     ? 'text-blaze border-blaze border-2'
+                     : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
+                 }`} />
         </div>
 
         <div className="col-span-5 flex justify-center mt-6">
