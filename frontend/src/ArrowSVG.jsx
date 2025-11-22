@@ -183,7 +183,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
 
         {/* Knock */}
         <path
-          className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:scale-110`}
+          className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-y-1`}
           filter={greenGlow('knock')}
           d="M48.39,46.51v20.45s-17.82,3.57-38.65-4.56c0,0-.99-2.53,3.57-3.74,0,0,16.06,3.41,12.76-4.45,0,0-.38-2.91-9.62-1.32,0,0-6.23-.27-6.8-3.13,0,0,15.76-7.31,38.75-3.24Z"
           onMouseOver={() => setHoverPart('knock')}
@@ -212,7 +212,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
 
         {/* Insert */}
         <rect
-          className={`${hot('insert') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:scale-110`}
+          className={`${hot('insert') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-y-1`}
           filter={greenGlow('insert')}
           x={insertX} y={INSERT_Y} width={INSERT_W} height="22.21"
           onMouseOver={() => setHoverPart('insert')}
