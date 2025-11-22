@@ -42,6 +42,7 @@ const COMPONENT_LIBRARY = {
 };
 
 export default function ComponentLibraryTab({ onSelectComponent }) {
+  const { theme } = useTheme();
   const [selectedCategory, setSelectedCategory] = useState('knock');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -135,13 +136,19 @@ export default function ComponentLibraryTab({ onSelectComponent }) {
               </div>
             </div>
             <button
-              className="mt-3 w-full px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-sm transition-colors"
+              className="mt-3 w-full px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-sm transition-colors relative overflow-hidden"
               onClick={(e) => {
                 e.stopPropagation();
                 handleSelectComponent(component);
               }}
             >
-              Use Weight
+              <span className="relative z-10">Use Weight</span>
+              {theme === 'light' && (
+                <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+              )}
+              {theme === 'dark' && (
+                <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+              )}
             </button>
           </div>
         ))}
