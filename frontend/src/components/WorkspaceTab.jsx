@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useTheme } from '../ThemeContext';
 import PresetsTab from './PresetsTab';
@@ -45,6 +45,23 @@ export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset
   const [activeSection, setActiveSection] = useState('presets');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
+  const [underlineStyle, setUnderlineStyle] = useState({ width: 0, left: 0 });
+  const buttonRefs = useRef({});
+  
+  // Update underline position when active section changes
+  useEffect(() => {
+    const activeButton = buttonRefs.current[activeSection];
+    if (activeButton) {
+      const rect = activeButton.getBoundingClientRect();
+      const navRect = activeButton.closest('nav')?.getBoundingClientRect();
+      if (navRect) {
+        setUnderlineStyle({
+          width: rect.width,
+          left: rect.left - navRect.left,
+        });
+      }
+    }
+  }, [activeSection]);
 
   const sections = [
     { id: 'presets', label: 'Presets', iconName: 'Presets' },
@@ -408,26 +425,43 @@ export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset
   return (
     <div className="w-full">
       {/* Section Navigation */}
-      <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
-        <nav className="flex gap-2 overflow-x-auto pb-2">
+      <div className="mb-6 border-b border-gray-200 dark:border-gray-700 relative">
+        <nav className="flex gap-2 overflow-x-auto pb-2 relative">
           {sections.map((section) => (
             <button
               key={section.id}
+              ref={(el) => (buttonRefs.current[section.id] = el)}
               onClick={() => setActiveSection(section.id)}
-              className={`px-4 py-3 font-medium transition-all duration-300 ease-out whitespace-nowrap border-b-2 flex items-center gap-2 ${
+              className={`px-4 py-3 font-medium transition-all duration-300 ease-out whitespace-nowrap border-b-2 flex items-center gap-2 relative ${
                 activeSection === section.id
-                  ? 'border-blaze text-blaze dark:text-blaze-400'
+                  ? 'text-blaze dark:text-blaze-400'
                   : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
+              style={{ borderColor: 'transparent' }}
             >
               <img 
                 src={theme === 'dark' ? `/icons/${section.iconName}-White.svg` : `/icons/${section.iconName}-Black.svg`}
                 alt={section.label}
-                className="w-5 h-5 object-contain"
+                className={`w-5 h-5 object-contain transition-all duration-300 ${
+                  activeSection === section.id ? 'brightness-0 saturate-100' : ''
+                }`}
+                style={activeSection === section.id ? {
+                  filter: theme === 'dark' 
+                    ? 'brightness(0) saturate(100%) invert(71%) sepia(86%) saturate(4363%) hue-rotate(359deg) brightness(102%) contrast(101%)'
+                    : 'brightness(0) saturate(100%) invert(55%) sepia(93%) saturate(3281%) hue-rotate(359deg) brightness(101%) contrast(101%)'
+                } : {}}
               />
               {section.label}
             </button>
           ))}
+          {/* Animated underline */}
+          <div
+            className="absolute bottom-0 h-0.5 bg-blaze transition-all duration-300 ease-out"
+            style={{
+              width: `${underlineStyle.width}px`,
+              left: `${underlineStyle.left}px`,
+            }}
+          />
         </nav>
       </div>
 
