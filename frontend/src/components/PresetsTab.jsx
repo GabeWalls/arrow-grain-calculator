@@ -593,9 +593,15 @@ export default function PresetsTab({ onLoadPreset }) {
 
                 <button
                   onClick={() => handleLoadPreset(preset)}
-                  className="w-full px-4 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 text-white rounded shadow font-semibold transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform"
+                  className="w-full px-4 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 text-white rounded shadow font-semibold transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden"
                 >
-                  Load Preset
+                  <span className="relative z-10">Load Preset</span>
+                  {theme === 'light' && (
+                    <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                  )}
+                  {theme === 'dark' && (
+                    <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                  )}
                 </button>
               </div>
             );

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '../ThemeContext';
 
 const COMPONENT_LIBRARY = {
   knock: [
@@ -78,13 +79,23 @@ export default function ComponentLibraryTab({ onSelectComponent }) {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded capitalize transition-all duration-300 ease-out ${
+              className={`px-4 py-2 rounded capitalize transition-all duration-300 ease-out relative overflow-hidden ${
                 selectedCategory === cat
                   ? 'bg-blaze text-white shadow-md transform scale-105'
                   : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 hover:shadow-sm hover:scale-102 active:scale-95'
               }`}
             >
-              {cat}
+              <span className="relative z-10">{cat}</span>
+              {selectedCategory === cat && (
+                <>
+                  {theme === 'light' && (
+                    <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                  )}
+                  {theme === 'dark' && (
+                    <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                  )}
+                </>
+              )}
             </button>
           ))}
         </div>

@@ -177,6 +177,7 @@ function AdvancedCalculators() {
 }
 
 export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
+  const { theme } = useTheme();
   const [components, setComponents] = useState({
     knock: '',
     insert: '',
@@ -524,7 +525,15 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
         </div>
 
         <div className="col-span-5 flex justify-center mt-6">
-          <button type="submit" className="px-6 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform">Calculate</button>
+          <button type="submit" className="px-6 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden">
+            <span className="relative z-10">Calculate</span>
+            {theme === 'light' && (
+              <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+            )}
+            {theme === 'dark' && (
+              <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+            )}
+          </button>
         </div>
       </form>
 
@@ -547,11 +556,23 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
           </select>
         </div>
         <div className="flex gap-4">
-          <button type="button" onClick={handleSaveBuild} className="px-6 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform">
-            {editingBuildId ? 'Update Build' : 'Save Build'}
+          <button type="button" onClick={handleSaveBuild} className="px-6 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden">
+            <span className="relative z-10">{editingBuildId ? 'Update Build' : 'Save Build'}</span>
+            {theme === 'light' && (
+              <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+            )}
+            {theme === 'dark' && (
+              <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+            )}
           </button>
-          <button type="button" onClick={handleNewBuild} className="px-6 py-2 bg-gray-500 dark:bg-gray-500 hover:bg-gray-600 dark:hover:bg-gray-600 active:bg-gray-700 dark:active:bg-gray-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform">
-            New Build
+          <button type="button" onClick={handleNewBuild} className="px-6 py-2 bg-gray-500 dark:bg-gray-500 hover:bg-gray-600 dark:hover:bg-gray-600 active:bg-gray-700 dark:active:bg-gray-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden">
+            <span className="relative z-10">New Build</span>
+            {theme === 'light' && (
+              <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+            )}
+            {theme === 'dark' && (
+              <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+            )}
           </button>
         </div>
       </div>
@@ -606,8 +627,24 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
                         ))}
                       </div>
                       <div className="mt-3 flex gap-2">
-                        <button onClick={() => handleLoadBuild(build)} className="bg-green-600 hover:bg-green-700 active:bg-green-800 px-3 py-1 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform">Load</button>
-                        <button onClick={() => handleDeleteBuild(build._id)} className="bg-red-600 hover:bg-red-700 active:bg-red-800 px-3 py-1 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform">Delete</button>
+                        <button onClick={() => handleLoadBuild(build)} className="bg-green-600 hover:bg-green-700 active:bg-green-800 px-3 py-1 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform relative overflow-hidden">
+                          <span className="relative z-10">Load</span>
+                          {theme === 'light' && (
+                            <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                          )}
+                          {theme === 'dark' && (
+                            <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                          )}
+                        </button>
+                        <button onClick={() => handleDeleteBuild(build._id)} className="bg-red-600 hover:bg-red-700 active:bg-red-800 px-3 py-1 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform relative overflow-hidden">
+                          <span className="relative z-10">Delete</span>
+                          {theme === 'light' && (
+                            <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                          )}
+                          {theme === 'dark' && (
+                            <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                          )}
+                        </button>
                       </div>
                     </div>
                   );
@@ -619,13 +656,33 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
               <div className="flex items-center justify-between mt-4">
                 <div className="flex items-center gap-2">
                   <button type="button" onClick={prevPage} disabled={page <= 1}
-                          className={`px-3 py-1 rounded text-sm ${page <= 1 ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed' : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white'}`}>
-                    Prev
+                          className={`px-3 py-1 rounded text-sm relative overflow-hidden ${page <= 1 ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed' : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white'}`}>
+                    <span className="relative z-10">Prev</span>
+                    {page > 1 && (
+                      <>
+                        {theme === 'light' && (
+                          <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                        )}
+                        {theme === 'dark' && (
+                          <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                        )}
+                      </>
+                    )}
                   </button>
                   <span className="text-sm text-gray-700 dark:text-gray-300">Page <strong>{page}</strong> / {totalPages}</span>
                   <button type="button" onClick={nextPage} disabled={page >= totalPages}
-                          className={`px-3 py-1 rounded text-sm ${page >= totalPages ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed' : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white'}`}>
-                    Next
+                          className={`px-3 py-1 rounded text-sm relative overflow-hidden ${page >= totalPages ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed' : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white'}`}>
+                    <span className="relative z-10">Next</span>
+                    {page < totalPages && (
+                      <>
+                        {theme === 'light' && (
+                          <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                        )}
+                        {theme === 'dark' && (
+                          <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                        )}
+                      </>
+                    )}
                   </button>
                 </div>
 

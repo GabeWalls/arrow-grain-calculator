@@ -175,15 +175,27 @@ export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleLoadBuild(build)}
-                        className="flex-1 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 px-3 py-2 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform"
+                        className="flex-1 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 px-3 py-2 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform relative overflow-hidden"
                       >
-                        Load
+                        <span className="relative z-10">Load</span>
+                        {theme === 'light' && (
+                          <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                        )}
+                        {theme === 'dark' && (
+                          <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                        )}
                       </button>
                       <button
                         onClick={() => handleDeleteBuild(build._id)}
-                        className="bg-red-600 hover:bg-red-700 active:bg-red-800 px-3 py-2 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform"
+                        className="bg-red-600 hover:bg-red-700 active:bg-red-800 px-3 py-2 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform relative overflow-hidden"
                       >
-                        Delete
+                        <span className="relative z-10">Delete</span>
+                        {theme === 'light' && (
+                          <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                        )}
+                        {theme === 'dark' && (
+                          <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                        )}
                       </button>
                     </div>
                   </div>
@@ -198,13 +210,23 @@ export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset
                     type="button"
                     onClick={prevPage}
                     disabled={page <= 1}
-                    className={`px-3 py-1 rounded text-sm ${
+                    className={`px-3 py-1 rounded text-sm relative overflow-hidden ${
                       page <= 1
                         ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed'
                         : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white'
                     }`}
                   >
-                    Prev
+                    <span className="relative z-10">Prev</span>
+                    {page > 1 && (
+                      <>
+                        {theme === 'light' && (
+                          <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                        )}
+                        {theme === 'dark' && (
+                          <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                        )}
+                      </>
+                    )}
                   </button>
                   <span className="text-sm text-gray-700 dark:text-gray-300">
                     Page <strong>{page}</strong> / {totalPages}
@@ -213,13 +235,23 @@ export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset
                     type="button"
                     onClick={nextPage}
                     disabled={page >= totalPages}
-                    className={`px-3 py-1 rounded text-sm ${
+                    className={`px-3 py-1 rounded text-sm relative overflow-hidden ${
                       page >= totalPages
                         ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed'
                         : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white'
                     }`}
                   >
-                    Next
+                    <span className="relative z-10">Next</span>
+                    {page < totalPages && (
+                      <>
+                        {theme === 'light' && (
+                          <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                        )}
+                        {theme === 'dark' && (
+                          <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                        )}
+                      </>
+                    )}
                   </button>
                 </div>
 
@@ -385,15 +417,27 @@ export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset
                   <div className="flex gap-2">
                     <button
                       onClick={() => exportToText(build)}
-                      className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm transition-colors"
+                      className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm transition-colors relative overflow-hidden"
                     >
-                      Export as Text
+                      <span className="relative z-10">Export as Text</span>
+                      {theme === 'light' && (
+                        <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                      )}
+                      {theme === 'dark' && (
+                        <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                      )}
                     </button>
                     <button
                       onClick={() => printBuild(build)}
-                      className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm transition-colors"
+                      className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm transition-colors relative overflow-hidden"
                     >
-                      Print
+                      <span className="relative z-10">Print</span>
+                      {theme === 'light' && (
+                        <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                      )}
+                      {theme === 'dark' && (
+                        <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                      )}
                     </button>
                   </div>
                 </div>

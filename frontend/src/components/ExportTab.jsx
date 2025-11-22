@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useTheme } from '../ThemeContext';
 
 export default function ExportTab({ savedBuilds }) {
+  const { theme } = useTheme();
   const [selectedBuild, setSelectedBuild] = useState(null);
 
   const exportToText = (build) => {
@@ -92,9 +94,19 @@ export default function ExportTab({ savedBuilds }) {
         <button
           onClick={exportAllToJSON}
           disabled={builds.length === 0}
-          className="px-4 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded shadow transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform disabled:hover:scale-100 disabled:hover:shadow-none"
+          className="px-4 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded shadow transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform disabled:hover:scale-100 disabled:hover:shadow-none relative overflow-hidden"
         >
-          Export All Builds (JSON)
+          <span className="relative z-10">Export All Builds (JSON)</span>
+          {builds.length > 0 && (
+            <>
+              {theme === 'light' && (
+                <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+              )}
+              {theme === 'dark' && (
+                <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+              )}
+            </>
+          )}
         </button>
         <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
           Export all {builds.length} saved builds as a JSON file for backup or import into other tools.
@@ -135,15 +147,27 @@ export default function ExportTab({ savedBuilds }) {
                 <div className="flex gap-2">
                   <button
                     onClick={() => exportToText(build)}
-                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm"
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm relative overflow-hidden"
                   >
-                    Export as Text
+                    <span className="relative z-10">Export as Text</span>
+                    {theme === 'light' && (
+                      <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                    )}
+                    {theme === 'dark' && (
+                      <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                    )}
                   </button>
                   <button
                     onClick={() => printBuild(build)}
-                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm"
+                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm relative overflow-hidden"
                   >
-                    Print
+                    <span className="relative z-10">Print</span>
+                    {theme === 'light' && (
+                      <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                    )}
+                    {theme === 'dark' && (
+                      <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                    )}
                   </button>
                 </div>
               </div>

@@ -205,9 +205,15 @@ export default function CompareTab({ savedBuilds }) {
         {selectedBuilds.length > 0 && (
           <button
             onClick={clearSelection}
-            className="px-3 py-1.5 text-sm bg-gray-500 hover:bg-gray-600 active:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:active:bg-gray-800 text-white rounded shadow transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform"
+            className="px-3 py-1.5 text-sm bg-gray-500 hover:bg-gray-600 active:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:active:bg-gray-800 text-white rounded shadow transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform relative overflow-hidden"
           >
-            Clear ({selectedBuilds.length})
+            <span className="relative z-10">Clear ({selectedBuilds.length})</span>
+            {theme === 'light' && (
+              <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+            )}
+            {theme === 'dark' && (
+              <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+            )}
           </button>
         )}
       </div>
@@ -254,13 +260,23 @@ export default function CompareTab({ savedBuilds }) {
               <button
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`px-2 py-1 rounded ${
+                className={`px-2 py-1 rounded relative overflow-hidden ${
                   currentPage === 1
                     ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 cursor-not-allowed'
                     : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300'
                 }`}
               >
-                Prev
+                <span className="relative z-10">Prev</span>
+                {currentPage > 1 && (
+                  <>
+                    {theme === 'light' && (
+                      <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                    )}
+                    {theme === 'dark' && (
+                      <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                    )}
+                  </>
+                )}
               </button>
               <span className="text-gray-600 dark:text-gray-400">
                 Page {currentPage} / {totalPages}
@@ -268,13 +284,23 @@ export default function CompareTab({ savedBuilds }) {
               <button
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`px-2 py-1 rounded ${
+                className={`px-2 py-1 rounded relative overflow-hidden ${
                   currentPage === totalPages
                     ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 cursor-not-allowed'
                     : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300'
                 }`}
               >
-                Next
+                <span className="relative z-10">Next</span>
+                {currentPage < totalPages && (
+                  <>
+                    {theme === 'light' && (
+                      <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                    )}
+                    {theme === 'dark' && (
+                      <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                    )}
+                  </>
+                )}
               </button>
             </div>
           )}
