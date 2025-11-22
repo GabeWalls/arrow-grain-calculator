@@ -18,14 +18,25 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
+// API routes
+app.use(cors());
+app.use('/api', grainCalculatorRoute);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-app.use(cors());
-app.use(express.json());
-app.use('/api', grainCalculatorRoute);
+// Serve static files from React app in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../frontend/build')));
+  
+  // Serve React app for all non-API routes
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+  });
+} else {
+  // In development, serve backend public files
+  app.use(express.static(path.join(__dirname, 'public')));
+}
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {

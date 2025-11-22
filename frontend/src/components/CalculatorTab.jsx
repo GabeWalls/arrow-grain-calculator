@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTheme } from '../ThemeContext';
 import ArrowSVG from '../ArrowSVG';
+import API_BASE_URL from '../config/api';
 
 // Helper component to display animal silhouettes
 const AnimalSilhouette = ({ animal, className = 'w-8 h-8' }) => {
@@ -342,10 +343,10 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
 
     try {
       if (editingBuildId) {
-        await axios.put(`http://localhost:5000/api/builds/${editingBuildId}`, payload);
+        await axios.put(`${API_BASE_URL}/api/builds/${editingBuildId}`, payload);
         alert('Build updated!');
       } else {
-        await axios.post('http://localhost:5000/api/save', payload);
+        await axios.post(`${API_BASE_URL}/api/save`, payload);
         alert('Build saved!');
       }
       handleNewBuild();
@@ -368,7 +369,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
 
   const fetchBuilds = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/builds');
+      const res = await axios.get(`${API_BASE_URL}/api/builds`);
       const items = Array.isArray(res.data) ? res.data : (res.data.items || []);
       if (setSavedBuilds) {
         setSavedBuilds(items);
@@ -388,7 +389,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
 
   const handleDeleteBuild = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/builds/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/builds/${id}`);
       fetchBuilds();
     } catch (err) {
       console.error('Error deleting build:', err);
@@ -410,7 +411,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
     ];
 
     try {
-      const response = await axios.post('http://localhost:5000/api/calculate', {
+      const response = await axios.post(`${API_BASE_URL}/api/calculate`, {
         components: formattedComponents
       });
       setTotalGrains(response.data.totalGrains);

@@ -4,6 +4,7 @@ import { useTheme } from '../ThemeContext';
 import PresetsTab from './PresetsTab';
 import ComponentLibraryTab from './ComponentLibraryTab';
 import CompareTab from './CompareTab';
+import API_BASE_URL from '../config/api';
 
 // Helper component to display animal silhouettes
 const AnimalSilhouette = ({ animal, className = 'w-8 h-8' }) => {
@@ -79,7 +80,7 @@ export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset
 
   const fetchBuilds = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/builds');
+      const res = await axios.get(`${API_BASE_URL}/api/builds`);
       const items = Array.isArray(res.data) ? res.data : (res.data.items || []);
       if (setSavedBuilds) {
         setSavedBuilds(items);
@@ -100,7 +101,7 @@ export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset
 
   const handleDeleteBuild = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/builds/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/builds/${id}`);
       fetchBuilds();
     } catch (err) {
       console.error('Error deleting build:', err);

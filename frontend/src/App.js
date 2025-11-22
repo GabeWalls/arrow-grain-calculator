@@ -5,6 +5,7 @@ import CalculatorTab from './components/CalculatorTab';
 import WorkspaceTab from './components/WorkspaceTab';
 import StatisticsTab from './components/StatisticsTab';
 import GuideTab from './components/GuideTab';
+import API_BASE_URL from './config/api';
 
 function App() {
   const { theme, toggleTheme } = useTheme();
@@ -15,7 +16,7 @@ function App() {
   useEffect(() => {
     const fetchBuilds = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/builds');
+        const res = await axios.get(`${API_BASE_URL}/api/builds`);
         const items = Array.isArray(res.data) ? res.data : (res.data.items || []);
         setSavedBuilds(items);
       } catch (err) {
