@@ -22,19 +22,20 @@ app.use(cookieParser());
 // API routes
 app.use(cors());
 app.use('/api', grainCalculatorRoute);
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // Serve static files from React app in production
 if (process.env.NODE_ENV === 'production') {
+  // Serve React app static files
   app.use(express.static(path.join(__dirname, '../frontend/build')));
   
-  // Serve React app for all non-API routes
+  // Serve React app for all non-API routes (must be last)
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
   });
 } else {
-  // In development, serve backend public files
+  // In development, serve backend routes
+  app.use('/', indexRouter);
+  app.use('/users', usersRouter);
   app.use(express.static(path.join(__dirname, 'public')));
 }
 
