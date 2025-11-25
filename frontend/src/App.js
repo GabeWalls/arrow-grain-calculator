@@ -1,30 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTheme } from './ThemeContext';
+import { useAuth } from './context/AuthContext';
 import CalculatorTab from './components/CalculatorTab';
 import WorkspaceTab from './components/WorkspaceTab';
 import StatisticsTab from './components/StatisticsTab';
 import GuideTab from './components/GuideTab';
+import AuthModal from './components/AuthModal';
 import API_BASE_URL from './config/api';
 
 function App() {
   const { theme, toggleTheme } = useTheme();
+  const { user, isAuthenticated, logout } = useAuth();
   const [activeTab, setActiveTab] = useState('calculator');
   const [savedBuilds, setSavedBuilds] = useState([]);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState('login');
 
-  // Fetch builds on mount
+  // Fetch builds when user is authenticated
   useEffect(() => {
     const fetchBuilds = async () => {
+      if (!isAuthenticated) {
+        setSavedBuilds([]);
+        return;
+      }
       try {
         const res = await axios.get(`${API_BASE_URL}/api/builds`);
         const items = Array.isArray(res.data) ? res.data : (res.data.items || []);
         setSavedBuilds(items);
       } catch (err) {
-        console.error('Error fetching builds:', err);
+        if (err.response?.status === 401) {
+          // Token expired or invalid, logout will be handled by AuthContext
+          console.error('Authentication error:', err);
+        } else {
+          console.error('Error fetching builds:', err);
+        }
       }
     };
     fetchBuilds();
-  }, []);
+  }, [isAuthenticated]);
 
   // Handle preset loading - switches to calculator tab and loads preset
   const handlePresetLoad = (preset) => {
@@ -60,9 +74,28 @@ function App() {
   const renderTab = () => {
     switch (activeTab) {
       case 'calculator':
-        return <CalculatorTab savedBuilds={savedBuilds} setSavedBuilds={setSavedBuilds} />;
+        return (
+          <CalculatorTab 
+            savedBuilds={savedBuilds} 
+            setSavedBuilds={setSavedBuilds}
+            onOpenAuthModal={(mode) => {
+              setAuthModalMode(mode);
+              setAuthModalOpen(true);
+            }}
+          />
+        );
       case 'workspace':
-        return <WorkspaceTab savedBuilds={savedBuilds} setSavedBuilds={setSavedBuilds} onLoadPreset={handlePresetLoad} />;
+        return (
+          <WorkspaceTab 
+            savedBuilds={savedBuilds} 
+            setSavedBuilds={setSavedBuilds} 
+            onLoadPreset={handlePresetLoad}
+            onOpenAuthModal={(mode) => {
+              setAuthModalMode(mode);
+              setAuthModalOpen(true);
+            }}
+          />
+        );
       case 'statistics':
         return <StatisticsTab savedBuilds={savedBuilds} />;
       case 'guide':
@@ -123,23 +156,61 @@ function App() {
               ))}
             </nav>
             
-            {/* Theme Toggle Button - Far right */}
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="p-2.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 flex-shrink-0"
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? (
-                <svg className="w-5 h-5 transition-transform duration-300 hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
+            {/* Auth Section */}
+            <div className="flex items-center gap-3 flex-shrink-0">
+              {isAuthenticated ? (
+                <div className="flex items-center gap-3">
+                  <span className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                    {user?.name || user?.email}
+                  </span>
+                  <button
+                    onClick={logout}
+                    className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105"
+                  >
+                    Logout
+                  </button>
+                </div>
               ) : (
-                <svg className="w-5 h-5 transition-transform duration-300 hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setAuthModalMode('login');
+                      setAuthModalOpen(true);
+                    }}
+                    className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105"
+                  >
+                    Log In
+                  </button>
+                  <button
+                    onClick={() => {
+                      setAuthModalMode('signup');
+                      setAuthModalOpen(true);
+                    }}
+                    className="px-4 py-2 rounded-lg bg-blaze hover:bg-blaze-dark text-white font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105"
+                  >
+                    Sign Up
+                  </button>
+                </div>
               )}
-            </button>
+              
+              {/* Theme Toggle Button */}
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="p-2.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 flex-shrink-0"
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? (
+                  <svg className="w-5 h-5 transition-transform duration-300 hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5 transition-transform duration-300 hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -150,6 +221,13 @@ function App() {
           {renderTab()}
         </div>
       </main>
+
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={authModalOpen} 
+        onClose={() => setAuthModalOpen(false)}
+        initialMode={authModalMode}
+      />
     </div>
   );
 }

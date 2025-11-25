@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTheme } from '../ThemeContext';
+import { useAuth } from '../context/AuthContext';
 import ArrowSVG from '../ArrowSVG';
 import API_BASE_URL from '../config/api';
 
@@ -177,8 +178,9 @@ function AdvancedCalculators() {
   );
 }
 
-export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
+export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthModal }) {
   const { theme } = useTheme();
+  const { isAuthenticated } = useAuth();
   const [components, setComponents] = useState({
     knock: '',
     insert: '',
@@ -324,6 +326,21 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
   };
 
   const handleSaveBuild = async () => {
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      if (onOpenAuthModal) {
+        onOpenAuthModal('signup');
+      } else {
+        alert('Please log in or sign up to save builds.');
+      }
+      return;
+    }
+
+    if (!buildName.trim()) {
+      alert('Please enter a name for your build.');
+      return;
+    }
+
     const formattedComponents = [
       { name: 'knock', grains: Number(components.knock) },
       { name: 'fletching', grains: Number(components.fletching) },
@@ -353,7 +370,14 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
       fetchBuilds();
     } catch (err) {
       console.error('Error saving build:', err.response?.data || err.message);
-      alert('There was an error saving the build.');
+      if (err.response?.status === 401) {
+        alert('Your session has expired. Please log in again.');
+        if (onOpenAuthModal) {
+          onOpenAuthModal('login');
+        }
+      } else {
+        alert(err.response?.data?.error || 'There was an error saving the build.');
+      }
     }
   };
 
@@ -368,6 +392,12 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
   };
 
   const fetchBuilds = async () => {
+    if (!isAuthenticated) {
+      if (setSavedBuilds) {
+        setSavedBuilds([]);
+      }
+      return;
+    }
     try {
       const res = await axios.get(`${API_BASE_URL}/api/builds`);
       const items = Array.isArray(res.data) ? res.data : (res.data.items || []);
@@ -382,17 +412,31 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds }) {
     }
   };
 
-  // Initial fetch when component mounts
+  // Fetch builds when authenticated
   useEffect(() => {
     fetchBuilds();
-  }, []);
+  }, [isAuthenticated]);
 
   const handleDeleteBuild = async (id) => {
+    if (!isAuthenticated) {
+      if (onOpenAuthModal) {
+        onOpenAuthModal('login');
+      }
+      return;
+    }
     try {
       await axios.delete(`${API_BASE_URL}/api/builds/${id}`);
       fetchBuilds();
     } catch (err) {
       console.error('Error deleting build:', err);
+      if (err.response?.status === 401) {
+        alert('Your session has expired. Please log in again.');
+        if (onOpenAuthModal) {
+          onOpenAuthModal('login');
+        }
+      } else {
+        alert('Error deleting build.');
+      }
     }
   };
 

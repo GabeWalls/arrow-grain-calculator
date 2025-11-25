@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useTheme } from '../ThemeContext';
+import { useAuth } from '../context/AuthContext';
 import PresetsTab from './PresetsTab';
 import ComponentLibraryTab from './ComponentLibraryTab';
 import CompareTab from './CompareTab';
@@ -41,8 +42,9 @@ const AnimalSilhouette = ({ animal, className = 'w-8 h-8' }) => {
   );
 };
 
-export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset }) {
+export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset, onOpenAuthModal }) {
   const { theme } = useTheme();
+  const { isAuthenticated } = useAuth();
   const [activeSection, setActiveSection] = useState('presets');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
@@ -79,6 +81,12 @@ export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset
   }, [savedBuilds, pageSize, page]);
 
   const fetchBuilds = async () => {
+    if (!isAuthenticated) {
+      if (setSavedBuilds) {
+        setSavedBuilds([]);
+      }
+      return;
+    }
     try {
       const res = await axios.get(`${API_BASE_URL}/api/builds`);
       const items = Array.isArray(res.data) ? res.data : (res.data.items || []);
@@ -94,17 +102,35 @@ export default function WorkspaceTab({ savedBuilds, setSavedBuilds, onLoadPreset
   };
 
   useEffect(() => {
-    if (activeSection === 'saved' || activeSection === 'export') {
+    if (isAuthenticated && (activeSection === 'saved' || activeSection === 'export')) {
       fetchBuilds();
+    } else if (!isAuthenticated) {
+      if (setSavedBuilds) {
+        setSavedBuilds([]);
+      }
     }
-  }, [activeSection]);
+  }, [isAuthenticated, activeSection]);
 
   const handleDeleteBuild = async (id) => {
+    if (!isAuthenticated) {
+      if (onOpenAuthModal) {
+        onOpenAuthModal('login');
+      }
+      return;
+    }
     try {
       await axios.delete(`${API_BASE_URL}/api/builds/${id}`);
       fetchBuilds();
     } catch (err) {
       console.error('Error deleting build:', err);
+      if (err.response?.status === 401) {
+        alert('Your session has expired. Please log in again.');
+        if (onOpenAuthModal) {
+          onOpenAuthModal('login');
+        }
+      } else {
+        alert('Error deleting build.');
+      }
     }
   };
 

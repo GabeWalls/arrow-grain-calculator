@@ -49,7 +49,15 @@ const ArrowBuildSchema = new mongoose.Schema(
     gpi: { type: Number, required: true, min: 0 },
     arrowLength: { type: Number, required: true, min: 10, max: 40 },
     buildType: { type: String, enum: ['arrow', 'bolt'], default: 'arrow' },
-    animal: { type: String, enum: ['deer', 'elk', 'bear', 'moose', 'turkey', 'hogs', 'caribou', null], default: null },
+    animal: { type: String, enum: ['deer', 'elk', 'bear', 'moose', 'turkey', 'hogs', 'caribou', 'boar', null], default: null },
+    
+    // Link builds to users
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      index: true,
+    },
   },
   {
     timestamps: true, // creates createdAt/updatedAt
@@ -81,5 +89,6 @@ ArrowBuildSchema.pre('validate', function computeTotals() {
 // helpful indexes for perf demos
 ArrowBuildSchema.index({ createdAt: -1 });
 ArrowBuildSchema.index({ name: 1 });
+ArrowBuildSchema.index({ user: 1, createdAt: -1 }); // Compound index for user builds
 
 module.exports = mongoose.model('ArrowBuild', ArrowBuildSchema);

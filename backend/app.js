@@ -21,6 +21,8 @@ app.use(cookieParser());
 
 // API routes
 app.use(cors());
+const authRoute = require('./routes/auth');
+app.use('/api/auth', authRoute);
 app.use('/api', grainCalculatorRoute);
 
 // Serve static files from React app in production
