@@ -113,16 +113,16 @@ function App() {
           {/* Mobile: Top row with logo left, auth right. Second row with tabs */}
           {/* Desktop: Single row with logo, tabs, auth */}
           <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6">
-            {/* Top Row on Mobile: Logo Left, Auth Right */}
-            <div className="w-full md:w-auto flex items-center justify-between md:justify-start gap-4 md:gap-0">
-              {/* Logo - Banner style on mobile, Words version on desktop */}
-              <div className="flex items-center flex-shrink-0">
+            {/* Top Row on Mobile: Centered Logo, Auth Right */}
+            <div className="w-full md:w-auto flex items-center justify-center md:justify-start gap-4 md:gap-0 relative">
+              {/* Logo - Banner style on mobile, centered */}
+              <div className="flex items-center flex-shrink-0 md:flex-shrink-0">
                 <img 
                   src={theme === 'dark' 
                     ? "/ArrowWeight-Banner-DarkMode.svg" 
                     : "/ArrowWeight-Banner.svg"}
                   alt="Arrow Weight Calculator" 
-                  className="h-20 sm:h-24 md:hidden w-auto object-contain"
+                  className="h-20 sm:h-24 md:hidden w-auto object-contain mx-auto"
                 />
                 <img 
                   src={theme === 'dark' 
@@ -134,7 +134,7 @@ function App() {
               </div>
 
               {/* Auth Section - Always Top Right on Mobile */}
-              <div className="flex items-center gap-2 md:gap-3 flex-shrink-0 md:hidden">
+              <div className="flex items-center gap-2 md:gap-3 flex-shrink-0 md:hidden absolute right-0">
                 {isAuthenticated ? (
                   <div className="flex items-center gap-2">
                     <button
@@ -187,8 +187,8 @@ function App() {
               </div>
             </div>
 
-            {/* Tab Navigation - Second row on mobile, inline on desktop */}
-            <nav className="flex items-center gap-2 flex-1 min-w-0 w-full md:w-auto overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
+            {/* Tab Navigation - Centered on mobile, inline on desktop */}
+            <nav className="flex items-center gap-2 flex-1 min-w-0 w-full md:w-auto overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 justify-center md:justify-start">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
@@ -281,6 +281,7 @@ function App() {
           </div>
         </div>
       </header>
+
 
       {/* Main Content */}
       <main className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-4 md:px-6 py-4 md:py-8">
