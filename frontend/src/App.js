@@ -110,18 +110,75 @@ function App() {
       {/* Header - Modern style inspired by mouse-sensitivity.com */}
       <header className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-300 dark:border-gray-700 sticky top-0 z-50 shadow-lg">
         <div className="max-w-7xl mx-auto px-3 md:px-6 py-2 md:py-4">
-          {/* Mobile: Stack vertically, Desktop: Horizontal */}
+          {/* Mobile: Top row with logo left, auth right. Second row with tabs */}
+          {/* Desktop: Single row with logo, tabs, auth */}
           <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6">
-            {/* Logo - Made much bigger */}
-            <div className="flex items-center flex-shrink-0 w-full md:w-auto justify-center md:justify-start">
-              <img 
-                src={theme === 'dark' ? "/ArrowWeight-Logo-Words-DarkMode.svg" : "/ArrowWeight-Logo-Words.svg"}
-                alt="Arrow Weight Calculator" 
-                className="h-12 sm:h-16 md:h-20 lg:h-24 xl:h-28 2xl:h-32 w-auto object-contain"
-              />
+            {/* Top Row on Mobile: Logo Left, Auth Right */}
+            <div className="w-full md:w-auto flex items-center justify-between md:justify-start gap-4 md:gap-0">
+              {/* Logo - Banner style on mobile, bigger */}
+              <div className="flex items-center flex-shrink-0">
+                <img 
+                  src={theme === 'dark' ? "/ArrowWeight-Logo-Words-DarkMode.svg" : "/ArrowWeight-Logo-Words.svg"}
+                  alt="Arrow Weight Calculator" 
+                  className="h-16 sm:h-20 md:h-20 lg:h-24 xl:h-28 2xl:h-32 w-auto object-contain"
+                />
+              </div>
+
+              {/* Auth Section - Always Top Right on Mobile */}
+              <div className="flex items-center gap-2 md:gap-3 flex-shrink-0 md:hidden">
+                {isAuthenticated ? (
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={logout}
+                      className="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 text-sm"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => {
+                        setAuthModalMode('login');
+                        setAuthModalOpen(true);
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 text-sm"
+                    >
+                      Log In
+                    </button>
+                    <button
+                      onClick={() => {
+                        setAuthModalMode('signup');
+                        setAuthModalOpen(true);
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-blaze hover:bg-blaze-dark text-white font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 text-sm"
+                    >
+                      Sign Up
+                    </button>
+                  </div>
+                )}
+                
+                {/* Theme Toggle Button */}
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 flex-shrink-0"
+                  aria-label="Toggle theme"
+                >
+                  {theme === 'dark' ? (
+                    <svg className="w-5 h-5 transition-transform duration-300 hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5 transition-transform duration-300 hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
 
-            {/* Tab Navigation - Mobile: Horizontal scroll, Desktop: Flex */}
+            {/* Tab Navigation - Second row on mobile, inline on desktop */}
             <nav className="flex items-center gap-2 flex-1 min-w-0 w-full md:w-auto overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
               {tabs.map((tab) => (
                 <button
@@ -157,16 +214,16 @@ function App() {
               ))}
             </nav>
             
-            {/* Auth Section - Mobile: Wrap, Desktop: Flex */}
-            <div className="flex items-center gap-2 md:gap-3 flex-shrink-0 w-full md:w-auto justify-center md:justify-end">
+            {/* Auth Section - Desktop: Right side */}
+            <div className="hidden md:flex items-center gap-3 flex-shrink-0 ml-auto">
               {isAuthenticated ? (
-                <div className="flex items-center gap-2 md:gap-3 flex-wrap justify-center md:justify-end">
-                  <span className={`text-xs md:text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'} truncate max-w-[120px] md:max-w-none`}>
+                <div className="flex items-center gap-3">
+                  <span className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
                     {user?.name || user?.email}
                   </span>
                   <button
                     onClick={logout}
-                    className="px-3 md:px-4 py-1.5 md:py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 text-sm md:text-base"
+                    className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105"
                   >
                     Logout
                   </button>
@@ -178,7 +235,7 @@ function App() {
                       setAuthModalMode('login');
                       setAuthModalOpen(true);
                     }}
-                    className="px-3 md:px-4 py-1.5 md:py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 text-sm md:text-base"
+                    className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105"
                   >
                     Log In
                   </button>
@@ -187,7 +244,7 @@ function App() {
                       setAuthModalMode('signup');
                       setAuthModalOpen(true);
                     }}
-                    className="px-3 md:px-4 py-1.5 md:py-2 rounded-lg bg-blaze hover:bg-blaze-dark text-white font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 text-sm md:text-base"
+                    className="px-4 py-2 rounded-lg bg-blaze hover:bg-blaze-dark text-white font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105"
                   >
                     Sign Up
                   </button>
@@ -198,7 +255,7 @@ function App() {
               <button
                 type="button"
                 onClick={toggleTheme}
-                className="p-2 md:p-2.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 flex-shrink-0"
+                className="p-2.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 flex-shrink-0"
                 aria-label="Toggle theme"
               >
                 {theme === 'dark' ? (

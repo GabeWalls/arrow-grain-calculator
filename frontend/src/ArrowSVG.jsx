@@ -34,13 +34,13 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
     const boltGlow = (p) => (hot(p) ? 'url(#bolt-glow)' : 'none');
 
     return (
-      <div className="relative mb-6 md:mb-10 flex justify-center w-full overflow-hidden">
-        <div className="md:w-[950px] w-full flex justify-center">
+      <div className="relative mb-0 md:mb-10 flex justify-center w-full">
+        <div className="md:w-[950px] w-auto flex justify-center items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox={`0 0 ${BOLT_W} ${BOLT_H}`}
-            className="w-full h-auto md:w-[950px] transform md:transform-none rotate-90 md:rotate-0 origin-center transition-transform duration-300"
-            style={{ maxWidth: '90vw', maxHeight: '70vh' }}
+            className="h-auto md:w-[950px] transform md:transform-none rotate-90 md:rotate-0 origin-center transition-transform duration-300"
+            style={{ width: 'auto', maxHeight: '80vh', minWidth: '200px' }}
             onClick={() => onClearSelection?.()}
           >
           <defs>
@@ -173,13 +173,13 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
   const greenGlow = (p) => (hot(p) ? 'url(#green-glow)' : 'none');
 
   return (
-    <div className="relative mb-6 md:mb-10 flex justify-center w-full overflow-hidden">
-      <div className="md:w-[950px] w-full flex justify-center">
+    <div className="relative mb-0 md:mb-10 flex justify-center w-full">
+      <div className="md:w-[950px] w-auto flex justify-center items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1014.27 116.47"
-          className="w-full h-auto md:w-[950px] transform md:transform-none rotate-90 md:rotate-0 origin-center transition-transform duration-300"
-          style={{ maxWidth: '90vw', maxHeight: '70vh' }}
+          className="h-auto md:w-[950px] transform md:transform-none rotate-90 md:rotate-0 origin-center transition-transform duration-300"
+          style={{ width: 'auto', maxHeight: '80vh', minWidth: '200px' }}
           onClick={() => onClearSelection?.()}
         >
         <defs>
