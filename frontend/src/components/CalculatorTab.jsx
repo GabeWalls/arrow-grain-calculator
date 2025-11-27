@@ -85,12 +85,12 @@ function AdvancedCalculators() {
   }, [velocity, weight]);
 
   return (
-    <div className="mt-12 w-full max-w-4xl border-t border-gray-200 dark:border-gray-700 pt-8">
+    <div className="mt-8 md:mt-12 w-full max-w-4xl border-t border-gray-200 dark:border-gray-700 pt-6 md:pt-8 px-4 md:px-0">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 ease-out hover:shadow-md hover:scale-[1.01] active:scale-[0.99]"
+        className="w-full flex items-center justify-between p-3 md:p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 ease-out hover:shadow-md hover:scale-[1.01] active:scale-[0.99]"
       >
-        <h3 className="text-xl font-bold">Advanced Calculators</h3>
+        <h3 className="text-lg md:text-xl font-bold">Advanced Calculators</h3>
         <svg
           className={`w-5 h-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
           fill="none"
@@ -108,7 +108,7 @@ function AdvancedCalculators() {
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               Kinetic Energy measures the energy an arrow carries. Higher KE means more penetration power.
             </p>
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="block mb-2 text-sm font-medium">Velocity (fps)</label>
                 <input
@@ -143,7 +143,7 @@ function AdvancedCalculators() {
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               Momentum indicates how well an arrow can penetrate through tough materials like bone.
             </p>
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="block mb-2 text-sm font-medium">Velocity (fps)</label>
                 <input
@@ -533,11 +533,11 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
   }, [activePart]);
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="mb-6 flex items-center gap-4">
+    <div className="flex flex-col items-center w-full">
+      <div className="mb-4 md:mb-6 flex items-center gap-3 md:gap-4 w-full justify-center">
         <button
           type="button"
-          className={segClass(buildType === 'arrow')}
+          className={`${segClass(buildType === 'arrow')} text-sm md:text-base px-4 md:px-6 py-2 md:py-2.5`}
           onClick={() => setBuildType('arrow')}
           aria-pressed={buildType === 'arrow'}
         >
@@ -545,7 +545,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
         </button>
         <button
           type="button"
-          className={segClass(buildType === 'bolt')}
+          className={`${segClass(buildType === 'bolt')} text-sm md:text-base px-4 md:px-6 py-2 md:py-2.5`}
           onClick={() => setBuildType('bolt')}
           aria-pressed={buildType === 'bolt'}
         >
@@ -555,36 +555,38 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
 
       <ArrowSVG onPartClick={handleScrollToInput} activePart={activePart} mode={buildType} onClearSelection={() => setActivePart(null)} />
 
-      <form onSubmit={handleSubmit} className="w-full max-w-5xl grid grid-cols-5 gap-4 mt-6">
-        <div className="flex flex-col items-center">
+      <form onSubmit={handleSubmit} className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-5 gap-4 mt-6">
+        {/* Mobile: Order matches vertical arrow (top to bottom: Knock, Fletching, Shaft, Insert, Tip) */}
+        {/* Desktop: Left to right order */}
+        <div className="flex flex-col items-center order-1 md:order-1">
           <label className={`mb-1 transition-colors duration-200 ${activePart === 'knock' ? 'text-blaze font-bold' : ''}`}>Knock</label>
           <input type="number" name="knock" value={components.knock} onChange={handleChange} onFocus={handleInputFocus}
-                 className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                 className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full max-w-[200px] md:max-w-none transition-all duration-200 ${
                    activePart === 'knock'
                      ? 'border-blaze border-2 text-gray-900 dark:text-white'
                      : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
                  }`} />
         </div>
 
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center order-2 md:order-2">
           <label className={`mb-1 transition-colors duration-200 ${activePart === 'fletching' ? 'text-blaze font-bold' : ''}`}>Fletching</label>
           <input type="number" name="fletching" value={components.fletching} onChange={handleChange} onFocus={handleInputFocus}
-                 className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                 className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full max-w-[200px] md:max-w-none transition-all duration-200 ${
                    activePart === 'fletching'
                      ? 'border-blaze border-2 text-gray-900 dark:text-white'
                      : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
                  }`} />
           <label className="mt-2 mb-1 text-sm">Number of Fletches</label>
           <select value={fletchCount} onChange={(e) => setFletchCount(e.target.value)}
-                  className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full">
+                  className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full max-w-[200px] md:max-w-none">
             {[3, 4].map((count) => <option key={count} value={count}>{count}</option>)}
           </select>
         </div>
 
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center order-3 md:order-3">
           <label className={`mb-1 text-center transition-colors duration-200 ${activePart === 'shaft' ? 'text-blaze font-bold' : ''}`}>Shaft (Grains Per Inch)</label>
           <input type="number" name="gpi" value={gpi} onChange={(e) => setGpi(e.target.value)} onFocus={handleInputFocus}
-                 className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                 className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full max-w-[200px] md:max-w-none transition-all duration-200 ${
                    activePart === 'shaft'
                      ? 'border-blaze border-2 text-gray-900 dark:text-white'
                      : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
@@ -593,7 +595,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
             {buildType === 'bolt' ? 'Bolt Length (inches)' : 'Arrow Length (inches)'}
           </label>
           <select name="arrowLength" value={arrowLength} onChange={(e) => setArrowLength(e.target.value)} onFocus={handleInputFocus}
-                  className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                  className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full max-w-[200px] md:max-w-none transition-all duration-200 ${
                     activePart === 'shaft'
                       ? 'border-blaze border-2 text-gray-900 dark:text-white'
                       : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
@@ -602,30 +604,30 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
           </select>
           <label className="mt-2 mb-1 text-sm text-center">Shaft (Total Grains)</label>
           <input type="number" value={shaftGrains} readOnly
-                 className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 px-2 py-1 rounded shadow w-full" />
+                 className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 px-2 py-1 rounded shadow w-full max-w-[200px] md:max-w-none" />
         </div>
 
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center order-4 md:order-4">
           <label className={`mb-1 transition-colors duration-200 ${activePart === 'insert' ? 'text-blaze font-bold' : ''}`}>Insert</label>
           <input type="number" name="insert" value={components.insert} onChange={handleChange} onFocus={handleInputFocus}
-                 className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                 className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full max-w-[200px] md:max-w-none transition-all duration-200 ${
                    activePart === 'insert'
                      ? 'border-blaze border-2 text-gray-900 dark:text-white'
                      : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
                  }`} />
         </div>
 
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center order-5 md:order-5">
           <label className={`mb-1 transition-colors duration-200 ${activePart === 'tip' ? 'text-blaze font-bold' : ''}`}>Tip</label>
           <input type="number" name="tip" value={components.tip} onChange={handleChange} onFocus={handleInputFocus}
-                 className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                 className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full max-w-[200px] md:max-w-none transition-all duration-200 ${
                    activePart === 'tip'
                      ? 'border-blaze border-2 text-gray-900 dark:text-white'
                      : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
                  }`} />
         </div>
 
-        <div className="col-span-5 flex justify-center mt-6">
+        <div className="col-span-1 md:col-span-5 flex justify-center mt-6">
           <button type="submit" className="px-6 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden">
             <span className="relative z-10">Calculate</span>
             {theme === 'light' && (
@@ -638,13 +640,13 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
         </div>
       </form>
 
-      {totalGrains !== null && <h2 className="mt-6 text-xl font-semibold">Total {buildType === 'bolt' ? 'Bolt' : 'Arrow'} Weight: {totalGrains} grains</h2>}
-      {focPercent !== null && <h2 className={`mt-2 text-xl font-semibold ${getFocColor(focPercent)}`}>FOC: {focPercent}%</h2>}
+      {totalGrains !== null && <h2 className="mt-4 md:mt-6 text-lg md:text-xl font-semibold text-center px-4">Total {buildType === 'bolt' ? 'Bolt' : 'Arrow'} Weight: {totalGrains} grains</h2>}
+      {focPercent !== null && <h2 className={`mt-2 text-lg md:text-xl font-semibold text-center px-4 ${getFocColor(focPercent)}`}>FOC: {focPercent}%</h2>}
 
-      <div className="col-span-5 flex flex-col items-center mt-6">
+      <div className="col-span-1 md:col-span-5 flex flex-col items-center mt-4 md:mt-6 w-full max-w-md mx-auto px-4">
         <input type="text" placeholder="Build Name" value={buildName} onChange={(e) => setBuildName(e.target.value)}
-               className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full max-w-md mb-2" />
-        <div className="w-full max-w-md mb-2">
+               className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full mb-2" />
+        <div className="w-full mb-2">
           <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Target Animal</label>
           <select 
             value={animal} 
@@ -656,8 +658,8 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
             ))}
           </select>
         </div>
-        <div className="flex gap-4">
-          <button type="button" onClick={handleSaveBuild} className="px-6 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden">
+        <div className="flex gap-3 md:gap-4 w-full">
+          <button type="button" onClick={handleSaveBuild} className="flex-1 px-4 md:px-6 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden text-sm md:text-base">
             <span className="relative z-10">{editingBuildId ? 'Update Build' : 'Save Build'}</span>
             {theme === 'light' && (
               <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
@@ -666,7 +668,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
               <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
             )}
           </button>
-          <button type="button" onClick={handleNewBuild} className="px-6 py-2 bg-gray-500 dark:bg-gray-500 hover:bg-gray-600 dark:hover:bg-gray-600 active:bg-gray-700 dark:active:bg-gray-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden">
+          <button type="button" onClick={handleNewBuild} className="flex-1 px-4 md:px-6 py-2 bg-gray-500 dark:bg-gray-500 hover:bg-gray-600 dark:hover:bg-gray-600 active:bg-gray-700 dark:active:bg-gray-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden text-sm md:text-base">
             <span className="relative z-10">New Build</span>
             {theme === 'light' && (
               <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
@@ -678,10 +680,10 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
         </div>
       </div>
 
-      <div className="mt-10 w-full max-w-4xl">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-2xl font-bold">Saved Builds</h3>
-          <div className="flex items-center gap-3">
+      <div className="mt-8 md:mt-10 w-full max-w-4xl px-4 md:px-0">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2">
+          <h3 className="text-xl md:text-2xl font-bold">Saved Builds</h3>
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
             <span className="text-sm text-gray-600 dark:text-gray-400">{builds.length} total</span>
             <button type="button" onClick={() => setShowSaved(!showSaved)}
                     className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-sm text-gray-900 dark:text-white" aria-expanded={showSaved}>
@@ -693,20 +695,20 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
         {showSaved && (
           <>
             {builds.length === 0 ? (
-              <div className="text-gray-500 dark:text-gray-400 text-sm py-6">No saved builds yet.</div>
+              <div className="text-gray-500 dark:text-gray-400 text-sm py-6 text-center">No saved builds yet.</div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 {pageItems.map((build) => {
                   const typeLabel = (build.buildType ?? (build.arrowLength <= 24 ? 'bolt' : 'arrow')) === 'bolt' ? 'Bolt' : 'Arrow';
                   const isBolt = typeLabel === 'Bolt';
                   return (
-                    <div key={build._id} className="bg-white dark:bg-gray-700 p-4 rounded shadow border border-gray-200 dark:border-gray-600">
-                      <div className="flex justify-between items-center">
-                        <div className="font-semibold truncate">{build.name}</div>
-                        <div className="flex items-center gap-3">
+                    <div key={build._id} className="bg-white dark:bg-gray-700 p-3 md:p-4 rounded shadow border border-gray-200 dark:border-gray-600">
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-2">
+                        <div className="font-semibold truncate w-full sm:w-auto">{build.name}</div>
+                        <div className="flex items-center gap-2 flex-wrap">
                           {build.animal && (
-                            <div className="flex items-center justify-center w-8 h-8 bg-gray-100 dark:bg-gray-600 rounded-full p-1">
-                              <AnimalSilhouette animal={build.animal} className="w-6 h-6" />
+                            <div className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 bg-gray-100 dark:bg-gray-600 rounded-full p-1">
+                              <AnimalSilhouette animal={build.animal} className="w-5 h-5 md:w-6 md:h-6" />
                             </div>
                           )}
                           <span
@@ -719,16 +721,16 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
                           >
                             {typeLabel}
                           </span>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">{new Date(build.createdAt).toLocaleString()}</div>
+                          <div className="text-xs md:text-sm text-gray-500 dark:text-gray-400">{new Date(build.createdAt).toLocaleDateString()}</div>
                         </div>
                       </div>
-                      <div className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <div className="mt-2 text-xs md:text-sm text-gray-700 dark:text-gray-300">
                         {build.components.map((c, idx) => (
-                          <div key={idx}>{c.name}: {c.grains} grains</div>
+                          <div key={idx}>{c.name.charAt(0).toUpperCase() + c.name.slice(1)}: {c.grains} grains</div>
                         ))}
                       </div>
                       <div className="mt-3 flex gap-2">
-                        <button onClick={() => handleLoadBuild(build)} className="bg-green-600 hover:bg-green-700 active:bg-green-800 px-3 py-1 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform relative overflow-hidden">
+                        <button onClick={() => handleLoadBuild(build)} className="flex-1 bg-green-600 hover:bg-green-700 active:bg-green-800 px-3 py-1.5 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform relative overflow-hidden">
                           <span className="relative z-10">Load</span>
                           {theme === 'light' && (
                             <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
@@ -737,7 +739,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
                             <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
                           )}
                         </button>
-                        <button onClick={() => handleDeleteBuild(build._id)} className="bg-red-600 hover:bg-red-700 active:bg-red-800 px-3 py-1 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform relative overflow-hidden">
+                        <button onClick={() => handleDeleteBuild(build._id)} className="flex-1 bg-red-600 hover:bg-red-700 active:bg-red-800 px-3 py-1.5 rounded text-sm text-white transition-all duration-300 ease-out hover:shadow-md hover:scale-105 active:scale-95 transform relative overflow-hidden">
                           <span className="relative z-10">Delete</span>
                           {theme === 'light' && (
                             <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
@@ -754,7 +756,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
             )}
 
             {builds.length > 0 && (
-              <div className="flex items-center justify-between mt-4">
+              <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-3">
                 <div className="flex items-center gap-2">
                   <button type="button" onClick={prevPage} disabled={page <= 1}
                           className={`px-3 py-1 rounded text-sm relative overflow-hidden ${page <= 1 ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed' : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white'}`}>

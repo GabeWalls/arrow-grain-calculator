@@ -109,36 +109,37 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-pureblack dark:via-gray-950 dark:to-gray-900 text-gray-900 dark:text-white flex flex-col">
       {/* Header - Modern style inspired by mouse-sensitivity.com */}
       <header className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-300 dark:border-gray-700 sticky top-0 z-50 shadow-lg">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center gap-6">
+        <div className="max-w-7xl mx-auto px-3 md:px-6 py-2 md:py-4">
+          {/* Mobile: Stack vertically, Desktop: Horizontal */}
+          <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6">
             {/* Logo - Made much bigger */}
-            <div className="flex items-center flex-shrink-0">
+            <div className="flex items-center flex-shrink-0 w-full md:w-auto justify-center md:justify-start">
               <img 
                 src={theme === 'dark' ? "/ArrowWeight-Logo-Words-DarkMode.svg" : "/ArrowWeight-Logo-Words.svg"}
                 alt="Arrow Weight Calculator" 
-                className="h-20 md:h-24 lg:h-28 xl:h-32 2xl:h-36 w-auto object-contain"
+                className="h-12 sm:h-16 md:h-20 lg:h-24 xl:h-28 2xl:h-32 w-auto object-contain"
               />
             </div>
 
-            {/* Tab Navigation - To the right of logo, no scroll */}
-            <nav className="flex items-center gap-2 flex-1 min-w-0">
+            {/* Tab Navigation - Mobile: Horizontal scroll, Desktop: Flex */}
+            <nav className="flex items-center gap-2 flex-1 min-w-0 w-full md:w-auto overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-2.5 rounded-lg font-medium whitespace-nowrap flex items-center gap-2 relative overflow-hidden transition-all duration-300 ease-out flex-shrink-0 ${
+                  className={`px-3 md:px-4 py-2 md:py-2.5 rounded-lg font-medium whitespace-nowrap flex items-center gap-2 relative overflow-hidden transition-all duration-300 ease-out flex-shrink-0 text-sm md:text-base ${
                     activeTab === tab.id
                       ? 'bg-gradient-to-r from-blaze to-blaze-700 text-white shadow-lg transform scale-105 hover:scale-110 hover:shadow-xl'
                       : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 shadow-sm hover:shadow-md hover:scale-102 hover:bg-gray-200 dark:hover:bg-gray-700 active:scale-95'
                   }`}
                 >
-                  <span className="relative z-10 flex items-center gap-2">
+                  <span className="relative z-10 flex items-center gap-1 md:gap-2">
                     <img 
                       src={theme === 'dark' ? `/icons/${tab.iconName}-White.svg` : `/icons/${tab.iconName}-Black.svg`}
                       alt={tab.label}
-                      className="w-5 h-5 object-contain"
+                      className="w-4 h-4 md:w-5 md:h-5 object-contain"
                     />
-                    <span>{tab.label}</span>
+                    <span className="hidden sm:inline">{tab.label}</span>
                   </span>
                   {activeTab === tab.id && (
                     <>
@@ -156,16 +157,16 @@ function App() {
               ))}
             </nav>
             
-            {/* Auth Section */}
-            <div className="flex items-center gap-3 flex-shrink-0">
+            {/* Auth Section - Mobile: Wrap, Desktop: Flex */}
+            <div className="flex items-center gap-2 md:gap-3 flex-shrink-0 w-full md:w-auto justify-center md:justify-end">
               {isAuthenticated ? (
-                <div className="flex items-center gap-3">
-                  <span className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                <div className="flex items-center gap-2 md:gap-3 flex-wrap justify-center md:justify-end">
+                  <span className={`text-xs md:text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'} truncate max-w-[120px] md:max-w-none`}>
                     {user?.name || user?.email}
                   </span>
                   <button
                     onClick={logout}
-                    className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105"
+                    className="px-3 md:px-4 py-1.5 md:py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 text-sm md:text-base"
                   >
                     Logout
                   </button>
@@ -177,7 +178,7 @@ function App() {
                       setAuthModalMode('login');
                       setAuthModalOpen(true);
                     }}
-                    className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105"
+                    className="px-3 md:px-4 py-1.5 md:py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 text-sm md:text-base"
                   >
                     Log In
                   </button>
@@ -186,7 +187,7 @@ function App() {
                       setAuthModalMode('signup');
                       setAuthModalOpen(true);
                     }}
-                    className="px-4 py-2 rounded-lg bg-blaze hover:bg-blaze-dark text-white font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105"
+                    className="px-3 md:px-4 py-1.5 md:py-2 rounded-lg bg-blaze hover:bg-blaze-dark text-white font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 text-sm md:text-base"
                   >
                     Sign Up
                   </button>
@@ -197,7 +198,7 @@ function App() {
               <button
                 type="button"
                 onClick={toggleTheme}
-                className="p-2.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 flex-shrink-0"
+                className="p-2 md:p-2.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 flex-shrink-0"
                 aria-label="Toggle theme"
               >
                 {theme === 'dark' ? (
@@ -216,8 +217,8 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-8">
-        <div className="bg-white/60 dark:bg-gray-900/70 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200 dark:border-gray-800 p-6 md:p-8">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-4 md:px-6 py-4 md:py-8">
+        <div className="bg-white/60 dark:bg-gray-900/70 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200 dark:border-gray-800 p-4 sm:p-5 md:p-6 lg:p-8">
           {renderTab()}
         </div>
       </main>

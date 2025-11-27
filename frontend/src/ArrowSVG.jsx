@@ -34,13 +34,15 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
     const boltGlow = (p) => (hot(p) ? 'url(#bolt-glow)' : 'none');
 
     return (
-      <div className="relative mb-10 flex justify-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox={`0 0 ${BOLT_W} ${BOLT_H}`}
-          className="w-[950px] h-auto"
-          onClick={() => onClearSelection?.()}
-        >
+      <div className="relative mb-6 md:mb-10 flex justify-center w-full overflow-hidden">
+        <div className="md:w-[950px] w-full flex justify-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox={`0 0 ${BOLT_W} ${BOLT_H}`}
+            className="w-full h-auto md:w-[950px] transform md:transform-none rotate-90 md:rotate-0 origin-center transition-transform duration-300"
+            style={{ maxWidth: '90vw', maxHeight: '70vh' }}
+            onClick={() => onClearSelection?.()}
+          >
           <defs>
             <filter id="bolt-glow" x="-40%" y="-40%" width="180%" height="180%" colorInterpolationFilters="sRGB">
               <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
@@ -159,6 +161,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
             onClick={(e) => { e.stopPropagation(); onPartClick?.('insert'); }}
           />
         </svg>
+        </div>
       </div>
     );
   }
@@ -170,13 +173,15 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
   const greenGlow = (p) => (hot(p) ? 'url(#green-glow)' : 'none');
 
   return (
-    <div className="relative mb-10">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 1014.27 116.47"
-        className="w-[950px] h-auto"
-        onClick={() => onClearSelection?.()}
-      >
+    <div className="relative mb-6 md:mb-10 flex justify-center w-full overflow-hidden">
+      <div className="md:w-[950px] w-full flex justify-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1014.27 116.47"
+          className="w-full h-auto md:w-[950px] transform md:transform-none rotate-90 md:rotate-0 origin-center transition-transform duration-300"
+          style={{ maxWidth: '90vw', maxHeight: '70vh' }}
+          onClick={() => onClearSelection?.()}
+        >
         <defs>
             <filter id="green-glow" x="-40%" y="-40%" width="180%" height="180%" colorInterpolationFilters="sRGB">
               <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
@@ -259,6 +264,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
           onClick={(e) => { e.stopPropagation(); onPartClick?.('insert'); }}
         />
       </svg>
+      </div>
     </div>
   );
 }

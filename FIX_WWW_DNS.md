@@ -63,3 +63,4 @@ After waiting 15-30 minutes:
 
 After fixing the CNAME, everything should work automatically!
 
+
