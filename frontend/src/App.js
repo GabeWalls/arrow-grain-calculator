@@ -115,12 +115,21 @@ function App() {
           <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6">
             {/* Top Row on Mobile: Logo Left, Auth Right */}
             <div className="w-full md:w-auto flex items-center justify-between md:justify-start gap-4 md:gap-0">
-              {/* Logo - Banner style on mobile, bigger */}
+              {/* Logo - Banner style on mobile, Words version on desktop */}
               <div className="flex items-center flex-shrink-0">
                 <img 
-                  src={theme === 'dark' ? "/ArrowWeight-Logo-Words-DarkMode.svg" : "/ArrowWeight-Logo-Words.svg"}
+                  src={theme === 'dark' 
+                    ? "/ArrowWeight-Banner-DarkMode.svg" 
+                    : "/ArrowWeight-Banner.svg"}
                   alt="Arrow Weight Calculator" 
-                  className="h-16 sm:h-20 md:h-20 lg:h-24 xl:h-28 2xl:h-32 w-auto object-contain"
+                  className="h-20 sm:h-24 md:hidden w-auto object-contain"
+                />
+                <img 
+                  src={theme === 'dark' 
+                    ? "/ArrowWeight-Logo-Words-DarkMode.svg" 
+                    : "/ArrowWeight-Logo-Words.svg"}
+                  alt="Arrow Weight Calculator" 
+                  className="hidden md:block h-20 lg:h-24 xl:h-28 2xl:h-32 w-auto object-contain"
                 />
               </div>
 
