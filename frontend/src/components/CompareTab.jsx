@@ -386,7 +386,7 @@ export default function CompareTab({ savedBuilds }) {
             {['knock', 'fletching', 'shaft', 'insert', 'tip'].map((compName) => (
               <BarChart
                 key={compName}
-                label={`${compName.charAt(0).toUpperCase() + compName.slice(1)} Weight (grains)`}
+                label={`${compName === 'fletching' ? 'Vanes' : compName.charAt(0).toUpperCase() + compName.slice(1)} Weight (grains)`}
                 values={buildsToCompare.map(b => getComponentValue(b, compName))}
                 maxValue={getMaxValue(buildsToCompare.map(b => getComponentValue(b, compName)))}
                 formatValue={(v) => `${v.toFixed(0)} gr`}
@@ -420,7 +420,7 @@ export default function CompareTab({ savedBuilds }) {
                 <tbody>
                   {['knock', 'fletching', 'shaft', 'insert', 'tip'].map((compName) => (
                     <tr key={compName} className="border-b border-gray-200 dark:border-gray-600">
-                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{compName.charAt(0).toUpperCase() + compName.slice(1)}</td>
+                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{compName === 'fletching' ? 'Vanes' : compName.charAt(0).toUpperCase() + compName.slice(1)}</td>
                       {buildsToCompare.map((build, index) => (
                         <td key={build._id} className={`px-4 py-3 text-center text-gray-700 dark:text-gray-300 ${BUILD_COLORS_TEXT[index % BUILD_COLORS_TEXT.length]}`}>
                           {getComponentValue(build, compName)} gr

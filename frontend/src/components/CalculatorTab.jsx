@@ -557,15 +557,15 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
       <div className="w-full flex flex-col md:flex-col items-center">
         <div className="w-full flex flex-row md:flex-col items-stretch md:items-center gap-4 md:gap-0 mb-4 md:mb-0">
           {/* Arrow/Bolt SVG - Left on mobile, centered between edge and fields, bigger size */}
-          <div className="flex-shrink-0 w-[60%] md:w-full md:flex md:justify-center flex items-stretch justify-center md:self-auto self-stretch px-2 md:px-0">
+          <div className="flex-shrink-0 w-[75%] md:w-full md:flex md:justify-center flex items-stretch justify-center md:self-auto self-stretch px-2 md:px-0 absolute md:relative left-0 md:left-auto z-10 md:z-auto">
             <div className="w-full h-full flex items-center justify-center py-4 md:py-0">
               <ArrowSVG onPartClick={handleScrollToInput} activePart={activePart} mode={buildType} onClearSelection={() => setActivePart(null)} />
             </div>
           </div>
 
           {/* Input Fields - Right on mobile, below on desktop */}
-          <form onSubmit={handleSubmit} className="flex-1 md:w-full max-w-5xl grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 md:mt-6 flex flex-col">
-            {/* Mobile: Order matches vertical arrow (top to bottom: Knock, Fletching, Shaft, Insert, Tip) */}
+          <form onSubmit={handleSubmit} className="flex-1 md:w-full max-w-5xl grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 md:mt-6 flex flex-col relative md:relative z-20 md:z-auto ml-[70%] md:ml-0">
+            {/* Mobile: Order matches vertical arrow (top to bottom: Knock, Vanes, Shaft, Insert, Tip) */}
             {/* Desktop: Left to right order */}
             <div className="flex flex-col items-start md:items-center order-1 md:order-1">
               <label className={`mb-1 transition-colors duration-200 text-sm md:text-base ${activePart === 'knock' ? 'text-blaze font-bold' : ''}`}>Knock</label>
@@ -578,16 +578,16 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
             </div>
 
             <div className="flex flex-col items-start md:items-center order-2 md:order-2">
-              <label className={`mb-1 transition-colors duration-200 text-sm md:text-base ${activePart === 'fletching' ? 'text-blaze font-bold' : ''}`}>Fletching</label>
+              <label className={`mb-1 transition-colors duration-200 text-sm md:text-base ${activePart === 'fletching' ? 'text-blaze font-bold' : ''}`}>Vanes</label>
               <input type="number" name="fletching" value={components.fletching} onChange={handleChange} onFocus={handleInputFocus}
                      className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
                        activePart === 'fletching'
                          ? 'border-blaze border-2 text-gray-900 dark:text-white'
                          : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
                      }`} />
-              <label className="mt-2 mb-1 text-xs md:text-sm">Number of Fletches</label>
+              <label className="mt-2 mb-1 text-[10px] md:text-sm">Number of Vanes</label>
               <select value={fletchCount} onChange={(e) => setFletchCount(e.target.value)}
-                      className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full">
+                      className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-1.5 py-0.5 md:px-2 md:py-1 rounded shadow w-full text-xs md:text-base">
                 {[3, 4].map((count) => <option key={count} value={count}>{count}</option>)}
               </select>
             </div>
@@ -600,20 +600,20 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
                          ? 'border-blaze border-2 text-gray-900 dark:text-white'
                          : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
                      }`} />
-              <label className={`mt-2 mb-1 text-xs md:text-sm text-left md:text-center transition-colors duration-200 ${activePart === 'shaft' ? 'text-blaze font-bold' : ''}`}>
+              <label className={`mt-2 mb-1 text-[10px] md:text-sm text-left md:text-center transition-colors duration-200 ${activePart === 'shaft' ? 'text-blaze font-bold' : ''}`}>
                 {buildType === 'bolt' ? 'Bolt Length (inches)' : 'Arrow Length (inches)'}
               </label>
               <select name="arrowLength" value={arrowLength} onChange={(e) => setArrowLength(e.target.value)} onFocus={handleInputFocus}
-                      className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                      className={`bg-white dark:bg-gray-800 border px-1.5 py-0.5 md:px-2 md:py-1 rounded shadow w-full transition-all duration-200 text-xs md:text-base ${
                         activePart === 'shaft'
                           ? 'border-blaze border-2 text-gray-900 dark:text-white'
                           : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
                       }`}>
                 {generateArrowLengthOptions().map((len) => <option key={len} value={len}>{len}"</option>)}
               </select>
-              <label className="mt-2 mb-1 text-xs md:text-sm text-left md:text-center">Shaft (Total Grains)</label>
+              <label className="mt-2 mb-1 text-[10px] md:text-sm text-left md:text-center">Shaft (Total Grains)</label>
               <input type="number" value={shaftGrains} readOnly
-                     className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 px-2 py-1 rounded shadow w-full" />
+                     className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 px-1.5 py-0.5 md:px-2 md:py-1 rounded shadow w-full text-xs md:text-base" />
             </div>
 
             <div className="flex flex-col items-start md:items-center order-4 md:order-4">
@@ -637,7 +637,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
             </div>
 
             <div className="col-span-1 md:col-span-5 flex justify-center mt-4 md:mt-6 order-6 md:order-none">
-              <button type="submit" className="px-4 md:px-6 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden text-sm md:text-base">
+              <button type="submit" className="px-6 md:px-6 py-3 md:py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden text-base md:text-base font-semibold">
                 <span className="relative z-10">Calculate</span>
                 {theme === 'light' && (
                   <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
@@ -670,7 +670,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
           </select>
         </div>
         <div className="flex gap-3 md:gap-4 w-full">
-          <button type="button" onClick={handleSaveBuild} className="flex-1 px-4 md:px-6 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden text-sm md:text-base">
+          <button type="button" onClick={handleSaveBuild} className="flex-1 px-6 md:px-6 py-3 md:py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden text-base md:text-base font-semibold">
             <span className="relative z-10">{editingBuildId ? 'Update Build' : 'Save Build'}</span>
             {theme === 'light' && (
               <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
@@ -679,7 +679,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
               <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
             )}
           </button>
-          <button type="button" onClick={handleNewBuild} className="flex-1 px-4 md:px-6 py-2 bg-gray-500 dark:bg-gray-500 hover:bg-gray-600 dark:hover:bg-gray-600 active:bg-gray-700 dark:active:bg-gray-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden text-sm md:text-base">
+          <button type="button" onClick={handleNewBuild} className="flex-1 px-6 md:px-6 py-3 md:py-2 bg-gray-500 dark:bg-gray-500 hover:bg-gray-600 dark:hover:bg-gray-600 active:bg-gray-700 dark:active:bg-gray-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden text-base md:text-base font-semibold">
             <span className="relative z-10">New Build</span>
             {theme === 'light' && (
               <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>

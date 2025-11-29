@@ -39,7 +39,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox={`0 0 ${BOLT_W} ${BOLT_H}`}
-            className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-center md:origin-center transition-transform duration-300 scale-[1.75] md:scale-100"
+            className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-center md:origin-center transition-transform duration-300 scale-[2.2] md:scale-100"
             style={{ maxWidth: '100%', maxHeight: '100%', minHeight: '100%', height: '100%' }}
             onClick={() => onClearSelection?.()}
           >
@@ -67,75 +67,88 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
 
           <rect x="0" y="0" width={BOLT_W} height={BOLT_H} fill="transparent" />
 
-          {/* Fletching - Top vane will respond to shaft hover */}
-          <g
-            id="fletching-bolt"
-            pointerEvents="bounding-box"
-            className="group cursor-pointer"
-            filter={boltGlow('fletching')}
-            onMouseOver={() => setHoverPart('fletching')}
-            onMouseOut={() => setHoverPart(null)}
-            onClick={(e) => { e.stopPropagation(); onPartClick?.('fletching'); }}
-          >
-            <path
-              id="top-vane-bolt"
-              className={`transition-all duration-200 transform-gpu group-hover:-translate-y-1 ${hoverPart === 'shaft' ? '-translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
-              d="M778.41,85.09s-59-58.45-302.57-49.65c-1.48.05-2.85.77-3.73,1.96-4.57,6.2-19.74,25.74-30.35,26.91-1.48.16-2.81.97-3.75,2.13-2.11,2.6-4.63,8.05-3.06,18.65h343.46Z"
-            />
-            <path
-              id="bottom-vane-bolt"
-              className={`transition-all duration-200 transform-gpu group-hover:translate-y-1 ${hoverPart === 'shaft' ? 'translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
-              d="M778.41,158.04s-59,58.45-302.57,49.65c-1.48-.05-2.85-.77-3.73-1.96-4.57-6.2-19.74-25.74-30.35-26.91-1.48-.16-2.81-.97-3.75-2.13-2.11-2.6-4.63-8.05-3.06-18.65h343.46Z"
-            />
-          </g>
-
-          {/* Shaft - When hovering, top vane lifts but doesn't turn orange */}
-          <g 
-            id="shaft-bolt" 
-            className="shaft-group relative"
-          >
-            <rect
-              className={`${hot('shaft') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-colors duration-200 hover:fill-blaze`}
-              x={BOLT_SHAFT_X} y={BOLT_SHAFT_Y} width={BOLT_SHAFT_W} height={BOLT_SHAFT_H}
-              filter={boltGlow('shaft')}
-              onMouseOver={() => setHoverPart('shaft')}
+          {/* Left side group (knock, fletching, shaft) - moves left on insert hover */}
+          <g className={`transition-transform duration-200 transform-gpu ${hoverPart === 'insert' ? '-translate-x-3' : ''}`}>
+            {/* Fletching - Top vane will respond to shaft hover */}
+            <g
+              id="fletching-bolt"
+              pointerEvents="bounding-box"
+              className="group cursor-pointer"
+              filter={boltGlow('fletching')}
+              onMouseOver={() => setHoverPart('fletching')}
               onMouseOut={() => setHoverPart(null)}
-              onClick={(e) => { e.stopPropagation(); onPartClick?.('shaft'); }}
+              onClick={(e) => { e.stopPropagation(); onPartClick?.('fletching'); }}
+            >
+              <path
+                id="top-vane-bolt"
+                className={`transition-all duration-200 transform-gpu group-hover:-translate-y-1 ${hoverPart === 'shaft' ? '-translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
+                d="M778.41,85.09s-59-58.45-302.57-49.65c-1.48.05-2.85.77-3.73,1.96-4.57,6.2-19.74,25.74-30.35,26.91-1.48.16-2.81.97-3.75,2.13-2.11,2.6-4.63,8.05-3.06,18.65h343.46Z"
+              />
+              <path
+                id="bottom-vane-bolt"
+                className={`transition-all duration-200 transform-gpu group-hover:translate-y-1 ${hoverPart === 'shaft' ? 'translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
+                d="M778.41,158.04s-59,58.45-302.57,49.65c-1.48-.05-2.85-.77-3.73-1.96-4.57-6.2-19.74-25.74-30.35-26.91-1.48-.16-2.81-.97-3.75-2.13-2.11-2.6-4.63-8.05-3.06-18.65h343.46Z"
+              />
+            </g>
+
+            {/* Shaft - When hovering, top vane lifts but doesn't turn orange */}
+            <g 
+              id="shaft-bolt" 
+              className="shaft-group relative"
+            >
+              <rect
+                className={`${hot('shaft') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-colors duration-200 hover:fill-blaze`}
+                x={BOLT_SHAFT_X} y={BOLT_SHAFT_Y} width={BOLT_SHAFT_W} height={BOLT_SHAFT_H}
+                filter={boltGlow('shaft')}
+                onMouseOver={() => setHoverPart('shaft')}
+                onMouseOut={() => setHoverPart(null)}
+                onClick={(e) => { e.stopPropagation(); onPartClick?.('shaft'); }}
+              />
+              {isActive('shaft') && (
+                <>
+                  {theme === 'light' && (
+                    <rect
+                      x={BOLT_SHAFT_X} y={BOLT_SHAFT_Y} width={BOLT_SHAFT_W} height={BOLT_SHAFT_H}
+                      className="pointer-events-none"
+                      fill="url(#gradient-light)"
+                    />
+                  )}
+                  {theme === 'dark' && (
+                    <rect
+                      x={BOLT_SHAFT_X} y={BOLT_SHAFT_Y} width={BOLT_SHAFT_W} height={BOLT_SHAFT_H}
+                      className="pointer-events-none"
+                      fill="url(#gradient-dark)"
+                    />
+                  )}
+                </>
+              )}
+            </g>
+
+            {/* Knock */}
+            <path
+              className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-x-1`}
+              filter={boltGlow('knock')}
+              d="M343.46,102.88h-47.64c-1.46,0-2.47,1.46-1.95,2.83l4.74,12.45c.84,2.2.84,4.63,0,6.82l-4.67,12.27c-.55,1.45.52,3.01,2.07,3.01h47.44v-37.38Z"
+              onMouseOver={() => setHoverPart('knock')}
+              onMouseOut={() => setHoverPart(null)}
+              onClick={(e) => { e.stopPropagation(); onPartClick?.('knock'); }}
             />
-            {isActive('shaft') && (
-              <>
-                {theme === 'light' && (
-                  <rect
-                    x={BOLT_SHAFT_X} y={BOLT_SHAFT_Y} width={BOLT_SHAFT_W} height={BOLT_SHAFT_H}
-                    className="pointer-events-none"
-                    fill="url(#gradient-light)"
-                  />
-                )}
-                {theme === 'dark' && (
-                  <rect
-                    x={BOLT_SHAFT_X} y={BOLT_SHAFT_Y} width={BOLT_SHAFT_W} height={BOLT_SHAFT_H}
-                    className="pointer-events-none"
-                    fill="url(#gradient-dark)"
-                  />
-                )}
-              </>
-            )}
           </g>
 
-          {/* Knock */}
-          <path
-            className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-x-1`}
-            filter={boltGlow('knock')}
-            d="M343.46,102.88h-47.64c-1.46,0-2.47,1.46-1.95,2.83l4.74,12.45c.84,2.2.84,4.63,0,6.82l-4.67,12.27c-.55,1.45.52,3.01,2.07,3.01h47.44v-37.38Z"
-            onMouseOver={() => setHoverPart('knock')}
+          {/* Insert */}
+          <rect
+            className={`${hot('insert') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-colors duration-200 hover:fill-blaze`}
+            filter={boltGlow('insert')}
+            x={BOLT_INSERT_X} y={BOLT_INSERT_Y} width={BOLT_INSERT_W} height={BOLT_INSERT_H}
+            onMouseOver={() => setHoverPart('insert')}
             onMouseOut={() => setHoverPart(null)}
-            onClick={(e) => { e.stopPropagation(); onPartClick?.('knock'); }}
+            onClick={(e) => { e.stopPropagation(); onPartClick?.('insert'); }}
           />
 
-          {/* Tip */}
+          {/* Tip - moves right on insert hover */}
           <g
             pointerEvents="bounding-box"
-            className="group cursor-pointer transition-transform duration-200 transform-gpu hover:translate-x-1"
+            className={`group cursor-pointer transition-transform duration-200 transform-gpu ${hoverPart === 'insert' ? 'translate-x-3' : 'hover:translate-x-1'}`}
             filter={boltGlow('tip')}
             onMouseOver={() => setHoverPart('tip')}
             onMouseOut={() => setHoverPart(null)}
@@ -150,16 +163,6 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
               points="1482.89 109.61 1482.89 130.72 1505.43 120.17 1482.89 109.61"
             />
           </g>
-
-          {/* Insert */}
-          <rect
-            className={`${hot('insert') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-y-1`}
-            filter={boltGlow('insert')}
-            x={BOLT_INSERT_X} y={BOLT_INSERT_Y} width={BOLT_INSERT_W} height={BOLT_INSERT_H}
-            onMouseOver={() => setHoverPart('insert')}
-            onMouseOut={() => setHoverPart(null)}
-            onClick={(e) => { e.stopPropagation(); onPartClick?.('insert'); }}
-          />
         </svg>
         </div>
       </div>
@@ -178,7 +181,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1014.27 116.47"
-          className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-center md:origin-center transition-transform duration-300 scale-[1.75] md:scale-100"
+          className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-center md:origin-center transition-transform duration-300 scale-[2.2] md:scale-100"
           style={{ maxWidth: '100%', width: '100%', height: '100%', minHeight: '100%' }}
           onClick={() => onClearSelection?.()}
         >
@@ -196,49 +199,62 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
 
         <rect x="0" y="0" width="1014.27" height="116.47" fill="transparent" />
 
-        {/* Shaft */}
-        <rect
-          className={`${hot('shaft') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-colors duration-200 hover:fill-blaze`}
-          x={SHAFT_X} y={SHAFT_Y} width={SHAFT_W} height={SHAFT_H}
-          filter={greenGlow('shaft')}
-          onMouseOver={() => setHoverPart('shaft')}
-          onMouseOut={() => setHoverPart(null)}
-          onClick={(e) => { e.stopPropagation(); onPartClick?.('shaft'); }}
-        />
-
-        {/* Fletching - Top vane will respond to shaft hover */}
-        <g
-          pointerEvents="bounding-box"
-          className="group cursor-pointer"
-          filter={greenGlow('fletching')}
-          onMouseOver={() => setHoverPart('fletching')}
-          onMouseOut={() => setHoverPart(null)}
-          onClick={(e) => { e.stopPropagation(); onPartClick?.('fletching'); }}
-        >
-          <path
-            className={`transition-all duration-200 transform-gpu group-hover:-translate-y-1 ${hoverPart === 'shaft' ? '-translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
-            d="M124.22,35.69s15.86-29.46,40.79-27.65c0,0,139.92,8.39,167.19,27.65H124.22Z"
+        {/* Left side group (knock, fletching, shaft) - moves left on insert hover */}
+        <g className={`transition-transform duration-200 transform-gpu ${hoverPart === 'insert' ? '-translate-x-3' : ''}`}>
+          {/* Shaft */}
+          <rect
+            className={`${hot('shaft') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-colors duration-200 hover:fill-blaze`}
+            x={SHAFT_X} y={SHAFT_Y} width={SHAFT_W} height={SHAFT_H}
+            filter={greenGlow('shaft')}
+            onMouseOver={() => setHoverPart('shaft')}
+            onMouseOut={() => setHoverPart(null)}
+            onClick={(e) => { e.stopPropagation(); onPartClick?.('shaft'); }}
           />
+
+          {/* Fletching - Top vane will respond to shaft hover */}
+          <g
+            pointerEvents="bounding-box"
+            className="group cursor-pointer"
+            filter={greenGlow('fletching')}
+            onMouseOver={() => setHoverPart('fletching')}
+            onMouseOut={() => setHoverPart(null)}
+            onClick={(e) => { e.stopPropagation(); onPartClick?.('fletching'); }}
+          >
+            <path
+              className={`transition-all duration-200 transform-gpu group-hover:-translate-y-1 ${hoverPart === 'shaft' ? '-translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
+              d="M124.22,35.69s15.86-29.46,40.79-27.65c0,0,139.92,8.39,167.19,27.65H124.22Z"
+            />
+            <path
+              className={`transition-all duration-200 transform-gpu group-hover:translate-y-1 ${hoverPart === 'shaft' ? 'translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
+              d="M124.22,79.03s15.86,30.31,40.79,28.45c0,0,139.92-8.63,167.19-28.45H124.22Z"
+            />
+          </g>
+
+          {/* Knock */}
           <path
-            className={`transition-all duration-200 transform-gpu group-hover:translate-y-1 ${hoverPart === 'shaft' ? 'translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
-            d="M124.22,79.03s15.86,30.31,40.79,28.45c0,0,139.92-8.63,167.19-28.45H124.22Z"
+            className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-x-1`}
+            filter={greenGlow('knock')}
+            d="M48.39,46.51v20.45s-17.82,3.57-38.65-4.56c0,0-.99-2.53,3.57-3.74,0,0,16.06,3.41,12.76-4.45,0,0-.38-2.91-9.62-1.32,0,0-6.23-.27-6.8-3.13,0,0,15.76-7.31,38.75-3.24Z"
+            onMouseOver={() => setHoverPart('knock')}
+            onMouseOut={() => setHoverPart(null)}
+            onClick={(e) => { e.stopPropagation(); onPartClick?.('knock'); }}
           />
         </g>
 
-        {/* Knock */}
-        <path
-          className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-x-1`}
-          filter={greenGlow('knock')}
-          d="M48.39,46.51v20.45s-17.82,3.57-38.65-4.56c0,0-.99-2.53,3.57-3.74,0,0,16.06,3.41,12.76-4.45,0,0-.38-2.91-9.62-1.32,0,0-6.23-.27-6.8-3.13,0,0,15.76-7.31,38.75-3.24Z"
-          onMouseOver={() => setHoverPart('knock')}
+        {/* Insert */}
+        <rect
+          className={`${hot('insert') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-colors duration-200 hover:fill-blaze`}
+          filter={greenGlow('insert')}
+          x={insertX} y={INSERT_Y} width={INSERT_W} height="22.21"
+          onMouseOver={() => setHoverPart('insert')}
           onMouseOut={() => setHoverPart(null)}
-          onClick={(e) => { e.stopPropagation(); onPartClick?.('knock'); }}
+          onClick={(e) => { e.stopPropagation(); onPartClick?.('insert'); }}
         />
 
-        {/* Tip */}
+        {/* Tip - moves right on insert hover */}
         <g
           pointerEvents="bounding-box"
-          className="group cursor-pointer transition-transform duration-200 transform-gpu hover:translate-x-1"
+          className={`group cursor-pointer transition-transform duration-200 transform-gpu ${hoverPart === 'insert' ? 'translate-x-3' : 'hover:translate-x-1'}`}
           filter={greenGlow('tip')}
           onMouseOver={() => setHoverPart('tip')}
           onMouseOut={() => setHoverPart(null)}
@@ -253,16 +269,6 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
             points="994.33 51.1 994.33 63.64 1007.72 57.37 994.33 51.1"
           />
         </g>
-
-        {/* Insert */}
-        <rect
-          className={`${hot('insert') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-y-1`}
-          filter={greenGlow('insert')}
-          x={insertX} y={INSERT_Y} width={INSERT_W} height="22.21"
-          onMouseOver={() => setHoverPart('insert')}
-          onMouseOut={() => setHoverPart(null)}
-          onClick={(e) => { e.stopPropagation(); onPartClick?.('insert'); }}
-        />
       </svg>
       </div>
     </div>

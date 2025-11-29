@@ -47,7 +47,7 @@ export default function GuideTab() {
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-2">Fletching</h4>
+              <h4 className="font-semibold mb-2">Vanes</h4>
               <p className="text-sm text-gray-700 dark:text-gray-300">
                 3-fletch is standard and offers good stability. 4-fletch provides more control but adds weight. 
                 Choose based on your shooting style and bow setup.
@@ -93,7 +93,7 @@ export default function GuideTab() {
           <h3 className="text-xl font-bold mb-4">How to Measure Component Weights</h3>
           <ol className="text-sm text-gray-700 dark:text-gray-300 space-y-2 list-decimal list-inside">
             <li><strong>Use a grain scale:</strong> A precision scale that measures in grains is essential (1 grain = 0.0648 grams)</li>
-            <li><strong>Measure individually:</strong> Weigh each component separately - nock, fletching, shaft, insert, and tip</li>
+            <li><strong>Measure individually:</strong> Weigh each component separately - nock, vanes, shaft, insert, and tip</li>
             <li><strong>Shaft calculation:</strong> Multiply GPI (Grains Per Inch) by your arrow length to get total shaft weight</li>
             <li><strong>Double-check:</strong> Verify your total matches the sum of all components</li>
             <li><strong>Record everything:</strong> Save your builds in this calculator for future reference</li>
