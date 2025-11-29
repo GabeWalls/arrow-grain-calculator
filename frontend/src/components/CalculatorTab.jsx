@@ -557,14 +557,14 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
       <div className="w-full flex flex-col md:flex-col items-center">
         <div className="w-full flex flex-row md:flex-col items-stretch md:items-center gap-4 md:gap-0 mb-4 md:mb-0">
           {/* Arrow/Bolt SVG - Left on mobile, centered between edge and fields, bigger size */}
-          <div className="flex-shrink-0 w-[65%] md:w-full md:flex md:justify-center flex items-stretch justify-center md:self-auto self-stretch px-2 md:px-0 absolute md:relative left-0 md:left-auto z-10 md:z-auto">
+          <div className="flex-shrink-0 w-[55%] md:w-full md:flex md:justify-center flex items-stretch justify-center md:self-auto self-stretch px-2 md:px-0 absolute md:relative left-0 md:left-auto z-10 md:z-auto">
             <div className="w-full h-full flex items-center justify-center py-4 md:py-0 pt-8 md:pt-0">
               <ArrowSVG onPartClick={handleScrollToInput} activePart={activePart} mode={buildType} onClearSelection={() => setActivePart(null)} />
             </div>
           </div>
 
           {/* Input Fields - Right on mobile, below on desktop */}
-          <form onSubmit={handleSubmit} className="flex-1 md:w-full max-w-5xl grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 md:mt-6 flex flex-col relative md:relative z-20 md:z-auto ml-[60%] md:ml-0">
+          <form onSubmit={handleSubmit} className="flex-1 md:w-full max-w-5xl grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 md:mt-6 flex flex-col relative md:relative z-20 md:z-auto ml-[50%] md:ml-0">
             {/* Mobile: Order matches vertical arrow (top to bottom: Knock, Vanes, Shaft, Insert, Tip) */}
             {/* Desktop: Left to right order */}
             <div className="flex flex-col items-start md:items-center order-1 md:order-1">

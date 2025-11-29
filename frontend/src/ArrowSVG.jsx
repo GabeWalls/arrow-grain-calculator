@@ -39,7 +39,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox={`0 0 ${BOLT_W} ${BOLT_H}`}
-            className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-center md:origin-center transition-transform duration-300 scale-[1.9] md:scale-100"
+            className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-center md:origin-center transition-transform duration-300 scale-[1.75] md:scale-100"
             style={{ maxWidth: '100%', maxHeight: '100%', minHeight: '100%', height: '100%' }}
             onClick={() => onClearSelection?.()}
           >
@@ -81,12 +81,12 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
             >
               <path
                 id="top-vane-bolt"
-                className={`transition-all duration-200 transform-gpu group-hover:-translate-y-1 ${hoverPart === 'shaft' ? '-translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
+                className={`transition-all duration-200 transform-gpu group-hover:-translate-y-2 ${hoverPart === 'shaft' ? '-translate-y-2' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
                 d="M778.41,85.09s-59-58.45-302.57-49.65c-1.48.05-2.85.77-3.73,1.96-4.57,6.2-19.74,25.74-30.35,26.91-1.48.16-2.81.97-3.75,2.13-2.11,2.6-4.63,8.05-3.06,18.65h343.46Z"
               />
               <path
                 id="bottom-vane-bolt"
-                className={`transition-all duration-200 transform-gpu group-hover:translate-y-1 ${hoverPart === 'shaft' ? 'translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
+                className={`transition-all duration-200 transform-gpu group-hover:translate-y-2 ${hoverPart === 'shaft' ? 'translate-y-2' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
                 d="M778.41,158.04s-59,58.45-302.57,49.65c-1.48-.05-2.85-.77-3.73-1.96-4.57-6.2-19.74-25.74-30.35-26.91-1.48-.16-2.81-.97-3.75-2.13-2.11-2.6-4.63-8.05-3.06-18.65h343.46Z"
               />
             </g>
@@ -124,9 +124,9 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
               )}
             </g>
 
-            {/* Knock - moves left on shaft hover */}
+            {/* Knock - moves left on shaft hover (more aggressive for bolt) */}
             <path
-              className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-x-1 ${hoverPart === 'shaft' ? '-translate-x-1' : ''}`}
+              className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-x-2 ${hoverPart === 'shaft' ? '-translate-x-2' : ''}`}
               filter={boltGlow('knock')}
               d="M343.46,102.88h-47.64c-1.46,0-2.47,1.46-1.95,2.83l4.74,12.45c.84,2.2.84,4.63,0,6.82l-4.67,12.27c-.55,1.45.52,3.01,2.07,3.01h47.44v-37.38Z"
               onMouseOver={() => setHoverPart('knock')}
@@ -135,9 +135,9 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
             />
           </g>
 
-          {/* Insert - moves right on shaft hover */}
+          {/* Insert - moves right on shaft hover (more aggressive for bolt) */}
           <rect
-            className={`${hot('insert') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze ${hoverPart === 'shaft' ? 'translate-x-1' : ''}`}
+            className={`${hot('insert') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze ${hoverPart === 'shaft' ? 'translate-x-2' : ''}`}
             filter={boltGlow('insert')}
             x={BOLT_INSERT_X} y={BOLT_INSERT_Y} width={BOLT_INSERT_W} height={BOLT_INSERT_H}
             onMouseOver={() => setHoverPart('insert')}
@@ -145,10 +145,10 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
             onClick={(e) => { e.stopPropagation(); onPartClick?.('insert'); }}
           />
 
-          {/* Tip - moves right on insert hover and shaft hover */}
+          {/* Tip - moves right on insert hover and shaft hover (more aggressive for bolt) */}
           <g
             pointerEvents="bounding-box"
-            className={`group cursor-pointer transition-transform duration-200 transform-gpu ${hoverPart === 'insert' ? 'translate-x-3' : hoverPart === 'shaft' ? 'translate-x-1' : 'hover:translate-x-1'}`}
+            className={`group cursor-pointer transition-transform duration-200 transform-gpu ${hoverPart === 'insert' ? 'translate-x-3' : hoverPart === 'shaft' ? 'translate-x-2' : 'hover:translate-x-2'}`}
             filter={boltGlow('tip')}
             onMouseOver={() => setHoverPart('tip')}
             onMouseOut={() => setHoverPart(null)}
@@ -181,7 +181,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1014.27 116.47"
-          className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-center md:origin-center transition-transform duration-300 scale-[1.9] md:scale-100"
+          className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-center md:origin-center transition-transform duration-300 scale-[1.75] md:scale-100"
           style={{ maxWidth: '100%', width: '100%', height: '100%', minHeight: '100%' }}
           onClick={() => onClearSelection?.()}
         >
