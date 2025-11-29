@@ -555,16 +555,16 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
 
       {/* Mobile: SVG left, fields right. Desktop: SVG above, fields below */}
       <div className="w-full flex flex-col md:flex-col items-center">
-        <div className="w-full flex flex-row md:flex-col items-stretch md:items-center gap-4 md:gap-0 mb-4 md:mb-0">
-          {/* Arrow/Bolt SVG - Left on mobile, centered between edge and fields, bigger size */}
-          <div className="flex-shrink-0 w-[55%] md:w-full md:flex md:justify-center flex items-start md:items-center justify-center md:self-auto self-stretch px-2 md:px-0 absolute md:relative left-0 md:left-auto z-10 md:z-auto top-0 md:top-auto">
-            <div className="w-full h-full flex items-start md:items-center justify-center py-4 md:py-0 pt-16 md:pt-0">
+        <div className="w-full flex flex-row md:flex-col items-center md:items-center gap-4 md:gap-0 mb-4 md:mb-0 relative">
+          {/* Arrow/Bolt SVG - Left on mobile, centered vertically with fields */}
+          <div className="flex-shrink-0 w-[55%] md:w-full md:flex md:justify-center flex items-center justify-center md:self-auto self-center px-2 md:px-0 relative md:relative z-10 md:z-auto">
+            <div className="w-full h-full flex items-center justify-center">
               <ArrowSVG onPartClick={handleScrollToInput} activePart={activePart} mode={buildType} onClearSelection={() => setActivePart(null)} />
             </div>
           </div>
 
           {/* Input Fields - Right on mobile, below on desktop */}
-          <form onSubmit={handleSubmit} className="flex-1 md:w-full max-w-5xl grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 md:mt-6 flex flex-col relative md:relative z-20 md:z-auto ml-[50%] md:ml-0">
+          <form onSubmit={handleSubmit} className="flex-1 md:w-full max-w-5xl grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 md:mt-6 flex flex-col relative md:relative z-20 md:z-auto">
             {/* Mobile: Order matches vertical arrow (top to bottom: Knock, Vanes, Shaft, Insert, Tip) */}
             {/* Desktop: Left to right order */}
             <div className="flex flex-col items-start md:items-center order-1 md:order-1">
