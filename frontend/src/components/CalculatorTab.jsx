@@ -557,7 +557,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
       <div className="w-full flex flex-col md:flex-col items-center">
         <div className="w-full flex flex-row md:flex-col items-stretch md:items-center gap-4 md:gap-0 mb-4 md:mb-0">
           {/* Arrow/Bolt SVG - Left on mobile, centered between edge and fields, bigger size */}
-          <div className="flex-shrink-0 w-[35%] md:w-full md:flex md:justify-center flex items-stretch justify-center md:self-auto self-stretch px-2 md:px-0">
+          <div className="flex-shrink-0 w-[50%] md:w-full md:flex md:justify-center flex items-stretch justify-center md:self-auto self-stretch px-2 md:px-0">
             <div className="w-full h-full flex items-center justify-center py-4 md:py-0">
               <ArrowSVG onPartClick={handleScrollToInput} activePart={activePart} mode={buildType} onClearSelection={() => setActivePart(null)} />
             </div>

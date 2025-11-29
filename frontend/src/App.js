@@ -150,8 +150,12 @@ function App() {
               </div>
             </div>
 
-            {/* Mobile Menu - Hidden on mobile (shown when hamburger clicked), includes tabs, auth, and theme toggle */}
-            <div className={`${mobileMenuOpen ? 'flex' : 'hidden'} md:hidden flex-col absolute top-full left-0 right-0 bg-white dark:bg-gray-900 border-b border-gray-300 dark:border-gray-700 shadow-lg z-40 py-4 px-4`}>
+            {/* Mobile Menu - Smooth slide animation when hamburger clicked, includes tabs, auth, and theme toggle */}
+            <div className={`md:hidden flex-col absolute top-full left-0 right-0 bg-white dark:bg-gray-900 border-b border-gray-300 dark:border-gray-700 shadow-lg z-40 transition-all duration-300 ease-in-out overflow-hidden ${
+              mobileMenuOpen 
+                ? 'opacity-100 translate-y-0 pointer-events-auto max-h-[600px] py-4 px-4' 
+                : 'opacity-0 -translate-y-4 pointer-events-none max-h-0 py-0 px-4'
+            }`}>
               {/* Tab Navigation */}
               <nav className="flex flex-col gap-2 mb-4">
                 {tabs.map((tab) => (
