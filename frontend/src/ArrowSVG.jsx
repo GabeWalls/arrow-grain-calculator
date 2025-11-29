@@ -39,7 +39,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox={`0 0 ${BOLT_W} ${BOLT_H}`}
-            className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-center md:origin-center transition-transform duration-300 scale-125 md:scale-100"
+            className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-center md:origin-center transition-transform duration-300 scale-150 md:scale-100"
             style={{ maxWidth: '100%', maxHeight: '100%', minHeight: '100%', height: '100%' }}
             onClick={() => onClearSelection?.()}
           >
@@ -178,7 +178,7 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1014.27 116.47"
-          className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-center md:origin-center transition-transform duration-300 scale-125 md:scale-100"
+          className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-center md:origin-center transition-transform duration-300 scale-150 md:scale-100"
           style={{ maxWidth: '100%', width: '100%', height: '100%', minHeight: '100%' }}
           onClick={() => onClearSelection?.()}
         >
