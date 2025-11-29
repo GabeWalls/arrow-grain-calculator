@@ -124,9 +124,9 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
               )}
             </g>
 
-            {/* Knock */}
+            {/* Knock - moves left on shaft hover */}
             <path
-              className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-x-1`}
+              className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-x-1 ${hoverPart === 'shaft' ? '-translate-x-1' : ''}`}
               filter={boltGlow('knock')}
               d="M343.46,102.88h-47.64c-1.46,0-2.47,1.46-1.95,2.83l4.74,12.45c.84,2.2.84,4.63,0,6.82l-4.67,12.27c-.55,1.45.52,3.01,2.07,3.01h47.44v-37.38Z"
               onMouseOver={() => setHoverPart('knock')}
@@ -135,9 +135,9 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
             />
           </g>
 
-          {/* Insert */}
+          {/* Insert - moves right on shaft hover */}
           <rect
-            className={`${hot('insert') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-colors duration-200 hover:fill-blaze`}
+            className={`${hot('insert') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze ${hoverPart === 'shaft' ? 'translate-x-1' : ''}`}
             filter={boltGlow('insert')}
             x={BOLT_INSERT_X} y={BOLT_INSERT_Y} width={BOLT_INSERT_W} height={BOLT_INSERT_H}
             onMouseOver={() => setHoverPart('insert')}
@@ -145,10 +145,10 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
             onClick={(e) => { e.stopPropagation(); onPartClick?.('insert'); }}
           />
 
-          {/* Tip - moves right on insert hover */}
+          {/* Tip - moves right on insert hover and shaft hover */}
           <g
             pointerEvents="bounding-box"
-            className={`group cursor-pointer transition-transform duration-200 transform-gpu ${hoverPart === 'insert' ? 'translate-x-3' : 'hover:translate-x-1'}`}
+            className={`group cursor-pointer transition-transform duration-200 transform-gpu ${hoverPart === 'insert' ? 'translate-x-3' : hoverPart === 'shaft' ? 'translate-x-1' : 'hover:translate-x-1'}`}
             filter={boltGlow('tip')}
             onMouseOver={() => setHoverPart('tip')}
             onMouseOut={() => setHoverPart(null)}
@@ -230,9 +230,9 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
             />
           </g>
 
-          {/* Knock */}
+          {/* Knock - moves left on shaft hover */}
           <path
-            className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-x-1`}
+            className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-x-1 ${hoverPart === 'shaft' ? '-translate-x-1' : ''}`}
             filter={greenGlow('knock')}
             d="M48.39,46.51v20.45s-17.82,3.57-38.65-4.56c0,0-.99-2.53,3.57-3.74,0,0,16.06,3.41,12.76-4.45,0,0-.38-2.91-9.62-1.32,0,0-6.23-.27-6.8-3.13,0,0,15.76-7.31,38.75-3.24Z"
             onMouseOver={() => setHoverPart('knock')}
@@ -241,9 +241,9 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
           />
         </g>
 
-        {/* Insert */}
+        {/* Insert - moves right on shaft hover */}
         <rect
-          className={`${hot('insert') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-colors duration-200 hover:fill-blaze`}
+          className={`${hot('insert') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze ${hoverPart === 'shaft' ? 'translate-x-1' : ''}`}
           filter={greenGlow('insert')}
           x={insertX} y={INSERT_Y} width={INSERT_W} height="22.21"
           onMouseOver={() => setHoverPart('insert')}
@@ -251,10 +251,10 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
           onClick={(e) => { e.stopPropagation(); onPartClick?.('insert'); }}
         />
 
-        {/* Tip - moves right on insert hover */}
+        {/* Tip - moves right on insert hover and shaft hover */}
         <g
           pointerEvents="bounding-box"
-          className={`group cursor-pointer transition-transform duration-200 transform-gpu ${hoverPart === 'insert' ? 'translate-x-3' : 'hover:translate-x-1'}`}
+          className={`group cursor-pointer transition-transform duration-200 transform-gpu ${hoverPart === 'insert' ? 'translate-x-3' : hoverPart === 'shaft' ? 'translate-x-1' : 'hover:translate-x-1'}`}
           filter={greenGlow('tip')}
           onMouseOver={() => setHoverPart('tip')}
           onMouseOut={() => setHoverPart(null)}
