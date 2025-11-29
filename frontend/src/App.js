@@ -16,6 +16,7 @@ function App() {
   const [savedBuilds, setSavedBuilds] = useState([]);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState('login');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Fetch builds when user is authenticated
   useEffect(() => {
@@ -112,9 +113,24 @@ function App() {
         <div className="max-w-7xl mx-auto px-3 md:px-6 py-2 md:py-4">
           {/* Mobile: Top row with logo left, auth right. Second row with tabs */}
           {/* Desktop: Single row with logo, tabs, auth */}
-          <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6">
-            {/* Top Row on Mobile: Centered Logo, Auth Right */}
-            <div className="w-full md:w-auto flex items-center justify-center md:justify-start gap-4 md:gap-0 relative">
+          <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6 relative">
+            {/* Mobile Hamburger Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden absolute left-0 top-0 p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 flex-shrink-0 z-50"
+              aria-label="Toggle menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {mobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+
+            {/* Top Row on Mobile: Centered Logo */}
+            <div className="w-full md:w-auto flex items-center justify-center md:justify-start gap-4 md:gap-0 relative pl-10 md:pl-0">
               {/* Logo - Banner style on mobile, centered */}
               <div className="flex items-center flex-shrink-0 md:flex-shrink-0">
                 <img 
@@ -132,26 +148,73 @@ function App() {
                   className="hidden md:block h-20 lg:h-24 xl:h-28 2xl:h-32 w-auto object-contain"
                 />
               </div>
+            </div>
 
-              {/* Auth Section - Always Top Right on Mobile */}
-              <div className="flex items-center gap-2 md:gap-3 flex-shrink-0 md:hidden absolute right-0">
+            {/* Mobile Menu - Hidden on mobile (shown when hamburger clicked), includes tabs, auth, and theme toggle */}
+            <div className={`${mobileMenuOpen ? 'flex' : 'hidden'} md:hidden flex-col absolute top-full left-0 right-0 bg-white dark:bg-gray-900 border-b border-gray-300 dark:border-gray-700 shadow-lg z-40 py-4 px-4`}>
+              {/* Tab Navigation */}
+              <nav className="flex flex-col gap-2 mb-4">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => {
+                      setActiveTab(tab.id);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`px-4 py-2.5 rounded-lg font-medium whitespace-nowrap flex items-center gap-2 relative overflow-hidden transition-all duration-300 ease-out text-base ${
+                      activeTab === tab.id
+                        ? 'bg-gradient-to-r from-blaze to-blaze-700 text-white shadow-lg'
+                        : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 shadow-sm hover:shadow-md hover:bg-gray-200 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      <img 
+                        src={theme === 'dark' ? `/icons/${tab.iconName}-White.svg` : `/icons/${tab.iconName}-Black.svg`}
+                        alt={tab.label}
+                        className="w-5 h-5 object-contain"
+                      />
+                      <span>{tab.label}</span>
+                    </span>
+                    {activeTab === tab.id && (
+                      <>
+                        {theme === 'light' && (
+                          <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+                        )}
+                        {theme === 'dark' && (
+                          <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+                        )}
+                      </>
+                    )}
+                  </button>
+                ))}
+              </nav>
+
+              {/* Auth Section */}
+              <div className="flex flex-col gap-2 mb-4 pb-4 border-b border-gray-300 dark:border-gray-700">
                 {isAuthenticated ? (
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-col gap-2">
+                    <span className={`text-sm px-4 py-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                      {user?.name || user?.email}
+                    </span>
                     <button
-                      onClick={logout}
-                      className="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 text-sm"
+                      onClick={() => {
+                        logout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="px-4 py-2.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md text-base"
                     >
                       Logout
                     </button>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-col gap-2">
                     <button
                       onClick={() => {
                         setAuthModalMode('login');
                         setAuthModalOpen(true);
+                        setMobileMenuOpen(false);
                       }}
-                      className="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 text-sm"
+                      className="px-4 py-2.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md text-base"
                     >
                       Log In
                     </button>
@@ -159,36 +222,43 @@ function App() {
                       onClick={() => {
                         setAuthModalMode('signup');
                         setAuthModalOpen(true);
+                        setMobileMenuOpen(false);
                       }}
-                      className="px-3 py-1.5 rounded-lg bg-blaze hover:bg-blaze-dark text-white font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 text-sm"
+                      className="px-4 py-2.5 rounded-lg bg-blaze hover:bg-blaze-dark text-white font-medium transition-all duration-300 ease-out shadow-sm hover:shadow-md text-base"
                     >
                       Sign Up
                     </button>
                   </div>
                 )}
-                
-                {/* Theme Toggle Button */}
-                <button
-                  type="button"
-                  onClick={toggleTheme}
-                  className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 flex-shrink-0"
-                  aria-label="Toggle theme"
-                >
-                  {theme === 'dark' ? (
+              </div>
+              
+              {/* Theme Toggle Button */}
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="px-4 py-2.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-out shadow-sm hover:shadow-md flex items-center gap-2 text-base"
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? (
+                  <>
                     <svg className="w-5 h-5 transition-transform duration-300 hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
-                  ) : (
+                    <span>Light Mode</span>
+                  </>
+                ) : (
+                  <>
                     <svg className="w-5 h-5 transition-transform duration-300 hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                     </svg>
-                  )}
-                </button>
-              </div>
+                    <span>Dark Mode</span>
+                  </>
+                )}
+              </button>
             </div>
 
-            {/* Tab Navigation - Centered on mobile, inline on desktop */}
-            <nav className="flex items-center gap-2 flex-1 min-w-0 w-full md:w-auto overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 justify-center md:justify-start">
+            {/* Tab Navigation - Desktop only (completely hidden on mobile) */}
+            <nav className="hidden md:flex items-center gap-2 flex-1 min-w-0 w-auto overflow-x-auto md:overflow-x-visible pb-0 justify-start">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}

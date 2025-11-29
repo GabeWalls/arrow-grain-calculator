@@ -555,16 +555,16 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
 
       {/* Mobile: SVG left, fields right. Desktop: SVG above, fields below */}
       <div className="w-full flex flex-col md:flex-col items-center">
-        <div className="w-full flex flex-row md:flex-col items-start md:items-center gap-4 md:gap-0 mb-4 md:mb-0">
-          {/* Arrow/Bolt SVG - Left on mobile, aligned with fields */}
-          <div className="flex-shrink-0 w-[40%] md:w-full md:flex md:justify-center flex items-start justify-start pt-0 md:pt-0">
-            <div className="w-full flex items-start justify-start">
+        <div className="w-full flex flex-row md:flex-col items-stretch md:items-center gap-4 md:gap-0 mb-4 md:mb-0">
+          {/* Arrow/Bolt SVG - Left on mobile, centered between edge and fields, bigger size */}
+          <div className="flex-shrink-0 w-[35%] md:w-full md:flex md:justify-center flex items-stretch justify-center md:self-auto self-stretch px-2 md:px-0">
+            <div className="w-full h-full flex items-center justify-center py-4 md:py-0">
               <ArrowSVG onPartClick={handleScrollToInput} activePart={activePart} mode={buildType} onClearSelection={() => setActivePart(null)} />
             </div>
           </div>
 
           {/* Input Fields - Right on mobile, below on desktop */}
-          <form onSubmit={handleSubmit} className="flex-1 md:w-full max-w-5xl grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 md:mt-6">
+          <form onSubmit={handleSubmit} className="flex-1 md:w-full max-w-5xl grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 md:mt-6 flex flex-col">
             {/* Mobile: Order matches vertical arrow (top to bottom: Knock, Fletching, Shaft, Insert, Tip) */}
             {/* Desktop: Left to right order */}
             <div className="flex flex-col items-start md:items-center order-1 md:order-1">
@@ -636,7 +636,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
                      }`} />
             </div>
 
-            <div className="col-span-1 md:col-span-5 flex justify-center mt-4 md:mt-6">
+            <div className="col-span-1 md:col-span-5 flex justify-center mt-4 md:mt-6 order-6 md:order-none">
               <button type="submit" className="px-4 md:px-6 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden text-sm md:text-base">
                 <span className="relative z-10">Calculate</span>
                 {theme === 'light' && (

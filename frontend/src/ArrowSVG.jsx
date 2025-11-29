@@ -34,13 +34,13 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
     const boltGlow = (p) => (hot(p) ? 'url(#bolt-glow)' : 'none');
 
     return (
-      <div className="relative mb-0 md:mb-10 flex justify-start md:justify-center w-full h-full">
-        <div className="md:w-[950px] w-full h-full flex justify-start md:justify-center items-start md:items-center">
+      <div className="relative mb-0 md:mb-10 flex justify-center md:justify-center w-full h-full">
+        <div className="md:w-[950px] w-full h-full flex justify-center md:justify-center items-stretch md:items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox={`0 0 ${BOLT_W} ${BOLT_H}`}
-            className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-top-left md:origin-center transition-transform duration-300"
-            style={{ maxWidth: '100%', maxHeight: '100%' }}
+            className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-center md:origin-center transition-transform duration-300"
+            style={{ maxWidth: '100%', maxHeight: '100%', minHeight: '100%', height: '100%' }}
             onClick={() => onClearSelection?.()}
           >
           <defs>
@@ -173,13 +173,13 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
   const greenGlow = (p) => (hot(p) ? 'url(#green-glow)' : 'none');
 
   return (
-    <div className="relative mb-0 md:mb-10 flex justify-start md:justify-center w-full h-full">
-      <div className="md:w-[950px] w-full h-full flex justify-start md:justify-center items-start md:items-center">
+    <div className="relative mb-0 md:mb-10 flex justify-center md:justify-center w-full h-full">
+      <div className="md:w-[950px] w-full h-full flex justify-center md:justify-center items-stretch md:items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1014.27 116.47"
-          className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-top-left md:origin-center transition-transform duration-300"
-          style={{ maxWidth: '100%', maxHeight: '100%' }}
+          className="h-full w-full md:w-[950px] md:h-auto transform md:transform-none rotate-90 md:rotate-0 origin-center md:origin-center transition-transform duration-300"
+          style={{ maxWidth: '100%', width: '100%', height: '100%', minHeight: '100%' }}
           onClick={() => onClearSelection?.()}
         >
         <defs>
