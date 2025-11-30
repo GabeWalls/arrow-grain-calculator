@@ -565,12 +565,12 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
 
           {/* Input Fields - Right on mobile, below on desktop */}
           <form onSubmit={handleSubmit} className="flex-1 md:w-full max-w-5xl grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 md:mt-6 flex flex-col relative md:relative z-20 md:z-auto">
-            {/* Mobile: Order matches vertical arrow (top to bottom: Knock, Vanes, Shaft, Insert, Tip) */}
+            {/* Mobile: Order matches vertical arrow (top to bottom: Knock, Vanes, Shaft, Insert, Broadhead) */}
             {/* Desktop: Left to right order */}
             <div className="flex flex-col items-start md:items-center order-1 md:order-1">
               <label className={`mb-1 transition-colors duration-200 text-sm md:text-base ${activePart === 'knock' ? 'text-blaze font-bold' : ''}`}>Knock</label>
               <input type="number" name="knock" value={components.knock} onChange={handleChange} onFocus={handleInputFocus}
-                     className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                     className={`bg-white dark:bg-gray-800 border px-4 py-3 md:px-2 md:py-1 rounded shadow w-full transition-all duration-200 text-base md:text-sm ${
                        activePart === 'knock'
                          ? 'border-blaze border-2 text-gray-900 dark:text-white'
                          : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
@@ -580,14 +580,14 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
             <div className="flex flex-col items-start md:items-center order-2 md:order-2">
               <label className={`mb-1 transition-colors duration-200 text-sm md:text-base ${activePart === 'fletching' ? 'text-blaze font-bold' : ''}`}>Vanes</label>
               <input type="number" name="fletching" value={components.fletching} onChange={handleChange} onFocus={handleInputFocus}
-                     className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                     className={`bg-white dark:bg-gray-800 border px-4 py-3 md:px-2 md:py-1 rounded shadow w-full transition-all duration-200 text-base md:text-sm ${
                        activePart === 'fletching'
                          ? 'border-blaze border-2 text-gray-900 dark:text-white'
                          : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
                      }`} />
               <label className="mt-2 mb-1 text-[10px] md:text-sm">Number of Vanes</label>
               <select value={fletchCount} onChange={(e) => setFletchCount(e.target.value)}
-                      className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-1.5 py-0.5 md:px-2 md:py-1 rounded shadow w-full text-xs md:text-base">
+                      className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-4 py-3 md:px-2 md:py-1 rounded shadow w-full text-base md:text-base">
                 {[3, 4].map((count) => <option key={count} value={count}>{count}</option>)}
               </select>
             </div>
@@ -595,7 +595,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
             <div className="flex flex-col items-start md:items-center order-3 md:order-3">
               <label className={`mb-1 text-left md:text-center transition-colors duration-200 text-sm md:text-base ${activePart === 'shaft' ? 'text-blaze font-bold' : ''}`}>Shaft (Grains Per Inch)</label>
               <input type="number" name="gpi" value={gpi} onChange={(e) => setGpi(e.target.value)} onFocus={handleInputFocus}
-                     className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                     className={`bg-white dark:bg-gray-800 border px-4 py-3 md:px-2 md:py-1 rounded shadow w-full transition-all duration-200 text-base md:text-sm ${
                        activePart === 'shaft'
                          ? 'border-blaze border-2 text-gray-900 dark:text-white'
                          : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
@@ -604,7 +604,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
                 {buildType === 'bolt' ? 'Bolt Length (inches)' : 'Arrow Length (inches)'}
               </label>
               <select name="arrowLength" value={arrowLength} onChange={(e) => setArrowLength(e.target.value)} onFocus={handleInputFocus}
-                      className={`bg-white dark:bg-gray-800 border px-1.5 py-0.5 md:px-2 md:py-1 rounded shadow w-full transition-all duration-200 text-xs md:text-base ${
+                      className={`bg-white dark:bg-gray-800 border px-4 py-3 md:px-2 md:py-1 rounded shadow w-full transition-all duration-200 text-base md:text-base ${
                         activePart === 'shaft'
                           ? 'border-blaze border-2 text-gray-900 dark:text-white'
                           : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
@@ -613,13 +613,13 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
               </select>
               <label className="mt-2 mb-1 text-[10px] md:text-sm text-left md:text-center">Shaft (Total Grains)</label>
               <input type="number" value={shaftGrains} readOnly
-                     className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 px-1.5 py-0.5 md:px-2 md:py-1 rounded shadow w-full text-xs md:text-base" />
+                     className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 px-4 py-3 md:px-2 md:py-1 rounded shadow w-full text-base md:text-sm" />
             </div>
 
             <div className="flex flex-col items-start md:items-center order-4 md:order-4">
               <label className={`mb-1 transition-colors duration-200 text-sm md:text-base ${activePart === 'insert' ? 'text-blaze font-bold' : ''}`}>Insert</label>
               <input type="number" name="insert" value={components.insert} onChange={handleChange} onFocus={handleInputFocus}
-                     className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                     className={`bg-white dark:bg-gray-800 border px-4 py-3 md:px-2 md:py-1 rounded shadow w-full transition-all duration-200 text-base md:text-sm ${
                        activePart === 'insert'
                          ? 'border-blaze border-2 text-gray-900 dark:text-white'
                          : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
@@ -627,16 +627,16 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
             </div>
 
             <div className="flex flex-col items-start md:items-center order-5 md:order-5">
-              <label className={`mb-1 transition-colors duration-200 text-sm md:text-base ${activePart === 'tip' ? 'text-blaze font-bold' : ''}`}>Tip</label>
+              <label className={`mb-1 transition-colors duration-200 text-sm md:text-base ${activePart === 'tip' ? 'text-blaze font-bold' : ''}`}>Broadhead</label>
               <input type="number" name="tip" value={components.tip} onChange={handleChange} onFocus={handleInputFocus}
-                     className={`bg-white dark:bg-gray-800 border px-2 py-1 rounded shadow w-full transition-all duration-200 ${
+                     className={`bg-white dark:bg-gray-800 border px-4 py-3 md:px-2 md:py-1 rounded shadow w-full transition-all duration-200 text-base md:text-sm ${
                        activePart === 'tip'
                          ? 'border-blaze border-2 text-gray-900 dark:text-white'
                          : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
                      }`} />
             </div>
 
-            {/* Calculate Button - Mobile: After Tip field, Desktop: Hidden (shown below) */}
+            {/* Calculate Button - Mobile: After Broadhead field, Desktop: Hidden (shown below) */}
             <div className="w-full flex justify-center mt-4 order-6 md:hidden">
               <button type="button" onClick={(e) => handleSubmit(e)} className="px-6 py-3 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden text-base font-semibold">
                 <span className="relative z-10">Calculate</span>
@@ -652,7 +652,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
         </div>
       </div>
 
-      {/* Calculate Button - Desktop only (mobile version is inside form after Tip field) */}
+      {/* Calculate Button - Desktop only (mobile version is inside form after Broadhead field) */}
       <div className="w-full flex justify-center mt-4 md:mt-6 hidden md:flex">
         <button type="button" onClick={(e) => handleSubmit(e)} className="px-6 py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden text-base font-semibold">
           <span className="relative z-10">Calculate</span>
@@ -670,13 +670,13 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
 
       <div className="col-span-1 md:col-span-5 flex flex-col items-center mt-4 md:mt-6 w-full max-w-md mx-auto px-4">
         <input type="text" placeholder="Build Name" value={buildName} onChange={(e) => setBuildName(e.target.value)}
-               className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full mb-2" />
+               className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-4 py-3 md:px-2 md:py-1 rounded shadow w-full mb-2 text-base md:text-sm" />
         <div className="w-full mb-2">
           <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Target Animal</label>
           <select 
             value={animal} 
             onChange={(e) => setAnimal(e.target.value)}
-            className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow w-full"
+            className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-4 py-3 md:px-2 md:py-1 rounded shadow w-full text-base md:text-sm"
           >
             {ANIMALS.map(a => (
               <option key={a.value} value={a.value}>{a.label}</option>

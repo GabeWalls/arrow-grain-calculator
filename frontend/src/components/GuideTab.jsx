@@ -33,10 +33,10 @@ export default function GuideTab() {
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-2">Tips/Broadheads</h4>
+              <h4 className="font-semibold mb-2">Broadheads</h4>
               <p className="text-sm text-gray-700 dark:text-gray-300">
-                Weight affects FOC significantly. Heavier tips (125-200gr) increase FOC and penetration. 
-                Lighter tips (100gr) improve speed and flat trajectory. Match tip weight to your game size.
+                Weight affects FOC significantly. Heavier broadheads (125-200gr) increase FOC and penetration. 
+                Lighter broadheads (100gr) improve speed and flat trajectory. Match broadhead weight to your game size.
               </p>
             </div>
             <div>
@@ -64,7 +64,7 @@ export default function GuideTab() {
               <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1 list-disc list-inside">
                 <li>Target weight: 400-450 grains</li>
                 <li>FOC: 12-15%</li>
-                <li>Tip: 100-125gr broadhead</li>
+                <li>Broadhead: 100-125gr</li>
                 <li>Focus on balance between speed and penetration</li>
               </ul>
             </div>
@@ -73,7 +73,7 @@ export default function GuideTab() {
               <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1 list-disc list-inside">
                 <li>Target weight: 500-600+ grains</li>
                 <li>FOC: 15-20%</li>
-                <li>Tip: 150-200gr broadhead</li>
+                <li>Broadhead: 150-200gr</li>
                 <li>Prioritize penetration over speed</li>
               </ul>
             </div>
@@ -82,7 +82,7 @@ export default function GuideTab() {
               <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1 list-disc list-inside">
                 <li>Target weight: 600+ grains</li>
                 <li>FOC: 18-20%</li>
-                <li>Tip: 175-200gr premium broadhead</li>
+                <li>Broadhead: 175-200gr premium</li>
                 <li>Maximum weight and FOC for deep penetration</li>
               </ul>
             </div>
@@ -93,7 +93,7 @@ export default function GuideTab() {
           <h3 className="text-xl font-bold mb-4">How to Measure Component Weights</h3>
           <ol className="text-sm text-gray-700 dark:text-gray-300 space-y-2 list-decimal list-inside">
             <li><strong>Use a grain scale:</strong> A precision scale that measures in grains is essential (1 grain = 0.0648 grams)</li>
-            <li><strong>Measure individually:</strong> Weigh each component separately - nock, vanes, shaft, insert, and tip</li>
+            <li><strong>Measure individually:</strong> Weigh each component separately - nock, vanes, shaft, insert, and broadhead</li>
             <li><strong>Shaft calculation:</strong> Multiply GPI (Grains Per Inch) by your arrow length to get total shaft weight</li>
             <li><strong>Double-check:</strong> Verify your total matches the sum of all components</li>
             <li><strong>Record everything:</strong> Save your builds in this calculator for future reference</li>
