@@ -635,20 +635,21 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
                          : 'text-gray-900 dark:text-white border-gray-300 dark:border-gray-600'
                      }`} />
             </div>
-
-            <div className="col-span-1 md:col-span-5 flex justify-center mt-4 md:mt-6 order-6 md:order-none">
-              <button type="submit" className="px-6 md:px-6 py-3 md:py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden text-base md:text-base font-semibold">
-                <span className="relative z-10">Calculate</span>
-                {theme === 'light' && (
-                  <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
-                )}
-                {theme === 'dark' && (
-                  <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
-                )}
-              </button>
-            </div>
           </form>
         </div>
+      </div>
+
+      {/* Calculate Button - Below fields on desktop, above build name */}
+      <div className="w-full flex justify-center mt-4 md:mt-6 order-6 md:order-none">
+        <button type="button" onClick={(e) => handleSubmit(e)} className="px-6 md:px-6 py-3 md:py-2 bg-blaze hover:bg-blaze-600 active:bg-blaze-700 rounded shadow text-white transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 active:scale-95 transform relative overflow-hidden text-base md:text-base font-semibold">
+          <span className="relative z-10">Calculate</span>
+          {theme === 'light' && (
+            <span className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/5 to-transparent"></span>
+          )}
+          {theme === 'dark' && (
+            <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent"></span>
+          )}
+        </button>
       </div>
 
       {totalGrains !== null && <h2 className="mt-4 md:mt-6 text-lg md:text-xl font-semibold text-center px-4">Total {buildType === 'bolt' ? 'Bolt' : 'Arrow'} Weight: {totalGrains} grains</h2>}
