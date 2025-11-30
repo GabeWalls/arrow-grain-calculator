@@ -135,15 +135,15 @@ function App() {
               <div className="flex items-center flex-shrink-0 md:flex-shrink-0">
                 <img 
                   src={theme === 'dark' 
-                    ? "/ArrowWeight-Banner-DarkMode.svg" 
-                    : "/ArrowWeight-Banner.svg"}
+                    ? "/ArrowWeight-Logo-Banner-Size-Darkmode.svg" 
+                    : "/ArrowWeight-Banner-Size.svg"}
                   alt="Arrow Weight Calculator" 
                   className="h-20 sm:h-24 md:hidden w-auto object-contain mx-auto"
                 />
                 <img 
                   src={theme === 'dark' 
-                    ? "/ArrowWeight-Logo-Words-DarkMode.svg" 
-                    : "/ArrowWeight-Logo-Words.svg"}
+                    ? "/ArrowWeight-Logo-Words-Darkmode.svg" 
+                    : "/ArrowWeight-Logo-2.svg"}
                   alt="Arrow Weight Calculator" 
                   className="hidden md:block h-20 lg:h-24 xl:h-28 2xl:h-32 w-auto object-contain"
                 />
