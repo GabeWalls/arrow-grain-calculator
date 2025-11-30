@@ -117,7 +117,7 @@ function App() {
             {/* Mobile Hamburger Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden absolute left-0 top-0 p-3 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 flex-shrink-0 z-50"
+              className="md:hidden absolute left-0 top-1/2 -translate-y-1/2 p-3 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-out shadow-sm hover:shadow-md hover:scale-105 flex-shrink-0 z-50"
               aria-label="Toggle menu"
             >
               <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,7 +142,7 @@ function App() {
                 />
                 <img 
                   src={theme === 'dark' 
-                    ? "/ArrowWeight-Logo-Words-Darkmode.svg" 
+                    ? "/ArrowWeight-Logo-Words-DarkMode.svg" 
                     : "/ArrowWeight-Logo-2.svg"}
                   alt="Arrow Weight Calculator" 
                   className="hidden md:block h-20 lg:h-24 xl:h-28 2xl:h-32 w-auto object-contain"
