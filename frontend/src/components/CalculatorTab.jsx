@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useTheme } from '../ThemeContext';
 import { useAuth } from '../context/AuthContext';
@@ -202,6 +202,12 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
   const [showSaved, setShowSaved] = useState(true);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
+  const [toggleIndicatorStyle, setToggleIndicatorStyle] = useState({ width: 0, left: 0 });
+  const arrowButtonRef = useRef(null);
+  const boltButtonRef = useRef(null);
+  const [toggleIndicatorStyle, setToggleIndicatorStyle] = useState({ width: 0, left: 0 });
+  const arrowButtonRef = useRef(null);
+  const boltButtonRef = useRef(null);
 
   const ANIMALS = [
     { value: '', label: 'None' },
@@ -493,6 +499,30 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
   const prevPage = () => goToPage(page - 1);
   const nextPage = () => goToPage(page + 1);
 
+  // Update toggle indicator position when buildType changes
+  useEffect(() => {
+    const updateIndicator = () => {
+      const activeButton = buildType === 'arrow' ? arrowButtonRef.current : boltButtonRef.current;
+      const container = activeButton?.closest('.relative.inline-flex');
+      if (activeButton && container) {
+        const rect = activeButton.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        setToggleIndicatorStyle({
+          width: rect.width,
+          left: rect.left - containerRect.left,
+        });
+      }
+    };
+    
+    // Update immediately
+    updateIndicator();
+    
+    // Also update after a short delay to handle initial render
+    const timeout = setTimeout(updateIndicator, 10);
+    
+    return () => clearTimeout(timeout);
+  }, [buildType]);
+
   // Handle click outside to deselect
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -530,14 +560,17 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
       {/* Arrow/Bolt Toggle Switch */}
       <div className="mb-4 md:mb-6 w-full flex justify-center">
         <div className="relative inline-flex bg-gray-200 dark:bg-gray-700 rounded-full p-1 shadow-inner">
-          {/* Sliding background indicator */}
+          {/* Sliding background indicator - smooth animation like workshop tabs */}
           <div
-            className={`absolute top-1 bottom-1 w-1/2 rounded-full bg-blaze transition-transform duration-300 ease-in-out ${
-              buildType === 'arrow' ? 'translate-x-0' : 'translate-x-full'
-            }`}
+            className="absolute top-1 bottom-1 rounded-full bg-blaze transition-all duration-300 ease-out"
+            style={{
+              width: `${toggleIndicatorStyle.width}px`,
+              left: `${toggleIndicatorStyle.left}px`,
+            }}
           />
           {/* Arrow Button */}
           <button
+            ref={arrowButtonRef}
             type="button"
             onClick={() => setBuildType('arrow')}
             className={`relative z-10 px-6 md:px-8 py-2 md:py-2.5 rounded-full text-sm md:text-base font-semibold transition-colors duration-300 ${
@@ -551,6 +584,7 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
           </button>
           {/* Bolt Button */}
           <button
+            ref={boltButtonRef}
             type="button"
             onClick={() => setBuildType('bolt')}
             className={`relative z-10 px-6 md:px-8 py-2 md:py-2.5 rounded-full text-sm md:text-base font-semibold transition-colors duration-300 ${

@@ -82,12 +82,12 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
             >
               <path
                 id="top-vane-bolt"
-                className={`transition-all duration-200 transform-gpu group-hover:-translate-y-2 ${(hoverPart === 'shaft' || activePart === 'shaft') ? '-translate-y-2' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
+                className={`transition-all duration-200 transform-gpu group-hover:-translate-y-2 ${(hoverPart === 'shaft' || activePart === 'shaft' || activePart === 'fletching') ? '-translate-y-2' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
                 d="M778.41,85.09s-59-58.45-302.57-49.65c-1.48.05-2.85.77-3.73,1.96-4.57,6.2-19.74,25.74-30.35,26.91-1.48.16-2.81.97-3.75,2.13-2.11,2.6-4.63,8.05-3.06,18.65h343.46Z"
               />
               <path
                 id="bottom-vane-bolt"
-                className={`transition-all duration-200 transform-gpu group-hover:translate-y-2 ${(hoverPart === 'shaft' || activePart === 'shaft') ? 'translate-y-2' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
+                className={`transition-all duration-200 transform-gpu group-hover:translate-y-2 ${(hoverPart === 'shaft' || activePart === 'shaft' || activePart === 'fletching') ? 'translate-y-2' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
                 d="M778.41,158.04s-59,58.45-302.57,49.65c-1.48-.05-2.85-.77-3.73-1.96-4.57-6.2-19.74-25.74-30.35-26.91-1.48-.16-2.81-.97-3.75-2.13-2.11-2.6-4.63-8.05-3.06-18.65h343.46Z"
               />
             </g>
@@ -125,9 +125,9 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
               )}
             </g>
 
-            {/* Knock - moves left on shaft hover or active (more aggressive for bolt) */}
+            {/* Knock - moves left on shaft hover or active, or when knock itself is active (more aggressive for bolt) */}
             <path
-              className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-x-2 ${(hoverPart === 'shaft' || activePart === 'shaft') ? '-translate-x-2' : ''}`}
+              className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-x-2 ${(hoverPart === 'shaft' || activePart === 'shaft' || activePart === 'knock') ? '-translate-x-2' : ''}`}
               filter={boltGlow('knock')}
               d="M343.46,102.88h-47.64c-1.46,0-2.47,1.46-1.95,2.83l4.74,12.45c.84,2.2.84,4.63,0,6.82l-4.67,12.27c-.55,1.45.52,3.01,2.07,3.01h47.44v-37.38Z"
               onMouseOver={() => setHoverPart('knock')}
@@ -146,10 +146,10 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
             onClick={(e) => { e.stopPropagation(); onPartClick?.('insert'); }}
           />
 
-          {/* Tip - moves right on insert hover/active and shaft hover/active (more aggressive for bolt) */}
+          {/* Tip - moves right on insert hover/active, shaft hover/active, or when tip itself is active (more aggressive for bolt) */}
           <g
             pointerEvents="bounding-box"
-            className={`group cursor-pointer transition-transform duration-200 transform-gpu ${(hoverPart === 'insert' || activePart === 'insert') ? 'translate-x-3' : (hoverPart === 'shaft' || activePart === 'shaft') ? 'translate-x-2' : 'hover:translate-x-2'}`}
+            className={`group cursor-pointer transition-transform duration-200 transform-gpu ${(hoverPart === 'insert' || activePart === 'insert') ? 'translate-x-3' : (hoverPart === 'shaft' || activePart === 'shaft') ? 'translate-x-2' : (activePart === 'tip') ? 'translate-x-2' : 'hover:translate-x-2'}`}
             filter={boltGlow('tip')}
             onMouseOver={() => setHoverPart('tip')}
             onMouseOut={() => setHoverPart(null)}
@@ -223,18 +223,18 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
             onClick={(e) => { e.stopPropagation(); onPartClick?.('fletching'); }}
           >
             <path
-              className={`transition-all duration-200 transform-gpu group-hover:-translate-y-1 ${(hoverPart === 'shaft' || activePart === 'shaft') ? '-translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
+              className={`transition-all duration-200 transform-gpu group-hover:-translate-y-1 ${(hoverPart === 'shaft' || activePart === 'shaft' || activePart === 'fletching') ? '-translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
               d="M124.22,35.69s15.86-29.46,40.79-27.65c0,0,139.92,8.39,167.19,27.65H124.22Z"
             />
             <path
-              className={`transition-all duration-200 transform-gpu group-hover:translate-y-1 ${(hoverPart === 'shaft' || activePart === 'shaft') ? 'translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
+              className={`transition-all duration-200 transform-gpu group-hover:translate-y-1 ${(hoverPart === 'shaft' || activePart === 'shaft' || activePart === 'fletching') ? 'translate-y-1' : ''} ${hot('fletching') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'}`}
               d="M124.22,79.03s15.86,30.31,40.79,28.45c0,0,139.92-8.63,167.19-28.45H124.22Z"
             />
           </g>
 
-          {/* Knock - moves left on shaft hover or active */}
+          {/* Knock - moves left on shaft hover or active, or when knock itself is active */}
           <path
-            className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-x-1 ${(hoverPart === 'shaft' || activePart === 'shaft') ? '-translate-x-1' : ''}`}
+            className={`${hot('knock') ? 'fill-blaze' : 'fill-gray-700 dark:fill-gray-300'} cursor-pointer transition-transform duration-200 hover:fill-blaze hover:-translate-x-1 ${(hoverPart === 'shaft' || activePart === 'shaft' || activePart === 'knock') ? '-translate-x-1' : ''}`}
             filter={greenGlow('knock')}
             d="M48.39,46.51v20.45s-17.82,3.57-38.65-4.56c0,0-.99-2.53,3.57-3.74,0,0,16.06,3.41,12.76-4.45,0,0-.38-2.91-9.62-1.32,0,0-6.23-.27-6.8-3.13,0,0,15.76-7.31,38.75-3.24Z"
             onMouseOver={() => setHoverPart('knock')}
@@ -253,10 +253,10 @@ export default function ArrowSVG({ onPartClick, activePart, onClearSelection, mo
           onClick={(e) => { e.stopPropagation(); onPartClick?.('insert'); }}
         />
 
-        {/* Tip - moves right on insert hover/active and shaft hover/active */}
+        {/* Tip - moves right on insert hover/active, shaft hover/active, or when tip itself is active */}
         <g
           pointerEvents="bounding-box"
-          className={`group cursor-pointer transition-transform duration-200 transform-gpu ${(hoverPart === 'insert' || activePart === 'insert') ? 'translate-x-3' : (hoverPart === 'shaft' || activePart === 'shaft') ? 'translate-x-1' : 'hover:translate-x-1'}`}
+          className={`group cursor-pointer transition-transform duration-200 transform-gpu ${(hoverPart === 'insert' || activePart === 'insert') ? 'translate-x-3' : (hoverPart === 'shaft' || activePart === 'shaft') ? 'translate-x-1' : (activePart === 'tip') ? 'translate-x-1' : 'hover:translate-x-1'}`}
           filter={greenGlow('tip')}
           onMouseOver={() => setHoverPart('tip')}
           onMouseOut={() => setHoverPart(null)}
