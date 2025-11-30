@@ -205,9 +205,6 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
   const [toggleIndicatorStyle, setToggleIndicatorStyle] = useState({ width: 0, left: 0 });
   const arrowButtonRef = useRef(null);
   const boltButtonRef = useRef(null);
-  const [toggleIndicatorStyle, setToggleIndicatorStyle] = useState({ width: 0, left: 0 });
-  const arrowButtonRef = useRef(null);
-  const boltButtonRef = useRef(null);
 
   const ANIMALS = [
     { value: '', label: 'None' },
