@@ -138,7 +138,7 @@ function App() {
                     ? "/ArrowWeight-Logo-Banner-Size-Darkmode.svg" 
                     : "/ArrowWeight-Banner-Size.svg"}
                   alt="Arrow Weight Calculator" 
-                  className="h-20 sm:h-24 md:hidden w-auto object-contain mx-auto"
+                  className="h-28 sm:h-32 md:hidden w-auto object-contain mx-auto"
                 />
                 <img 
                   src={theme === 'dark' 
