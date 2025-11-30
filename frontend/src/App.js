@@ -110,7 +110,7 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-pureblack dark:via-gray-950 dark:to-gray-900 text-gray-900 dark:text-white flex flex-col">
       {/* Header - Modern style inspired by mouse-sensitivity.com */}
       <header className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-300 dark:border-gray-700 sticky top-0 z-50 shadow-lg">
-        <div className="max-w-7xl mx-auto px-3 md:px-6 py-2 md:py-4">
+        <div className="max-w-7xl mx-auto px-3 md:px-6 py-1 md:py-4">
           {/* Mobile: Top row with logo left, auth right. Second row with tabs */}
           {/* Desktop: Single row with logo, tabs, auth */}
           <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6 relative">
@@ -136,14 +136,14 @@ function App() {
                 <img 
                   src={theme === 'dark' 
                     ? "/ArrowWeight-Logo-Words-DarkMode.svg" 
-                    : "/ArrowWeight-Logo-2.svg"}
+                    : "/ArrowWeight-Logo.svg"}
                   alt="Arrow Weight Calculator" 
                   className="h-28 sm:h-32 md:hidden w-auto object-contain mx-auto"
                 />
                 <img 
                   src={theme === 'dark' 
                     ? "/ArrowWeight-Logo-Words-DarkMode.svg" 
-                    : "/ArrowWeight-Logo-2.svg"}
+                    : "/ArrowWeight-Logo.svg"}
                   alt="Arrow Weight Calculator" 
                   className="hidden md:block h-20 lg:h-24 xl:h-28 2xl:h-32 w-auto object-contain"
                 />
