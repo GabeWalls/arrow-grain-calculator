@@ -131,12 +131,12 @@ function App() {
 
             {/* Top Row on Mobile: Centered Logo */}
             <div className="w-full md:w-auto flex items-center justify-center md:justify-start gap-4 md:gap-0 relative pl-10 md:pl-0">
-              {/* Logo - Banner style on mobile, centered */}
+              {/* Logo - Logo-2 style on mobile, centered */}
               <div className="flex items-center flex-shrink-0 md:flex-shrink-0">
                 <img 
                   src={theme === 'dark' 
-                    ? "/ArrowWeight-Logo-Banner-Size-Darkmode.svg" 
-                    : "/ArrowWeight-Banner-Size.svg"}
+                    ? "/ArrowWeight-Logo-Words-DarkMode.svg" 
+                    : "/ArrowWeight-Logo-2.svg"}
                   alt="Arrow Weight Calculator" 
                   className="h-28 sm:h-32 md:hidden w-auto object-contain mx-auto"
                 />
