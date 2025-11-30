@@ -493,13 +493,6 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
   const prevPage = () => goToPage(page - 1);
   const nextPage = () => goToPage(page + 1);
 
-  const segClass = (isActive) =>
-    `px-4 py-1 rounded-full border-2 transition ${
-      isActive 
-        ? 'bg-blaze dark:bg-blaze text-white dark:text-white border-blaze dark:border-blaze font-semibold' 
-        : 'border-gray-400 dark:border-gray-500 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 bg-white dark:bg-gray-700'
-    }`;
-
   // Handle click outside to deselect
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -534,23 +527,42 @@ export default function CalculatorTab({ savedBuilds, setSavedBuilds, onOpenAuthM
 
   return (
     <div className="flex flex-col items-center w-full">
-      <div className="mb-4 md:mb-6 flex items-center gap-3 md:gap-4 w-full justify-center">
-        <button
-          type="button"
-          className={`${segClass(buildType === 'arrow')} text-sm md:text-base px-4 md:px-6 py-2 md:py-2.5`}
-          onClick={() => setBuildType('arrow')}
-          aria-pressed={buildType === 'arrow'}
-        >
-          Arrow
-        </button>
-        <button
-          type="button"
-          className={`${segClass(buildType === 'bolt')} text-sm md:text-base px-4 md:px-6 py-2 md:py-2.5`}
-          onClick={() => setBuildType('bolt')}
-          aria-pressed={buildType === 'bolt'}
-        >
-          Bolt
-        </button>
+      {/* Arrow/Bolt Toggle Switch */}
+      <div className="mb-4 md:mb-6 w-full flex justify-center">
+        <div className="relative inline-flex bg-gray-200 dark:bg-gray-700 rounded-full p-1 shadow-inner">
+          {/* Sliding background indicator */}
+          <div
+            className={`absolute top-1 bottom-1 w-1/2 rounded-full bg-blaze transition-transform duration-300 ease-in-out ${
+              buildType === 'arrow' ? 'translate-x-0' : 'translate-x-full'
+            }`}
+          />
+          {/* Arrow Button */}
+          <button
+            type="button"
+            onClick={() => setBuildType('arrow')}
+            className={`relative z-10 px-6 md:px-8 py-2 md:py-2.5 rounded-full text-sm md:text-base font-semibold transition-colors duration-300 ${
+              buildType === 'arrow'
+                ? 'text-white'
+                : 'text-gray-700 dark:text-gray-300'
+            }`}
+            aria-pressed={buildType === 'arrow'}
+          >
+            Arrow
+          </button>
+          {/* Bolt Button */}
+          <button
+            type="button"
+            onClick={() => setBuildType('bolt')}
+            className={`relative z-10 px-6 md:px-8 py-2 md:py-2.5 rounded-full text-sm md:text-base font-semibold transition-colors duration-300 ${
+              buildType === 'bolt'
+                ? 'text-white'
+                : 'text-gray-700 dark:text-gray-300'
+            }`}
+            aria-pressed={buildType === 'bolt'}
+          >
+            Bolt
+          </button>
+        </div>
       </div>
 
       {/* Mobile: SVG left, fields right. Desktop: SVG above, fields below */}
