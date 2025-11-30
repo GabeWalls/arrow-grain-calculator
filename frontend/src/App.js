@@ -364,6 +364,37 @@ function App() {
         </div>
       </main>
 
+      {/* Footer */}
+      <footer className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-t border-gray-300 dark:border-gray-700 mt-auto">
+        <div className="max-w-7xl mx-auto px-3 md:px-6 py-6 md:py-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
+            {/* Copyright */}
+            <div className="text-center md:text-left">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                © 2025 <span className="font-semibold text-gray-900 dark:text-white">Walls Tech</span>. All rights reserved.
+              </p>
+            </div>
+
+            {/* Navigation Links */}
+            <nav className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`text-sm font-medium transition-colors duration-200 ${
+                    activeTab === tab.id
+                      ? 'text-blaze dark:text-blaze-400'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
+          </div>
+        </div>
+      </footer>
+
       {/* Auth Modal */}
       <AuthModal 
         isOpen={authModalOpen} 
